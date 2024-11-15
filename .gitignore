@@ -1,0 +1,6 @@
+.venv
+.env
+Run_server.py
+Run_Migrations.py
+**/_pycache**
+media

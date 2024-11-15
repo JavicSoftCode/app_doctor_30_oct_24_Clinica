@@ -1,0 +1,43 @@
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="ModalLabel">
+                    <i class="fa-solid fa-clipboard-list fa-lg me-2"></i> Detalles de Auditoría de Usuario
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Columna para los datos -->
+                            <div class="col-md-6">
+                                <style>p { margin-bottom: 10px; }</style>
+
+                                <p><strong><i class="fa-solid fa-hashtag fa-lg me-2"></i>ID:</strong> <span
+                                        id="auditUser-id"></span></p>
+                                <p><strong><i class="fa-solid fa-user fa-lg me-2"></i>Usuario:</strong> <span
+                                        id="auditUser-usuario"></span></p>
+                                <p><strong><i class="fa-solid fa-table fa-lg me-2"></i>Tabla:</strong> <span
+                                        id="auditUser-tabla"></span></p>
+                                <p><strong><i class="fa-solid fa-fingerprint fa-lg me-2"></i>Registro ID:</strong> <span
+                                        id="auditUser-registroid"></span></p>
+                            </div>
+                            <!-- Columna derecha -->
+                            <div class="col-md-6 ">
+                                  <p><strong><i class="fa-solid fa-calendar-day fa-lg me-2"></i>Fecha:</strong> <span
+                                        id="auditUser-fecha"></span></p>
+                                <p><strong><i class="fa-solid fa-clock fa-lg me-2"></i>Hora:</strong> <span
+                                        id="auditUser-hora"></span></p>
+                                <p><strong><i class="fa-solid fa-bolt fa-lg me-2"></i>Acción:</strong> <span
+                                        id="auditUser-accion"></span></p>
+                            </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

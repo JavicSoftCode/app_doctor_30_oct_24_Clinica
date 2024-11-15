@@ -1,0 +1,54 @@
+<style>
+    /* Ocultar barra de desplazamiento en Chrome/Safari */
+    .scroll::-webkit-scrollbar {
+        width: 0;
+    }
+
+    /* Ajustes de espaciado para los párrafos */
+    p {
+        margin-bottom: 10px;
+    }
+</style>
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="ModalLabel">
+                    <i class="fa-solid fa-stethoscope fa-lg me-2"></i> Detalles del Examen Solicitado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body scroll">
+                <div class="row ">
+                       <!-- Columna izquierda -->
+                    <div class="col-md-4 text-center">
+                        <img id="examenSolicitado-foto" src="" alt="Foto del Exámen Solicitado"
+                             class="img-fluid rounded shadow-sm" style="width: 320px; height: 220px;">
+                    </div>
+
+                    <!-- Columna central: Información del examenSolicitado -->
+                    <div class="col-md-4">
+                        <p><strong><i class="fas fa-id-badge fa-lg  me-2"></i>ID:</strong> <span id="examenSolicitado-id"></span></p>
+                        <p><strong><i class="fa-solid fa-file-signature fa-lg me-2"></i> Nombre de Exámen:</strong> <span id="examenSolicitado-nombre_examen"></span></p>
+                        <p><strong><i class="fa-solid fa-user fa-lg me-2"></i>Paciente:</strong> <span id="examenSolicitado-paciente"></span></p>
+                    </div>
+
+                    <div class="col-md-4">
+
+                                                <p><strong><i class="fa-solid fa-calendar-alt fa-lg me-2"></i> Fecha Solicitud:</strong> <span id="examenSolicitado-fecha_solicitud"></span></p>
+
+                        <p><strong><i class="fa fa-file-pdf fa-lg me-2"></i>Resultado PDF:</strong> <span id="examenSolicitado-resultado"></span></p>
+                        <p><strong><i class="fas fa-comment-medical fa-lg me-2"></i>Comentario:</strong> <span id="examenSolicitado-comentario"></span></p>
+                        <p><strong><i class="fas fa-toggle-on fa-lg   me-2"></i> Estado:</strong> <span id="examenSolicitado-estado"></span></p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>

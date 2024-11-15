@@ -1,0 +1,54 @@
+<style>p {
+    margin-bottom: 10px;
+}</style>
+
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="ModalLabel">
+                    <i class="fa-solid fa-vial fa-lg me-2"></i> Detalles del Tipo de Examen
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Columna para los datos -->
+                    <!-- Columna izquierda -->
+                    <div class="col-md-6">
+
+                        <p><strong><i class="fa-solid fa-hashtag fa-lg me-2"></i>ID:</strong>
+                            <span id="tipo_categoria-id"></span>
+                        </p>
+                        <p><strong><i class="fa-solid fa-layer-group fa-lg me-2"></i>Categoría del Examen:</strong>
+                            <span id="tipo_categoria-categoria_examen"></span>
+                        </p>
+                        <p><strong><i class="fa-solid fa-vial fa-lg me-2"></i>Tipo de Examen:</strong>
+                            <span id="tipo_categoria-nombre"></span>
+                        </p>
+                        <p><strong><i class="fa-solid fa-file-signature fa-lg me-2"></i>Descripción:</strong>
+                            <span class="justif-interlineado" id="tipo_categoria-descripcion"></span>
+                        </p>
+                    </div>
+                    <!-- Columna derecha -->
+                    <div class="col-md-6">
+                        <p><strong><i class="fa-solid fa-arrow-down-wide-short fa-lg me-2"></i>Valor Mínimo:</strong>
+                            <span id="tipo_categoria-valor_minimo"></span>
+                        </p>
+                        <p><strong><i class="fa-solid fa-arrow-up-wide-short fa-lg me-2"></i>Valor Máximo:</strong>
+                            <span id="tipo_categoria-valor_maximo"></span>
+                        </p>
+                        <p><strong><i class="fas fa-toggle-on fa-lg   me-2"></i>Estado:</strong>
+                            <span id="tipo_categoria-activo"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

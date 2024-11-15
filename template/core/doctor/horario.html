@@ -1,0 +1,392 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <style>
+        .calendar-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .calendar {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .month {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 5px;
+        {#border-radius: 50%;#} background-color: #e0e0e0;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #d4d4d4;
+        }
+
+        .weekdays, .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .weekdays .day {
+            font-weight: bold;
+            color: #333;
+            padding: 5px 0;
+        }
+
+        .days .day {
+            padding: 10px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        {#.days .day:hover {#}
+        {#    background-color: #d4e4f2;#}
+
+        .day.active {
+            background-color: #d4e4f2; /* Fondo bajo cuando está activo */
+        }
+
+        .day.has-hours {
+            background-color: #4a90e2; /* Fondo fuerte cuando tiene horas seleccionadas */
+            color: white;
+        }
+
+        .hours-selection {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .hours-selection h4 {
+            text-align: center;
+            font-size: 1.1em;
+            color: #4a90e2;
+        }
+
+        .hours-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .hour-block {
+            width: 80px;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #d4e4f2; /* Fondo bajo por defecto */
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hour-block:hover {
+            background-color: #b9d9e6;
+        }
+
+        .hour-block.selected {
+            background-color: #4a90e2; /* Fondo fuerte cuando está seleccionado */
+            color: white;
+        }
+
+        .clear-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 5px 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .clear-btn:hover {
+            background-color: #ff1a1a;
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" class="row">
+                            {% csrf_token %}
+
+                            <div class="col-md-6">
+                                <div class="calendar-container" style="margin-left: 50%">
+                                    <h1 class="text-center text-primary mb-4"
+                                        style="font-weight: bold;font-size: 25px">{{ doctor }}</h1>
+                                    {{ form.horario_atencion }}
+                                    <div class="calendar">
+                                        <div class="header">
+                                            <div class="month"></div>
+                                            <div class="btns">
+                                                <div class="btn today-btn" style="background-color: #0B5ED7"><i
+                                                        class="fa-solid fa-calendar fa-lg"
+                                                        style="color: white"></i></div>
+                                                <div class="btn prev-btn" style="background-color: #0B5ED7"><i
+                                                        class="fa-solid fa-circle-chevron-left fa-lg"
+                                                        style="color: white"></i></div>
+                                                <div class="btn next-btn" style="background-color: #0B5ED7"><i
+                                                        class="fa-solid fa-circle-chevron-right fa-lg"
+                                                        style="color: white"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="weekdays">
+                                            <div class="day">Dom</div>
+                                            <div class="day">Lun</div>
+                                            <div class="day">Mar</div>
+                                            <div class="day">Mié</div>
+                                            <div class="day">Jue</div>
+                                            <div class="day">Vie</div>
+                                            <div class="day">Sáb</div>
+                                        </div>
+                                        <div class="days"></div>
+                                    </div>
+
+                                    <div class="hours-selection">
+                                        <h4>Seleccionar Horas</h4>
+                                        <div class="hours-container"></div>
+                                        <button class="clear-btn" type="button" disabled style="display: none">Limpiar
+                                            Selección
+                                            de Horas
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button class="btn me-2 grabar save-schedule-btn" id="guardar-btn" type="submit"
+                                            style="background-color: #0B5ED7; display: none"
+                                            disabled>{{ grabar }}</button>
+                                    <a class="btn btn-secondary cancelar" href="{{ back_url }}"
+                                       style="background-color: #0B5ED7"><i
+                                            class="fa-solid fa-circle-left fa-lg me-2"></i>
+                                        Regresar</a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const daysContainer = document.querySelector(".days");
+        const nextBtn = document.querySelector(".next-btn");
+        const prevBtn = document.querySelector(".prev-btn");
+        const month = document.querySelector(".month");
+        const todayBtn = document.querySelector(".today-btn");
+        const hoursContainer = document.querySelector(".hours-container");
+        const hoursSelectionDiv = document.querySelector(".hours-selection");
+        const clearBtn = document.querySelector(".clear-btn");
+
+        const months = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+        const workingHours = [
+            "8AM-9AM", "9AM-10AM", "10AM-11AM", "11AM-12PM", "12PM-1PM",
+            "1PM-2PM", "2PM-3PM", "3PM-4PM", "4PM-5PM"
+        ];
+
+        const date = new Date();
+        let currentMonth = date.getMonth();
+        let currentYear = date.getFullYear();
+        let selectedDays = {};
+        let activeDay = null;
+
+        function renderCalendar() {
+            date.setDate(1);
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const prevLastDay = new Date(currentYear, currentMonth, 0);
+            const lastDayIndex = lastDay.getDay();
+            const prevLastDayDate = prevLastDay.getDate();
+            const nextDays = 7 - lastDayIndex - 1;
+
+            month.innerHTML = `${months[currentMonth]} ${currentYear}`;
+            let days = "";
+
+            for (let x = firstDay.getDay(); x > 0; x--) {
+                days += `<div class="day prev">${prevLastDayDate - x + 1}</div>`;
+            }
+
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const dayKey = `${currentYear}-${currentMonth}-${i}`;
+                const hasHours = selectedDays[dayKey]?.length > 0;
+                const isActive = activeDay === i;
+                days += `<div class="day ${hasHours ? 'has-hours' : ''} ${isActive ? 'active' : ''}" data-day="${i}">${i}</div>`;
+            }
+
+            for (let j = 1; j <= nextDays; j++) {
+                days += `<div class="day next">${j}</div>`;
+            }
+
+            daysContainer.innerHTML = days;
+            hideTodayBtn();
+        }
+
+        function renderHours(selectedDayKey) {
+            hoursContainer.innerHTML = '';
+            workingHours.forEach(hour => {
+                const hourDiv = document.createElement("div");
+                hourDiv.classList.add("hour-block");
+                hourDiv.textContent = hour;
+
+                // Mostrar solo las horas seleccionadas sin permitir clic
+                if (selectedDays[selectedDayKey]?.includes(hour)) {
+                    hourDiv.classList.add("selected");
+                } else {
+                    // Si la hora no fue seleccionada, se desactiva visualmente
+                    hourDiv.classList.add("disabled");
+                }
+
+                hoursContainer.appendChild(hourDiv);
+            });
+        }
+
+        function updateDayVisual(dateKey) {
+            const day = parseInt(dateKey.split("-")[2]);
+            const dayElement = document.querySelector(`[data-day="${day}"]`);
+
+            if (selectedDays[dateKey]?.length > 0) {
+                dayElement.classList.add("has-hours");
+            } else {
+                dayElement.classList.remove("has-hours");
+            }
+            updateHorarioInput();
+        }
+
+        daysContainer.addEventListener("click", (e) => {
+            if (!e.target.classList.contains("day") ||
+                e.target.classList.contains("prev") ||
+                e.target.classList.contains("next")) return;
+
+            // Remover active de todos los días
+            document.querySelectorAll(".day").forEach(day => {
+                if (!day.classList.contains("prev") && !day.classList.contains("next")) {
+                    day.classList.remove("active");
+                }
+            });
+
+            const day = parseInt(e.target.dataset.day);
+            const dayKey = `${currentYear}-${currentMonth}-${day}`;
+
+            // Activar el día seleccionado
+            activeDay = day;
+            e.target.classList.add("active");
+
+            // Mostrar las horas
+            renderHours(dayKey);
+            hoursSelectionDiv.style.display = "block";
+        });
+
+        clearBtn.addEventListener("click", () => {
+            if (activeDay !== null) {
+                const selectedDayKey = `${currentYear}-${currentMonth}-${activeDay}`;
+                selectedDays[selectedDayKey] = [];
+                renderHours(selectedDayKey);
+                updateDayVisual(selectedDayKey);
+                updateHorarioInput();
+            }
+        });
+
+        function hideTodayBtn() {
+            const todayDate = new Date();
+            todayBtn.style.display =
+                (todayDate.getMonth() === currentMonth && todayDate.getFullYear() === currentYear)
+                    ? "none"
+                    : "inline-block";
+        }
+
+        nextBtn.addEventListener("click", () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            activeDay = null;
+            hoursSelectionDiv.style.display = "none";
+            renderCalendar();
+        });
+
+        prevBtn.addEventListener("click", () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            activeDay = null;
+            hoursSelectionDiv.style.display = "none";
+            renderCalendar();
+        });
+
+        todayBtn.addEventListener("click", () => {
+            currentMonth = date.getMonth();
+            currentYear = date.getFullYear();
+            activeDay = null;
+            hoursSelectionDiv.style.display = "none";
+            renderCalendar();
+        });
+
+        renderCalendar();
+
+        const horarioInput = document.getElementById('horario_atencion_input');
+        const saveScheduleBtn = document.querySelector('.save-schedule-btn');
+
+        // Función para actualizar el input oculto con los horarios
+        function updateHorarioInput() {
+            // Convertimos el objeto selectedDays a string JSON
+            horarioInput.value = JSON.stringify(selectedDays);
+        }
+
+        // Botón de guardar
+        saveScheduleBtn.addEventListener("click", () => {
+            updateHorarioInput();
+            // Opcional: Mostrar mensaje de confirmación
+            {#alert('Horarios guardados correctamente');#}
+        });
+
+        // Al cargar la página, si hay datos existentes
+        document.addEventListener('DOMContentLoaded', () => {
+            if (horarioInput.value) {
+                try {
+                    selectedDays = JSON.parse(horarioInput.value);
+                    renderCalendar();
+                } catch (e) {
+                    console.error('Error al cargar horarios existentes:', e);
+                }
+            }
+        });
+    </script>
+
+{% endblock content %}

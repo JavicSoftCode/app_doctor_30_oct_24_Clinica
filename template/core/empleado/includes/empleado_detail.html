@@ -1,0 +1,80 @@
+<style>
+    /* Ocultar barra de desplazamiento en Chrome/Safari */
+    .scroll::-webkit-scrollbar {
+        width: 0;
+    }
+
+    /* Ajustes de espaciado para los párrafos */
+    p {
+        margin-bottom: 10px;
+    }
+</style>
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="ModalLabel">
+                    <i class="fa-solid fa-user-tie fa-lg me-2"></i> Detalles del Empleado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body scroll" style="max-height: 400px; overflow-y: auto;">
+                <div class="row">
+                     <!-- Columna izquierda -->
+                    <div class="col-md-4 text-center">
+                        <img id="empleado-foto" src="" alt="Foto del Empleado"
+                             class="img-fluid rounded shadow-sm" style="width: 320px; height: 300px;">
+                    </div>
+
+                                          <div class="col-md-4">
+
+                        <h6 class="fw-bold" style="margin-bottom: 12px"><i class="fa-solid fa-user-tie fa-lg me-2"></i>
+                            Información del Empleado</h6>
+                            <p><strong><i class="fas fa-id-badge fa-lg me-2"></i> ID:</strong> <span
+                                    id="empleado-id"></span></p>
+                            <p><strong><i class="fa-solid fa-id-card fa-lg  me-2"></i> Cédula:</strong> <span
+                                    id="empleado-cedula"></span></p>
+{#                            <p><strong><i class="fa-solid fa-user fa-lg me-2"></i> Nombres:</strong> <span#}
+{#                                    id="empleado-nombres"></span></p>#}
+                            <p><strong><i class="fa-solid fa-user-tie fa-lg me-2"></i> Empleado:</strong> <span
+                                    id="empleado-empleado"></span></p>
+                            <p><strong><i class="fa-solid fa-calendar-alt fa-lg me-2"></i> F. Nacimiento:</strong> <span
+                                    id="empleado-fecha-nacimiento"></span></p>
+                            <p><strong><i class="fas fa-birthday-cake me-2 me-2"></i>Edad:</strong> <span
+                                    id="empleado-edad"></span></p>
+                                               <p><strong><i class="fa-solid fa-envelope fa-lg me-2"></i> Email:</strong> <span
+                                    id="empleado-email"></span></p>
+                                               <p><strong><i class="fa-solid fa-phone fa-lg me-2"></i> Teléfonos:</strong> <span
+                                    id="empleado-telefonos"></span></p>
+                    </div>
+                    <!-- Columna derecha -->
+                    <div class="col-md-4">
+                           <p><strong><i class="fa-solid fa-person-circle-question fa-lg me-2"></i> Cargo:</strong> <span
+                                    id="empleado-cargo"></span></p>
+                            <p><strong><i class="fa-solid fa-hand-holding-dollar fa-lg me-2"></i> Sueldo: $ </strong> <span
+                                    id="empleado-sueldo"></span></p>
+
+
+                        <p><strong><i class="fa-solid fa-map-marker-alt fa-lg me-2"></i> Dirección:</strong> <span
+                                id="empleado-direccion"></span></p>
+                        <p><strong><i class="fa-solid fa-map-marker-alt fa-lg me-2"></i> Latitud:</strong> <span
+                                id="empleado-latitud"></span></p>
+                        <p><strong><i class="fa-solid fa-map-marker-alt fa-lg me-2"></i> Longitud:</strong> <span
+                                id="empleado-longitud"></span></p>
+                        <p><strong><i class="fa fa-file-pdf fa-lg me-2"></i> Curriculum:</strong> <span
+                                id="empleado-curriculum"></span></p>
+                        <p><strong><i class="fa-solid fa-file-signature fa-lg me-2"></i> Firma Digital:</strong> <span
+                                id="empleado-firma_digital"></span></p>
+                        <p><strong><i class="fas fa-toggle-on fa-lg   me-2"></i> Estado:</strong> <span
+                                id="empleado-activo"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times fa-lg"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

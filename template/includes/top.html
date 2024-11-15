@@ -1,0 +1,22 @@
+            <nav class="navbar navbar-expand-lg navbar-light sticky-top mb-4">
+                <div class="container-fluid">
+                    <a class="text-white text-decoration-none fw-bold d-inline-flex align-items-center gap-2 transition-all hover:text-primary-dark"
+                       href="{% url 'core:home' %}">
+                        <i class="fas fa-home"></i> <!-- o cualquier otro icono de Font Awesome -->
+                        {{ title }}
+                    </a>
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle text-white" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-md me-2"></i>Dr Daniel Vera
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Salir</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>

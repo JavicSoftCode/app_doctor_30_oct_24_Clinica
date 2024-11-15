@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title1 }} </title>
+    <link rel="shortcut icon" href="{% static 'img/logo.webp' %}" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    {% block css %}{% endblock %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 px-0 sidebar">
+
+            {#            top logueo#}
+            <div class="text-center py-1">
+                <div class="d-flex flex-row justify-content-center align-items-center text-center">
+                    <img src="{% static 'img/usuario_anonimo.png' %}" alt="Logo" class="mb-3 rounded-circle"
+                         width="100px">
+                </div>
+                <h5 class="text-white">{{ request.user }}</h5>
+                <h3 class="text-white">SaludSync</h3>
+                <h4 class="text-white">Sistema Médico</h4>
+            </div>
+
+            {#            DASHBOARD#}
+            <nav class="nav flex-column">
+                <a class="nav-link active" href="/admin"><i class="fas fa-home fa-lg me-2"></i> Dashboard</a>
+
+                <a class="nav-link" href="{% url 'core:patient_list' %}"><i class="fas fa-user-injured  fa-lg me-2"></i>
+                    Pacientes</a>
+
+                <a class="nav-link" href="{% url 'attention:citaMedica_list' %}"><i
+                        class="fas fa-calendar-alt  fa-lg me-2"></i> Citas</a>
+
+                <a class="nav-link" href="{% url 'attention:attention_list' %}"><i
+                        class="fas fa-procedures  fa-lg me-2"></i>
+                    Atenciones</a>
+
+                <a class="nav-link" href="{% url 'attention:examenSolicitado_list' %}"><i
+                        class="fa-solid fa-vial  fa-lg me-2"></i> Exámenes Solicitados</a>
+
+                <a class="nav-link" href="#"><i class="fas fa-money-bills  fa-lg me-2"></i> Pagos</a>
+
+                <a class="nav-link" href="{% url 'core:doctor_list' %}"><i
+                        class="fa-solid fa-user-doctor  fa-lg me-2"></i> Doctores</a>
+
+                <a class="nav-link" href="#"><i
+                        class="fas fa-file-medical fa-lg me-2"></i>Fichas
+                    Médicas</a>
+
+                {#                <a class="text-white ms-2 text-decoration-none " href="#"><i></i> Mantenimiento</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Especialidad</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Horarios</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Servicios</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Costos</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Cargo</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Certificados</a>#}
+                {#                    <a class="nav-link" href="{% url 'core:empleado_list' %}"><i class="fas fa-cogs me-2"></i> Empleado</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i>Tipo Medicina</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i>Marca Medicina </a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Medicamento</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Diagnostico</a>#}
+                {#                <a class="nav-link" href="#"><i class="fas fa-cogs me-2"></i> Tipo Sangre</a>#}
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 px-md-4 main-content scrollable-content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light sticky-top mb-4">
+                <div class="container-fluid">
+                    <a class="text-white text-decoration-none fw-bold d-inline-flex align-items-center gap-2 transition-all hover:text-primary-dark"
+                       href="{% url 'core:home' %}">
+                        <i class="fas fa-home fa-lg me-2"></i>
+                        {{ title }}
+                    </a>
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle text-white" type="button"
+                                    style="background-color: #3B3BBA; color: white"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-md me-2"></i>Dr Daniel Vera
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user fa-lg me-2"></i>Perfil</a>
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'core:auditUser_list' %}"><i
+                                        class="fa-solid fa-user-shield fa-lg me-2"></i>Auditoría
+                                    / Administración</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user-secret  fa-lg me-2"></i>Block
+                                    Seguridad</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-lg me-2"></i>Salir</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <main style="margin-top: -20px">
+                <!-- llama al message de exito o fracaso -->
+                {% include 'includes/messages.html' %}
+                {% block content %}
+
+                    <!-- Dashboard Content -->
+                    <div class="row g-4 mb-4">
+                        <!-- Stats Cards -->
+                        <div class="col-md-3">
+                            <div class="card stat-card">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="icon-square bg-white text-primary">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="card-title mb-0">Citas Hoy</h6>
+                                        <h3 class="mb-0">{{ can_citas }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card" style="background: linear-gradient(45deg, #2ecc71, #27ae60);">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="icon-square bg-white text-success">
+                                        <i class="fas fa-user-injured"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="card-title mb-0">Pacientes</h6>
+                                        <h3 class="mb-0">{{ can_paci }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="icon-square bg-white text-danger">
+                                        <i class="fas fa-heartbeat"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="card-title mb-0">Atenciones</h6>
+                                        <h3 class="mb-0">{{ can_atencion }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card" style="background: linear-gradient(45deg, #9b59b6, #8e44ad);">
+
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="icon-square bg-white" style="color: #934cb0">
+                                        {#                            <i class="fa-solid fa-file-medical"></i>#}
+                                        <i class="fa-brands fa-cc-paypal"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="card-title mb-0">Pagos</h6>
+                                        <h3 class="mb-0">1000</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Quick Actions -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Acciones Rápidas</h5>
+                                    <div class="quick-actions d-flex flex-wrap gap-3">
+                                        <button class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Cita
+                                        </button>
+                                        <a class="btn btn-success text-white d-inline-flex align-items-center"
+                                           href="{% url 'core:patient_list' %}">
+                                            <i class="fas fa-user-plus me-2"></i>
+                                            Paciente
+                                        </a>
+                                        <a class="btn btn-dark text-white"
+                                           href="{% url 'attention:attention_list' %}"><i
+                                                class="fas fa-file-medical me-2"></i>Atencion</a>
+
+                                        <a class="btn btn-info fw-bold text-white" href="#"><i
+                                                class="fas fa-file-medical me-2"></i>Certificado</a>
+
+                                        <a class="btn btn-danger"><i class="fas fa-notes-medical me-2"></i>Ficha Clinica</a>
+                                        <a class="btn btn-secondary text-white" href="#"><i
+                                                class="fas fa-file-medical me-2"></i>Pagos</a>
+                                        <a class="btn btn-warning text-white" href="#"><i
+                                                class="fas fa-file-medical me-2"></i>Examenes</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity & Upcoming Appointments -->
+                    <div class="row">
+                        <!-- Actividad Reciente -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Actividad Reciente</h5>
+                                    {% if ultimo_paciente %}
+                                        <div class="activity-item d-flex align-items-center py-3 border-bottom">
+                                            <div class="bg-primary text-white p-2 rounded me-3">
+                                                <i class="fas fa-user-plus"></i>
+                                            </div>
+                                            <div>
+                                                <p class="mb-0 fw-bold">Nuevo paciente
+                                                    registrado: {{ ultimo_paciente.nombre_completo }}</p>
+                                                <small class="text-muted">Registrado
+                                                    hace {{ tiempo_desde_ultimo_paciente }}</small>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="activity-item d-flex align-items-center py-3 border-bottom">
+                                            <div class="bg-primary text-white p-2 rounded me-3">
+                                                <i class="fas fa-user-plus"></i>
+                                            </div>
+                                            <p class="text-muted" style="margin-top: 10px">No hay actividad reciente
+                                                del Paciente Registrado</p>
+                                        </div>
+                                    {% endif %}
+                                    {% if ultima_cita_realizada %}
+                                        <div class="activity-item d-flex align-items-center py-3 border-bottom">
+                                            <div class="bg-success text-white p-2 rounded me-3">
+                                                <i class="fas fa-calendar-check"></i>
+                                            </div>
+                                            <div>
+                                                <p class="mb-0 fw-bold">Última Cita
+                                                    Realizada: {{ ultima_cita_realizada.paciente.nombre_completo }}</p>
+                                                <small class="text-muted">Cita realizada
+                                                    hace {{ tiempo_desde_ultima_cita }}</small>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="activity-item d-flex align-items-center py-3 border-bottom">
+                                            <div class="bg-success text-white p-2 rounded me-3">
+                                                <i class="fas fa-calendar-check"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-muted" style="margin-top: 10px">No hay actividad reciente
+                                                    de Citas Realizadas</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="activity-item d-flex align-items-center py-3">
+                                        <div class="bg-info text-white p-2 rounded me-3">
+                                            <i class="fas fa-file-medical"></i>
+                                        </div>
+                                        <div>
+                                            {% if ultima_atencion %}
+                                                <p class="mb-0 fw-bold">Última atención
+                                                    registrada: {{ ultima_atencion.paciente.nombre_completo }}</p>
+                                                <small class="text-muted">Registrada
+                                                    hace {{ tiempo_desde_ultima_atencion }}</small>
+                                            {% else %}
+                                                <p class="text-muted" style="margin-top: 10px">No hay actividad reciente
+                                                    de Atenciones Registradas</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Próximas Citas -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Próximas Citas</h5>
+                                    {% for cita in proximas_citas %}
+                                        <div class="appointment-item d-flex align-items-center py-3 border-bottom">
+                                            <img src="{{ cita.paciente.get_image }}" alt="Patient"
+                                                 class="rounded-circle me-3 pruebaAnoni"
+                                                 style="width: 50px; height: 50px; ">
+                                            <div>
+                                                <p class="mb-0 fw-bold">{{ cita.paciente.nombre_completo }}</p>
+                                                <small class="text-muted">{{ cita.fecha }}
+                                                    - {{ cita.hora_cita|time:"g:i A" }}</small>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="py-3">
+                                            <p class="mb-0 text-muted">No hay citas programadas.</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {#                    GRAFICOS#}
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Atención de Concultas</h5>
+
+                                    <!-- Gráfico de Barras para Atenciones -->
+                                    <div>
+                                        <select id="atencionMesSelect" class="form-select mb-3"
+                                                onchange="filterAtencionesByMonth()">
+                                            <option value="">Seleccione un mes</option>
+                                            {% for mes_numero, mes_nombre in meses %}
+                                                <option value="{{ mes_numero }}">{{ mes_nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <canvas id="atencionChart" width="400" height="200"></canvas>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Citas Médicas</h5>
+
+                                    <!-- Gráfico de Pastel para Citas -->
+                                    <div>
+                                        <select id="citasMesSelect" class="form-select mb-3"
+                                                onchange="filterCitasByMonth()">
+                                            <option value="">Seleccione un mes</option>
+                                            {% for mes_numero, mes_nombre in meses %}
+                                                <option value="{{ mes_numero }}">{{ mes_nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="btn-group mb-3 btn-GRAFICAS" role="group">
+                                                <button onclick="filterCitasByEstado('P')"
+                                                        class="btn btn-outline-primary btn-GRAFICAS"
+                                                        style="background-color: blue; color: white;">
+                                                    Programada
+                                                </button>
+                                                <button onclick="filterCitasByEstado('C')"
+                                                        class="btn btn-outline-primary btn-GRAFICAS"
+                                                        style="background-color: blue; color: white">
+                                                    Cancelada
+                                                </button>
+                                                <button onclick="filterCitasByEstado('R')"
+                                                        class="btn btn-outline-primary btn-GRAFICAS"
+                                                        style="background-color: blue; color: white">
+                                                    Realizada
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <canvas id="citasChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        // Actualización del JavaScript para los gráficos
+                        const atencionData = {{ atenciones_data|safe }};
+                        const citasData = {{ citas_data|safe }};
+                        let currentCitasMonth = new Date().getMonth() + 1; // Mes actual (1-12)
+
+                        // Función para obtener el nombre del mes
+                        function getMonthName(monthNumber) {
+                            const date = new Date(2000, monthNumber - 1, 1);
+                            return date.toLocaleString('es-ES', {month: 'long'});
+                        }
+
+                        // Función para inicializar los selectores con el mes actual
+                        function initializeSelectors() {
+                            const currentMonth = new Date().getMonth() + 1; // 1-12
+                            document.getElementById('atencionMesSelect').value = currentMonth;
+                            document.getElementById('citasMesSelect').value = currentMonth;
+
+                            // Cargar datos iniciales
+                            filterAtencionesByMonth(currentMonth);
+                            filterCitasByMonth(currentMonth);
+                        }
+
+                        // Función para actualizar el gráfico de Atenciones
+                        function filterAtencionesByMonth(selectedMonth = null) {
+                            const mes = selectedMonth || document.getElementById('atencionMesSelect').value;
+                            if (mes) {
+                                fetch(`/filtro-atenciones/?mes=${mes}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Actualizar datos del gráfico
+                                        const monthData = new Array(12).fill(0);
+                                        monthData[mes - 1] = data;
+                                        atencionChart.data.datasets[0].data = monthData;
+                                        atencionChart.update();
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            }
+                        }
+
+                        // Función para actualizar el gráfico de Citas
+                        function filterCitasByMonth(selectedMonth = null) {
+                            const mes = selectedMonth || document.getElementById('citasMesSelect').value;
+                            currentCitasMonth = mes;
+                            if (mes) {
+                                fetch(`/filtro-citas/?mes=${mes}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Actualizar datos del gráfico
+                                        const citasData = [
+                                            data['P'] || 0,
+                                            data['C'] || 0,
+                                            data['R'] || 0
+                                        ];
+                                        citasChart.data.datasets[0].data = citasData;
+                                        citasChart.update();
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            }
+                        }
+
+                        // Función para filtrar citas por estado
+                        function filterCitasByEstado(estado) {
+                            fetch(`/filtro-citas-estado/?estado=${estado}&mes=${currentCitasMonth}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (Array.isArray(data)) {
+                                        citasChart.data.datasets[0].data = data;
+                                    } else {
+                                        // Si solo recibimos un número, creamos un array con ceros excepto el valor correspondiente
+                                        const newData = [0, 0, 0];
+                                        const index = estado === 'P' ? 0 : estado === 'C' ? 1 : 2;
+                                        newData[index] = data;
+                                        citasChart.data.datasets[0].data = newData;
+                                    }
+                                    citasChart.update();
+                                })
+                                .catch(error => console.error('Error:', error));
+                        }
+
+                        // Inicializar los gráficos de Chart.js
+                        const atencionChart = new Chart(document.getElementById('atencionChart'), {
+                            type: 'bar',
+                            data: {
+                                labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                                datasets: [{
+                                    label: 'Atenciones',
+                                    data: atencionData,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+
+                        const citasChart = new Chart(document.getElementById('citasChart'), {
+                            type: 'pie',
+                            data: {
+                                labels: ['Programadas', 'Canceladas', 'Realizadas'],
+                                datasets: [{
+                                    label: 'Citas',
+                                    data: citasData,
+                                    backgroundColor: [
+                                        'rgba(255,223,2,0.49)',
+                                        'rgba(255,0,0,0.41)',
+                                        'rgba(0,128,0,0.43)'
+                                    ]
+                                }]
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+
+                        // Inicializar los selectores cuando se carga la página
+                        document.addEventListener('DOMContentLoaded', initializeSelectors);
+
+                    </script>
+
+                {% endblock %}
+            </main>
+        </div>
+
+    </div>
+</div>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+{% block js %}{% endblock %}
+</body>
+</html>

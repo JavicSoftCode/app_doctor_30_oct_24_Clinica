@@ -1,0 +1,197 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <!-- Mensajes de ERRORES -->
+                {% include 'includes/messages.html' %}
+                <!-- Patient List Content -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">{{ title1 }}</h3>
+                        </div>
+
+                        <!-- Search and Filter -->
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                            <form method="GET" action="{% url 'core:medicine_list' %}"
+                                  class="d-flex flex-column flex-md-row gap-0 align-items-md-center">
+                                <div class="col-md-3 me-3">
+                                    <input type="text" name="q" class="form-control search-box"
+                                           value="{{ request.GET.q }}"
+                                           placeholder="Buscar medicamento...">
+                                </div>
+                                <div class="col-md-5 me-3">
+                                    <select class="form-select" name="comercial" id="comercial-select">
+                                        <option value="T">Todos los Tipos de Medicamentos</option>
+                                        <option value="True" {% if request.GET.comercial == "True" %}
+                                                selected{% endif %}>Comercial
+                                        </option>
+                                        <option value="False" {% if request.GET.comercial == "False" %}
+                                                selected{% endif %}>Generico
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <select class="form-select" name="activo" id="activo-select">
+                                        <option value="T">Todos los Estados del Medicamento</option>
+                                        <option value="True" {% if request.GET.activo == "True" %} selected{% endif %}>
+                                            Activo
+                                        </option>
+                                        <option value="False" {% if request.GET.activo == "False" %}
+                                                selected{% endif %}>Inactivo
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </form>
+                            <a style="background-color: #3B3BBA; color: white" class="btn btn-primary mt-3 mt-md-0"
+                               href="{% url 'core:medicine_create' %}">
+                                <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}
+                            </a>
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <!-- Tabla -->
+                            <table class="table table-hover align-middle text-center">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Foto</th>
+                                    <th>Nombre</th>
+                                    <th>Descripcion</th>
+                                    <th>Tipo</th>
+                                    <th>Marca Meds</th>
+                                    <th>Concentración</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Comercial</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in medicamentos %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td><img src="{{ item.get_image }}" class="rounded-circle" width="50px" alt="">
+                                        </td>
+
+                                        <td>{{ item.nombre }}</td>
+                                        <td>{{ item.descripcion | striptags | truncatechars:20 }}</td>
+                                        <td>{{ item.tipo }}</td>
+                                        <td>{{ item.marca_medicamento }}</td>
+                                        <td>{{ item.concentracion }}</td>
+                                        <td>{{ item.cantidad }}</td>
+                                        <td>$ {{ item.precio }}</td>
+                                        <td>
+                                            {% if item.comercial %}
+                                                <i class="fa-solid fa-capsules" style="color: #3cff3c;"> C. </i>
+                                            {% else %}
+                                                <i class="fa-solid fa-pills" style="color: red;"> G. </i>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if item.activo %}
+                                                <i class="fa-solid fa-circle-check" style="color: #3cff3c;"></i>
+                                            {% else %}
+                                                <i class="fa-solid fa-circle-xmark" style="color: red;"></i>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons d-flex gap-2">
+                                                <button class="btn btn-info btn-sm" title="Detalle Empleado"
+                                                        onclick="verDetalle('{{ item.id }}')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+
+                                                <a href="{% url 'core:medicine_update' item.id %}"
+                                                   class="btn btn-info btn-sm text-white" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                {% with id=item.id name=item.nombre_completo msg="¿Está seguro de eliminar a este Medicamento?" %}
+                                                    <button class="btn btn-danger"
+                                                            onclick="confirmDelete('{{ id }}', '{{ name }}', '{{ msg|escapejs }}');">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                {% endwith %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <!-- Pagination -->
+                        {% include 'includes/paginations.html' %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'includes/confirm_delete_modal.html' %}
+    {% include 'core/medicine/includes/medicine_detail.html' %}
+
+    <script>
+
+        /* funciones del modal eliminar*/
+        function confirmDelete(id, name, msg) {
+            document.getElementById('modalMessage').innerText = `${msg} ${name}`;
+            const form = document.getElementById('deleteForm');
+            form.action = `/medicine_delete/${id}/`; // Ajusta la URL según tu configuración
+            const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            modal.show();
+        }
+
+        function closeModal() {
+            const modalElement = document.getElementById('confirmDeleteModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+
+        function verDetalle(id) {
+            fetch(`/medicine_detail/${id}/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('medicamento-id').textContent = data.id;
+                    document.getElementById('medicamento-image').src = data.image;
+                    document.getElementById('medicamento-tipo').textContent = data.tipo;
+                    document.getElementById('medicamento-marca_medicamento').textContent = data.marca_medicamento;
+                    document.getElementById('medicamento-nombre').textContent = data.nombre;
+                    document.getElementById('medicamento-descripcion').textContent = data.descripcion;
+                    document.getElementById('medicamento-concentracion').textContent = data.concentracion;
+                    document.getElementById('medicamento-cantidad').textContent = data.cantidad;
+                    document.getElementById('medicamento-precio').textContent = `$${data.precio.toFixed(2)}`;
+                    document.getElementById('medicamento-comercial').textContent = data.comercial ? 'Comercial' : 'Generico';
+
+                    // Estado activo
+                    if (data.activo) {
+                        document.getElementById('medicamento-activo').innerHTML = '<i class="fa-solid fa-circle-check" style="color: #3cff3c;"></i>';
+                    } else {
+                        document.getElementById('medicamento-activo').innerHTML = '<i class="fa-solid fa-circle-xmark" style="color: red;"></i>';
+                    }
+
+                    // Muestra el modal de detalles
+                    const modal = new bootstrap.Modal(document.getElementById('modal'));
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al cargar los datos del medicamento');
+                });
+        }
+
+    </script>
+
+{% endblock content %}

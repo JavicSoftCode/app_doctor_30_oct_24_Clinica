@@ -1,0 +1,44 @@
+<style>p{margin-bottom: 10px}</style>
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="ModalLabel">
+                    <i class="fa-solid fa-stethoscope me-2"></i> Detalles de la Cita Médica
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <!-- Información de la Cita -->
+                    <div class="col-md-12">
+                        <div class="row">
+                            <!-- Información Principal -->
+                            <div class="col-md-6">
+                                <p><strong><i class="fa-solid fa-hashtag fa-lg me-2"></i>ID:</strong> <span
+                                        id="citaMedica-id"></span></p>
+                                <p><strong><i class="fa-solid fa-user fa-lg me-2"></i>Paciente:</strong> <span
+                                        id="citaMedica-paciente"></span></p>
+                            </div>
+                            <!-- Estado -->
+                            <div class="col-md-6">
+                                <p><strong><i class="fa-solid fa-calendar-alt fa-lg me-2"></i>Fecha:</strong> <span
+                                        id="citaMedica-fecha"></span></p>
+                                <p><strong><i class="fa-solid fa-clock fa-lg me-2"></i>Hora:</strong> <span
+                                        id="citaMedica-hora_cita"></span></p>
+                                <p><strong><i class="fa-solid fa-check-circle fa-lg me-2"></i>Estado:</strong> <span
+                                        id="citaMedica-estado"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

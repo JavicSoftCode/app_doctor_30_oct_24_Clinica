@@ -1,0 +1,58 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <!-- Mensajes de ERRORES -->
+                {% include 'includes/message_error_form.html' %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" class="row">
+                            {% csrf_token %}
+
+                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">{{ title1 }}</h3>
+
+                            <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="{{ form.paciente.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.paciente.label }}</label>
+                                    {{ form.paciente }}
+                                    {{ form.paciente.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.fecha.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.fecha.label }}</label>
+                                    {{ form.fecha }}
+                                    {{ form.fecha.errors }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="{{ form.hora_cita.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.hora_cita.label }}</label>
+                                    {{ form.hora_cita }}
+                                    {{ form.hora_cita.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.estado.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.estado.label }}</label>
+                                    {{ form.estado }}
+                                    {{ form.estado.errors }}
+                                </div>
+
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button class="btn me-2 grabar" type="submit" style="background-color: #3B3BBA; color: white">{{ grabar }}</button>
+                                    <a class="btn btn-secondary cancelar" href="{{ back_url }}">Cancelar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,92 @@
+<style>
+    /* Ocultar barra de desplazamiento en Chrome/Safari */
+    .scrollDoctor::-webkit-scrollbar {
+        width: 0;
+    }
+
+    /* Ajustes de espaciado para los párrafos */
+    p {
+        margin-bottom: 10px;
+    }
+</style>
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width: 120%; margin-left: -12%;">
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="ModalLabel">
+                    <i class="fa-solid fa-user-md fa-lg me-2"></i> Detalles del Doctor
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body scrollDoctor" style="max-height: 400px; overflow-y: auto;">
+                <div class="row">
+                    <!-- Columna izquierda -->
+                    <div class="col-md-4 text-center">
+                        <img id="doctor-foto" src="" alt="Foto del Doctor"
+                             class="img-fluid rounded shadow-sm" style="width: 320px; height: 380px;">
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <h6 class="fw-bold" style="margin-bottom: 12px"><i class="fas fa-user fa-lg me-2"></i>
+                            Información del Doctor</h6>
+                        <p><strong><i class="fas fa-id-badge fa-lg  me-2"></i> ID:</strong> <span
+                                id="doctor-id"></span></p>
+                        <p><strong><i class="fa-solid fa-id-card fa-lg me-2"></i> Cédula:</strong> <span
+                                id="doctor-cedula"></span></p>
+                        <p><strong><i class="fa-solid fa-user-md fa-lg me-2"></i> Doctor:</strong> <span
+                                id="doctor-doctor"></span></p>
+                        <p><strong><i class="fa-solid fa-stethoscope fa-lg me-2"></i> Especialidad:</strong> <span
+                                id="doctor-especialidad"></span></p>
+                        <p><strong><i class="fa-solid fa-id-card-clip fa-lg me-2"></i> Código Único:</strong> <span
+                                id="doctor-codigoUnico"></span></p>
+                        {#                            <p><strong><i class="fa-solid fa-user fa-lg"></i> Nombres:</strong> <span#}
+                        {#                                    id="doctor-nombres"></span></p>#}
+                        {#                            <p><strong><i class="fa-solid fa-user-tie fa-lg"></i> Apellidos:</strong> <span#}
+                        {#                                    id="doctor-apellidos"></span></p>#}
+                        <p><strong><i class="fa-solid fa-calendar-alt fa-lg me-2"></i> F. Nacimiento:</strong> <span
+                                id="doctor-fecha-nacimiento"></span></p>
+                        <p><strong><i class="fas fa-birthday-cake me-2"></i>Edad:</strong> <span
+                                id="doctor-edad"></span></p>
+                        <p><strong><i class="fa-solid fa-envelope fa-lg me-2"></i> Email:</strong> <span
+                                id="doctor-email"></span></p>
+                                     <p><strong><i class="fa-solid fa-phone fa-lg me-2"></i> Teléfono:</strong> <span
+                                id="doctor-telefonos"></span></p>
+
+
+                    </div>
+                    <!-- Columna derecha -->
+                    <div class="col-md-4">
+                        <h6 class="fw-bold" style="margin-bottom: 12px"><i class="fas fa-info-circle fa-lg   me-2"></i>
+                            Información Adicional</h6>
+
+                        <p><strong><i class="fa-solid fa-map-marker-alt fa-lg me-2"></i> Dirección:</strong> <span
+                                id="doctor-direccion"></span> </p>
+                        <p><strong><i class="fa-solid fa-map-marker-alt fa-lg me-2"></i> Latitud:</strong> <span
+                                id="doctor-latitud"></span></p>
+                        <p><strong><i class="fa-solid fa-map-marker-alt fa-lg me-2"></i> Longitud:</strong> <span
+                                id="doctor-longitud"></span></p>
+{#                        <p><strong><i class="fa-solid fa-clock fa-lg me-2"></i> Horario de Atención:</strong> <span#}
+{#                                id="doctor-horario"></span></p>#}
+                        <p><strong><i class="fa-solid fa-hourglass-half fa-lg me-2"></i> Duración de Cita:</strong> <span
+                                id="doctor-duracion-cita"></span></p>
+                        <p><strong><i class="fa fa-file-pdf fa-lg me-2"></i> Curriculum:</strong> <span
+                                id="doctor-curriculum"></span></p>
+                        <p><strong><i class="fa-solid fa-file-signature fa-lg me-2"></i> Firma Digital:</strong> <span
+                                id="doctor-firmaDigital"></span></p>
+                        <p><strong><i class="fa fa-file-medical fa-lg me-2"></i> Imagen Receta:</strong> <span
+                                id="doctor-imagen-receta"></span></p>
+                        <p><strong><i class="fas fa-toggle-on fa-lg   me-2"></i> Estado:</strong> <span
+                                id="doctor-activo"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times fa-lg me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

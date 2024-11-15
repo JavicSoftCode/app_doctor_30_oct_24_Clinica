@@ -1,0 +1,182 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <!-- Mensajes de ERRORES -->
+                {% include 'includes/messages.html' %}
+                <!-- Patient List Content -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">{{ title1 }}</h3>
+                        </div>
+
+                        <!-- Search and Filter -->
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                            <form method="GET" action="{% url 'attention:examenSolicitado_list' %}"
+                                  class="d-flex flex-column flex-md-row gap-3 align-items-md-center">
+                                <div class="col-md-6">
+                                    <input type="text" name="q" class="form-control search-box"
+                                           value="{{ request.GET.q }}"
+                                           placeholder="Buscar exámen solicitado...">
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" name="estado">
+                                        <option value="T">Todos</option>
+                                        <option value="S" {% if request.GET.estado == "S" %} selected{% endif %}>
+                                            Solicitado
+                                        </option>
+                                        <option value="R" {% if request.GET.estado == "R" %} selected{% endif %}>
+                                            Realizado
+                                        </option>
+                                    </select>
+                                </div>
+                            </form>
+                            <a class="btn btn-primary mt-3 mt-md-0" href="{% url 'attention:examenSolicitado_create' %}"
+                               style="background-color: #3B3BBA; color: white">
+                                <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}
+                            </a>
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <!-- Tabla -->
+                            <table class="table table-hover align-middle text-center">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Resultado Exámen</th>
+                                    <th>Paciente</th>
+                                    <th>Nombre del Exámen</th>
+                                    <th>F. Solicitud</th>
+                                    <th>Comentario</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in examenes %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        {#                            <td>{{ item.resultado }}</td>#}
+                                        <td>
+                                            {% if item.resultado %}
+                                                <a href="{{ item.resultado.url }}" title="{{ item.resultado }}"
+                                                   target="_blank">
+                                                    <i class="fa-solid fa-file-pdf fa-lg" style="color: red"></i>
+                                                </a>
+                                            {% else %}
+                                                <span><i class="fa-regular fa-file-pdf" title="SIN EXAMEN"
+                                                         style="cursor: pointer"></i></span>
+                                            {% endif %}
+                                        </td>
+
+
+                                        <td>{{ item.paciente }}</td>
+                                        <td>{{ item.nombre_examen }} </td>
+                                        <td>{{ item.fecha_solicitud |date:"d/m/Y" }}</td>
+                                        <td>{{ item.comentario | striptags | truncatechars:30 }}</td>
+                                        <td>
+                                            {% if item.estado == 'S' %}
+                                                <i class="fa-solid fa-s fa-lg"
+                                                   style="color: #ffffff; background-color: #183153DB; padding: 13px; border-radius: 5px"></i>
+                                            {% else %}
+                                                <i class="fa-solid fa-r fa-lg"
+                                                   style="color: #ffffff ; background-color: #183153DB; padding: 13px; border-radius: 5px"></i>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            <div class="action-buttons d-flex gap-2">
+                                                <button class="btn btn-info btn-sm" title="Detalle Exámen Solicitado"
+                                                        onclick="verDetalle('{{ item.id }}')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+
+                                                <a href="{% url 'attention:examenSolicitado_update' item.id %}"
+                                                   class="btn btn-info btn-sm text-white" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                {% with id=item.id name=item.paciente msg="¿Está seguro de eliminar a este Exámen Solicitado?" %}
+                                                    <button class="btn btn-danger"
+                                                            onclick="confirmDelete('{{ id }}', '{{ name }}', '{{ msg|escapejs }}');">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                {% endwith %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <!-- Pagination -->
+                        {% include 'includes/paginations.html' %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'includes/confirm_delete_modal.html' %}
+    {% include 'attention/examenSolicitado/includes/examenSolicitado_detail.html' %}
+
+    <script>
+
+        /* funciones del modal eliminar*/
+        function confirmDelete(id, name, msg) {
+            document.getElementById('modalMessage').innerText = `${msg} ${name}`;
+            const form = document.getElementById('deleteForm');
+            form.action = `/examenSolicitado_delete/${id}/`; // Ajusta la URL según tu configuración
+            const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            modal.show();
+        }
+
+        function closeModal() {
+            const modalElement = document.getElementById('confirmDeleteModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+
+        /* funciones del mode¿al detalle */
+        function verDetalle(id) {
+            fetch(`/examenSolicitado_detail/${id}/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('examenSolicitado-id').textContent = data.id;
+                    document.getElementById('examenSolicitado-nombre_examen').textContent = data.nombre_examen;
+                    document.getElementById('examenSolicitado-paciente').textContent = data.paciente;
+                    document.getElementById('examenSolicitado-fecha_solicitud').textContent = data.fecha_solicitud;
+                    {#document.getElementById('examenSolicitado-resultado').textContent = data.resultado;#}
+                    document.getElementById('examenSolicitado-resultado').innerHTML = data.resultado ? `<a href="${data.resultado}" target="_blank"><i class="fa-solid fa-file-pdf fa-lg" style="color: red"></i></a>` : '<i class="fa-regular fa-file-pdf" title="SIN EXAMEN"style="cursor: pointer"></i>';
+                    document.getElementById('examenSolicitado-comentario').textContent = data.comentario;
+                    document.getElementById('examenSolicitado-foto').src = data.foto;
+
+                    // Condicional para cambiar el estado con iconos y colores
+                    let estadoHtml = '';
+                    if (data.estado === 'S') {
+                        estadoHtml = ' <i class="fa-solid fa-s fa-lg" style="color: #ffffff; background-color: #183153DB; padding: 13px; border-radius: 5px"></i> Solicitado';
+                    } else if (data.estado === 'R') {
+                        estadoHtml = '  <i class="fa-solid fa-r fa-lg" style="color: #ffffff ; background-color: #183153DB; padding: 13px; border-radius: 5px"></i> Realizado';
+                    }
+                    document.getElementById('examenSolicitado-estado').innerHTML = estadoHtml;
+                    const modal = new bootstrap.Modal(document.getElementById('modal'));
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al cargar los datos del Exámen Solicitado');
+                });
+        }
+    </script>
+
+{% endblock content %}

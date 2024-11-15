@@ -1,0 +1,148 @@
+{#<!-- templates/includes/patient_detail_modal.html -->#}
+{#<div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">#}
+{#    <div class="modal-dialog">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header bg-primary bg-opacity-75">#}
+{#                <h5 class="modal-title text-white fw-bold" id="pacienteModalLabel">#}
+{#                    <i class="fas fa-user-circle me-2"></i>Detalles del Paciente#}
+{#                </h5>#}
+{#                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#            </div>#}
+{#           <div class="modal-body">#}
+{#    <div class="row">#}
+{#        <!-- Columna para la foto -->#}
+{#        <div class="col-md-4 text-center mb-3">#}
+{#            <img id="paciente-foto" src="" alt="Foto del paciente" #}
+{#                 class="img-fluid rounded shadow-sm" #}
+{#                 style="max-height: 200px; width: auto;">#}
+{#        </div>#}
+{#        <!-- Columna para los datos -->#}
+{#        <div class="col-md-8">#}
+{#            <div class="row">#}
+{#                <div class="col-md-6">#}
+{#                    <p><strong><i class="fas fa-id-card me-2"></i>ID:</strong> <span id="paciente-id"></span></p>#}
+{#                    <p><strong><i class="fas fa-user me-2"></i>Nombres:</strong> <span id="paciente-nombres"></span></p>#}
+{#                    <p><strong><i class="fas fa-user me-2"></i>Apellidos:</strong> <span id="paciente-apellidos"></span></p>#}
+{#                    <p><strong><i class="fa-solid fa-calendar me-2"></i>F.Nacimiento:</strong> <span id="paciente-nac"></span></p>#}
+{#                </div>#}
+{#                <div class="col-md-6">#}
+{#                    <p><strong><i class="fas fa-address-card me-2"></i>DNI:</strong> <span id="paciente-dni"></span></p>#}
+{#                    <p><strong><i class="fas fa-phone me-2"></i>Teléfono:</strong> <span id="paciente-telefono"></span></p>#}
+{#                    <p><strong><i class="fas fa-map-marker-alt me-2"></i>Dirección:</strong> <span id="paciente-direccion"></span></p>#}
+{#                    <p><strong><i class="fas fa-birthday-cake me-2"></i>Edad:</strong> <span id="paciente-edad"></span></p>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#<div class="modal-footer">#}
+{#    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">#}
+{#        <i class="fas fa-times me-2"></i>Cerrar#}
+{#    </button>#}
+{#</div>#}
+{#</div>#}
+{#</div>#}
+{#</div>#}
+
+<style>
+    /* Ocultar barra de desplazamiento en Chrome/Safari */
+    .scrollPaciente::-webkit-scrollbar {
+        width: 0;
+    }
+
+    /* Ajustes de espaciado para los párrafos */
+    p {
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width: 120%; margin-left: -12%;">
+
+            <!-- Encabezado del modal -->
+            <div class="modal-header bg-primary bg-opacity-75">
+                <h5 class="modal-title text-white fw-bold" id="pacienteModalLabel">
+                    <i class="fas fa-user-circle fa-lg me-2"></i> Detalles del Paciente
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Cuerpo del modal -->
+            <div class="modal-body scrollPaciente" style="max-height: 400px; overflow-y: auto;">
+                <div class="row">
+
+                    <!-- Columna izquierda: Foto del Paciente e información básica -->
+                    <div class="col-md-4 text-center">
+                        <img id="paciente-foto" src="" alt="Foto del paciente"
+                             class="img-fluid rounded shadow-sm" style="width: 320px; height: 380px;">
+                    </div>
+
+                    <!-- Columna central: Información del Paciente -->
+                    <div class="col-md-4">
+                        <h6 class="fw-bold" style="margin-bottom: 12px"><i class="fas fa-user fa-lg me-2"></i>
+                            Información del Paciente</h6>
+                        <p><strong><i class="fas fa-id-badge fa-lg  me-2"></i>ID:</strong> <span
+                                id="paciente-id"></span></p>
+                        <p><strong><i class="fas fa-address-card fa-lg   me-2"></i>Cédula:</strong> <span
+                                id="paciente-cedula"></span></p>
+
+                        <p><strong><i class="fas fa-user fa-lg   me-2"></i>Paciente:</strong> <span
+                                id="paciente-paciente"></span></p>
+                        {#                        <p><strong><i class="fas fa-user me-2"></i>Nombres:</strong> <span id="paciente-nombres"></span></p>#}
+                        {#                        <p><strong><i class="fas fa-user me-2"></i>Apellidos:</strong> <span id="paciente-apellidos"></span></p>#}
+                        <p><strong><i class="fa-solid fa-calendar fa-lg   me-2"></i>F. Nacimiento:</strong> <span
+                                id="paciente-fecha-nac"></span></p>
+                        <p><strong><i class="fas fa-birthday-cake fa-lg   me-2"></i>Edad:</strong> <span
+                                id="paciente-edad"></span></p>
+                        <p><strong><i class="fas fa-envelope fa-lg   me-2"></i>Email:</strong> <span
+                                id="paciente-email"></span></p>
+                        <p><strong><i class="fas fa-phone fa-lg   me-2"></i>Teléfono:</strong> <span
+                                id="paciente-telefono"></span></p>
+
+                        <p><strong><i class="fas fa-venus-mars  fa-lg  me-2"></i>Sexo:</strong> <span
+                                id="paciente-sexo"></span></p>
+                        <p><strong><i class="fas fa-tint fa-lg   me-2"></i>Tipo de Sangre:</strong> <span
+                                id="paciente-tipo-sangre"></span></p>
+
+                        <p><strong><i class="fas fa-ring fa-lg   me-2"></i>Estado Civil:</strong> <span
+                                id="paciente-estado-civil"></span></p>
+                    </div>
+
+                    <!-- Columna derecha: Información adicional del Paciente -->
+                    <div class="col-md-4">
+                        <h6 class="fw-bold" style="margin-bottom: 12px"><i class="fas fa-info-circle fa-lg   me-2"></i>
+                            Información Adicional</h6>
+                        <p><strong><i class="fas fa-map-marker-alt  fa-lg  me-2"></i>Dirección:</strong> <span
+                                id="paciente-direccion"></span></p>
+                        <p><strong><i class="fas fa-map-marker-alt  fa-lg  me-2"></i>Latitud:</strong> <span
+                                id="paciente-latitud"></span></p>
+                        <p><strong><i class="fas fa-map-marker-alt  fa-lg  me-2"></i>Longitud:</strong> <span
+                                id="paciente-longitud"></span></p>
+                        <p><strong><i class="fas fa-exclamation-circle fa-lg   me-2"></i>Alergias:</strong> <span
+                                id="paciente-alergias"></span></p>
+                        <p><strong><i class="fas fa-notes-medical  fa-lg  me-2"></i>Enfermedades Crónicas:</strong>
+                            <span id="paciente-enfermedades-cronicas"></span></p>
+                        <p><strong><i class="fas fa-pills fa-lg   me-2"></i>Medicación Actual:</strong> <span
+                                id="paciente-medicacion-actual"></span></p>
+                        <p><strong><i class="fas fa-syringe fa-lg   me-2"></i>Cirugías Previas:</strong> <span
+                                id="paciente-cirugias-previas"></span></p>
+                        <p><strong><i class="fas fa-file-medical-alt fa-lg   me-2"></i>Antecedentes Personales:</strong>
+                            <span id="paciente-antecedentes-personales"></span></p>
+                        <p><strong><i class="fas fa-file-medical fa-lg   me-2"></i>Antecedentes Familiares:</strong>
+                            <span id="paciente-antecedentes-familiares"></span></p>
+                        <p><strong><i class="fas fa-toggle-on fa-lg   me-2"></i>Estado:</strong> <span
+                                id="paciente-activo"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie del modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times fa-lg me-2"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
