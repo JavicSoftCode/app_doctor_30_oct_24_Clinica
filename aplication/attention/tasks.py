@@ -39,7 +39,7 @@ from aplication.attention.models import CitaMedica
 def enviar_recordatorio_cita():
   # Calcular el tiempo para 5 minutos antes de la cita
   ahora = timezone.now()
-  cinco_minutos_despues = ahora + timedelta(days=1)
+  cinco_minutos_despues = ahora + timedelta(minutes=5)
                                                                                       # minutes=5
   # Buscar citas dentro de los próximos 5 minutos
   citas_proximas = CitaMedica.objects.filter(

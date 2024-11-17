@@ -237,24 +237,24 @@
         <div class="section-title">Detalles de Medicamentos</div>
         <table>
             <thead>
-                <tr>
-                    <th>Medicamento</th>
-                    <th>Cantidad</th>
-                    <th>Prescripción</th>
-                </tr>
+            <tr>
+                <th>Medicamento</th>
+                <th>Cantidad</th>
+                <th>Prescripción</th>
+            </tr>
             </thead>
             <tbody>
-                {% for detalle in detalles %}
+            {% for detalle in detalles %}
                 <tr>
                     <td>{{ detalle.medicamento.nombre }}</td>
                     <td>{{ detalle.cantidad }}</td>
                     <td>{{ detalle.prescripcion }}</td>
                 </tr>
-                {% empty %}
+            {% empty %}
                 <tr>
                     <td colspan="3">No se encontraron detalles de medicamentos.</td>
                 </tr>
-                {% endfor %}
+            {% endfor %}
             </tbody>
         </table>
 
@@ -266,8 +266,14 @@
 
         <!-- Descargar ficha médica -->
         <div class="button-container me-2">
-            <a href="{% url 'attention:attention_descargar' %}" style="background-color: #3B3BBA">Descargar Ficha de Atención Médica <i class="fa-solid fa-file-medical fa-lg"></i></a>
+            <a href="{% url 'attention:attention_descargar' pk=id %}" style="background-color: #3B3BBA">
+                Descargar Ficha de Atención Médica <i class="fa-solid fa-file-medical fa-lg"></i>
+            </a>
         </div>
+
+        {#        <div class="button-container me-2">#}
+        {#            <a href="{% url 'attention:attention_descargar' %}" style="background-color: #3B3BBA">Descargar Ficha de Atención Médica <i class="fa-solid fa-file-medical fa-lg"></i></a>#}
+        {#        </div>#}
 
     </div>
 {% endblock content %}
