@@ -1,0 +1,93 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <!-- Mensajes de ERRORES -->
+                {% include 'includes/message_error_form.html' %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="post" class="space-y-6 py-4">
+                            {% csrf_token %}
+
+                            <h3 class="text-primary-emphasis mb-4 fw-bold">{{ title1 }}</h3>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label for="{{ form.username.id_for_label }}"
+                                               class="form-label fw-bold">{{ form.username.label }}</label>
+                                        {{ form.username }}
+                                        {{ form.username.errors }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.first_name.id_for_label }}"
+                                               class="form-label fw-bold">{{ form.first_name.label }}</label>
+                                        {{ form.first_name }}
+                                        {{ form.first_name.errors }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.last_name.id_for_label }}"
+                                               class="form-label fw-bold">{{ form.last_name.label }}</label>
+                                        {{ form.last_name }}
+                                        {{ form.last_name.errors }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.email.id_for_label }}"
+                                               class="form-label fw-bold">{{ form.email.label }}</label>
+                                        {{ form.email }}
+                                        {{ form.email.errors }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.is_active.id_for_label }}"
+                                               class="form-label fw-bold">{{ form.is_active.label }}</label>
+                                        {{ form.is_active }}
+                                        {{ form.is_active.errors }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.groups.id_for_label }}"
+                                               class="form-label fw-bold">{{ form.groups.label }}</label>
+                                        {{ form.groups }}
+                                        {{ form.groups.errors }}
+                                    </div>
+
+                                    {% if user.is_superuser and user.is_staff %}
+                                        <div class="form-group">
+                                            <label for="{{ form.is_staff.id_for_label }}"
+                                                   class="form-label fw-bold">{{ form.is_staff.label }}</label>
+                                            {{ form.is_staff }}
+                                            {{ form.is_staff.errors }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if user.is_superuser %}
+                                        <div class="form-group">
+                                            <label for="{{ form.is_superuser.id_for_label }}"
+                                                   class="form-label fw-bold">{{ form.is_superuser.label }}</label>
+                                            {{ form.is_superuser }}
+                                            {{ form.is_superuser.errors }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="d-flex justify-content-end mt-4">
+                                        <button class="btn me-2 grabar" type="submit"
+                                                style="background-color: #3B3BBA; color: white">{{ grabar }}</button>
+                                        <a class="btn btn-secondary cancelar" href="{{ back_url }}">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

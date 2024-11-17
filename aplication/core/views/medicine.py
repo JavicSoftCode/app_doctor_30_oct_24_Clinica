@@ -8,13 +8,14 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.medicine import MedicineForm
 from aplication.core.models import Medicamento
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class MedicineListView(LoginRequiredMixin, ListViewMixin, ListView):
+class MedicineListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/medicine/list.html"
   model = Medicamento
+  permission_required = 'view_medicamento'
   context_object_name = 'medicamentos'
 
   def get_queryset(self):
@@ -38,10 +39,11 @@ class MedicineListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre')
 
 
-class MedicineCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class MedicineCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Medicamento
   template_name = 'core/medicine/form.html'
   form_class = MedicineForm
+  permission_required = 'add_medicamento'
   success_url = reverse_lazy('core:medicine_list')
 
   def get_context_data(self, **kwargs):
@@ -61,10 +63,11 @@ class MedicineCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class MedicineUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class MedicineUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Medicamento
   template_name = 'core/medicine/form.html'
   form_class = MedicineForm
+  permission_required = 'change_medicamento'
   success_url = reverse_lazy('core:medicine_list')
 
   def get_context_data(self, **kwargs):
@@ -85,8 +88,9 @@ class MedicineUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class MedicineDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class MedicineDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = Medicamento
+  permission_required = 'delete_medicamento'
   success_url = reverse_lazy('core:medicine_list')
 
   def get_context_data(self, **kwargs):

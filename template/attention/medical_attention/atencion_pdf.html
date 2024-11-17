@@ -1,0 +1,273 @@
+{#{% extends "components/base.html" %}#}
+{#{% block content %}#}
+{#    {% load static %}#}
+{#    <div class="container-fluid">#}
+{#        <div class="row">#}
+{#            <!-- Main Content -->#}
+{#            <div class="col-md-12 col-lg-12 px-md-4 main-content">#}
+{##}
+{#                <!-- Mensajes de ERRORES -->#}
+{#                {% include 'includes/messages.html' %}#}
+{##}
+{#                <!-- Información del paciente -->#}
+{#                <div class="card mb-4">#}
+{#                    <div class="card-body">#}
+{#                        <div class="d-flex justify-content-between align-items-center mb-4">#}
+{#                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">Ficha de Atención Médica</h3>#}
+{#                        </div>#}
+{##}
+{#                        <!-- Información del paciente -->#}
+{#                        <div class="row mb-4">#}
+{#                            <!-- Foto del paciente -->#}
+{#                            <div class="col-md-3 text-center">#}
+{#                                <img src="{{ foto }}" alt="Foto del paciente" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">#}
+{#                            </div>#}
+{##}
+{#                            <!-- Información -->#}
+{#                            <div class="col-md-9">#}
+{#                                <p><strong>Paciente:</strong> {{ paciente }}</p>#}
+{#                                <p><strong>Fecha de Atención:</strong> {{ fecha_atencion }}</p>#}
+{#                                <p><strong>Motivo de Consulta:</strong> {{ motivo_consulta }}</p>#}
+{#                                <p><strong>Diagnósticos:</strong> {{ diagnosticos }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                        <h2>Detalles de Medicamentos</h2>#}
+{#                        <ul>#}
+{#                          {% for detalle in detalles %}#}
+{#                            <li>#}
+{#                                <strong>Medicamento:</strong> {{ detalle.medicamento.nombre }} <br>#}
+{#                                <strong>Cantidad:</strong> {{ detalle.cantidad }} <br>#}
+{#                                <strong>Prescripción:</strong> {{ detalle.prescripcion }}#}
+{#                            </li>#}
+{#                          {% endfor %}#}
+{#                        </ul>#}
+{##}
+{#                        <!-- Botón de Volver -->#}
+{#                        <div class="d-flex justify-content-end mt-4">#}
+{#                            <a href="{% url 'attention:attention_list' %}" class="btn btn-secondary">Volver</a>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+
+
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <style>
+        /* General styles */
+        .contenedorFicha {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            border: 2px solid #3B3BBA;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #3B3BBA;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            height: 80px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #3B3BBA;
+        }
+
+        .header h2 {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .button-container {
+            position: absolute;
+            right: 20px;
+            margin-top: -30px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: #3B3BBA;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #3B3BBA;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-grid div {
+            font-size: 14px;
+        }
+
+        .info-grid strong {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #3B3BBA;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Crea 3 columnas de igual tamaño */
+            grid-template-rows: auto auto; /* Crea 2 filas */
+            gap: 15px; /* Espacio entre los elementos */
+            margin-bottom: 20px;
+        }
+
+        .info-grid div {
+            font-size: 14px;
+            padding: 5px;
+        }
+
+    </style>
+
+    <div class="contenedorFicha">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-text">
+                <h1>Certificado Médico</h1>
+                <h2><i class="fa fa-hashtag fa-lg me-2"></i> {{ id }}</h2>
+                <h2>CLINICA SALUDSYNC</h2>
+                <p>FECHA DE ATENCIÓN: {{ fecha_atencion|date:"d/M/Y" }}</p>
+            </div>
+        </div>
+
+        <!-- Información del Paciente -->
+        <div class="section-title">Información del Paciente</div>
+        <div class="info-grid">
+            <div>
+                <strong>Paciente:</strong> {{ paciente }}
+            </div>
+            <div>
+                <strong>Edad:</strong> {{ edad }} años
+            </div>
+            <div>
+                <strong>Sexo:</strong> {{ sexo }}
+            </div>
+        </div>
+
+        <!-- Información de la Atención -->
+        <div class="section-title">Detalles de la Atención</div>
+        <div class="info-grid">
+            <div>
+                <strong>Motivo de Consulta:</strong> {{ motivo_consulta }}
+            </div>
+            <div>
+                <strong>Diagnósticos:</strong> {{ diagnosticos }}
+            </div>
+            <div>
+                <strong>Presión Arterial:</strong> {{ presion_arterial }}
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div>
+                <strong>Pulso:</strong> {{ pulso }}
+            </div>
+            <div>
+                <strong>Temperatura:</strong> {{ temperatura }}
+            </div>
+            <div>
+                <strong>Saturación de Oxígeno:</strong> {{ saturacion_oxigeno }}
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div>
+                <strong>Frecuencia Respiratoria:</strong> {{ frecuencia_respiratoria }}
+            </div>
+            <div>
+                <strong>Peso:</strong> {{ peso }} kg
+            </div>
+            <div>
+                <strong>Altura:</strong> {{ altura }} cm
+            </div>
+        </div>
+
+        <!-- Detalles de Medicamentos -->
+        <div class="section-title">Detalles de Medicamentos</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicamento</th>
+                    <th>Cantidad</th>
+                    <th>Prescripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in detalles %}
+                <tr>
+                    <td>{{ detalle.medicamento.nombre }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>{{ detalle.prescripcion }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No se encontraron detalles de medicamentos.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Comentarios Adicionales -->
+        <div class="section-title">Comentario Adicional</div>
+        <div>
+            <strong>Comentario:</strong> {{ comentario_adicional|default:"No especificado" }}
+        </div>
+
+        <!-- Descargar ficha médica -->
+        <div class="button-container me-2">
+            <a href="{% url 'attention:attention_descargar' %}" style="background-color: #3B3BBA">Descargar Ficha de Atención Médica <i class="fa-solid fa-file-medical fa-lg"></i></a>
+        </div>
+
+    </div>
+{% endblock content %}

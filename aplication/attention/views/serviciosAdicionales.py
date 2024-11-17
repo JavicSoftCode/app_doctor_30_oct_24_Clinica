@@ -1,19 +1,18 @@
-from django.contrib import messages
-from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
 
 from aplication.attention.forms.serviciosAdicionales import ServiciosAdicionalesForm
 from aplication.attention.models import ServiciosAdicionales
 from doctor.utils import save_audit
+from aplication.security.mixins.mixins import *
 
 
-class ServiciosAdicionalesListView(LoginRequiredMixin, ListViewMixin, ListView):
+class ServiciosAdicionalesListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "attention/serviciosAdicionales/list.html"
   model = ServiciosAdicionales
+  permission_required = 'view_serviciosadicionales'
   context_object_name = 'servicios'
 
   def get_queryset(self):
@@ -37,13 +36,12 @@ class ServiciosAdicionalesListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre_servicio')
 
 
-
-class ServiciosAdicionalesCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class ServiciosAdicionalesCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = ServiciosAdicionales
   template_name = 'attention/serviciosAdicionales/form.html'
   form_class = ServiciosAdicionalesForm
+  permission_required = 'add_serviciosadicionales'
   success_url = reverse_lazy('attention:serviciosAdicionales_list')
-
 
   def form_valid(self, form):
     # print("entro al form_valid")
@@ -59,12 +57,12 @@ class ServiciosAdicionalesCreateView(LoginRequiredMixin, CreateViewMixin, Create
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class ServiciosAdicionalesUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class ServiciosAdicionalesUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = ServiciosAdicionales
   template_name = 'attention/serviciosAdicionales/form.html'
   form_class = ServiciosAdicionalesForm
+  permission_required = 'change_serviciosadicionales'
   success_url = reverse_lazy('attention:serviciosAdicionales_list')
-
 
   def form_valid(self, form):
     response = super().form_valid(form)
@@ -80,8 +78,9 @@ class ServiciosAdicionalesUpdateView(LoginRequiredMixin, UpdateViewMixin, Update
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class ServiciosAdicionalesDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class ServiciosAdicionalesDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = ServiciosAdicionales
+  permission_required = 'delete_serviciosadicionales'
   success_url = reverse_lazy('attention:serviciosAdicionales_list')
 
   def get_context_data(self, **kwargs):

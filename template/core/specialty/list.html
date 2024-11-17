@@ -35,10 +35,12 @@
                                     </select>
                                 </div>
                             </form>
+                        {% if permissions.add_especialidad %}
                             <a style="background-color: #3B3BBA; color: white" class="btn btn-primary mt-3 mt-md-0"
                                href="{% url 'core:specialty_create' %}">
                                 <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}
                             </a>
+                        {% endif %}
                         </div>
 
                         <div class="table-responsive">
@@ -74,16 +76,20 @@
                                                     <i class="fas fa-eye"></i>
                                                 </button>
 
+                                            {% if permissions.change_especialidad %}
                                                 <a href="{% url 'core:specialty_update' item.id %}"
                                                    class="btn btn-info btn-sm text-white" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                            {% endif %}
 
+                                            {% if permissions.delete_especialidad %}
                                                 {% with id=item.id name=item.nombre msg="Esta seguro de eliminar esta Especialidad:" %}
                                                     <button class="btn btn-danger"
                                                             onclick="confirmDelete('{{ id }}','{{ name }}','{{ msg|escapejs }}');">
                                                         <i class="fa-solid fa-trash"></i></button>
                                                 {% endwith %}
+                                            {% endif %}
                                             </div>
                                         </td>
                                     </tr>

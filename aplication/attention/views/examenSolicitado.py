@@ -1,19 +1,18 @@
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from aplication.attention.forms.examenSolicitado import ExamenSolicitadoForm
 from aplication.attention.models import ExamenSolicitado
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
 from doctor.utils import save_audit
+from aplication.security.mixins.mixins import *
 
 
-class ExamenSolicitadoListView(LoginRequiredMixin, ListViewMixin, ListView):
+class ExamenSolicitadoListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "attention/examenSolicitado/list.html"
   model = ExamenSolicitado
+  permission_required = 'view_examensolicitado'
   context_object_name = 'examenes'
 
   def get_queryset(self):
@@ -38,10 +37,11 @@ class ExamenSolicitadoListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('paciente__nombres', 'paciente__apellidos')
 
 
-class ExamenSolicitadoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class ExamenSolicitadoCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = ExamenSolicitado
   template_name = 'attention/examenSolicitado/form.html'
   form_class = ExamenSolicitadoForm
+  permission_required = 'add_examensolicitado'
   success_url = reverse_lazy('attention:examenSolicitado_list')
 
   def form_valid(self, form):
@@ -58,10 +58,11 @@ class ExamenSolicitadoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class ExamenSolicitadoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class ExamenSolicitadoUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = ExamenSolicitado
   template_name = 'attention/examenSolicitado/form.html'
   form_class = ExamenSolicitadoForm
+  permission_required = 'change_examensolicitado'
   success_url = reverse_lazy('attention:examenSolicitado_list')
 
   def form_valid(self, form):
@@ -78,8 +79,9 @@ class ExamenSolicitadoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class ExamenSolicitadoDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class ExamenSolicitadoDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = ExamenSolicitado
+  permission_required = 'delete_examensolicitado'
   success_url = reverse_lazy('attention:examenSolicitado_list')
 
   def get_context_data(self, **kwargs):

@@ -13,13 +13,14 @@ from folium.plugins import FastMarkerCluster
 
 from aplication.core.forms.doctor import DoctorForm
 from aplication.core.models import Doctor
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class DoctorListView(LoginRequiredMixin, ListViewMixin, ListView):
+class DoctorListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/doctor/list.html"
   model = Doctor
+  permission_required = 'view_doctor'
   context_object_name = 'doctores'
 
   def get_queryset(self):
@@ -61,10 +62,11 @@ class DoctorListView(LoginRequiredMixin, ListViewMixin, ListView):
     return context
 
 
-class DoctorCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class DoctorCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Doctor
   template_name = 'core/doctor/form.html'
   form_class = DoctorForm
+  permission_required = 'add_doctor'
   success_url = reverse_lazy('core:doctor_list')
 
   def get_context_data(self, **kwargs):
@@ -106,10 +108,11 @@ class DoctorCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class DoctorUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class DoctorUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Doctor
   template_name = 'core/doctor/form.html'
   form_class = DoctorForm
+  permission_required = 'change_doctor'
   success_url = reverse_lazy('core:doctor_list')
 
   def get_context_data(self, **kwargs):
@@ -154,8 +157,9 @@ class DoctorUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return response
 
 
-class DoctorDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class DoctorDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = Doctor
+  permission_required = 'delete_doctor'
   success_url = reverse_lazy('core:doctor_list')
 
   def get_context_data(self, **kwargs):

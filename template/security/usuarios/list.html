@@ -1,0 +1,183 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <style>/* Modal base */
+    .modall {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    /* Contenido del modal */
+    .modal-contentt {
+        border: 2px solid #3B3BBA;
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 50%;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    </style>
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Main Content -->
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+
+                <!-- Audit User  List Content -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">{{ title1 }}</h3>
+                        </div>
+
+                        <!-- Barra de búsqueda -->
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                            <form method="GET" action="{% url 'security:users_list' %}">
+                                <input type="text" name="q" id="table-search"
+                                       class="form-control search-box"
+                                       autocomplete="off"
+                                       placeholder="Búscar usuario" value="{{ request.GET.q }}">
+                            </form>
+                        </div>
+
+                        <!-- Tabla Content -->
+                        <div class="table-responsive">
+
+                            <!-- Tabla -->
+                            <table class="table table-hover text-center">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuario</th>
+                                    <th>Email</th>
+                                    <th>Grupos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in users %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.username }}</td>
+                                        <td>
+                                            <a href="https://mail.google.com/mail/?view=cm&to={{ item.email }}"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                               title="{{ item.email }}">
+                                                <i class="fas fa-envelope fa-lg" style="color: #3498DB"></i>
+                                            </a>
+                                        </td>
+
+                                        <!-- Click en el icono y muestra el modal  -->
+                                        <td>
+                                            {% if item.get_groups != "No pertenece a ningún grupo" %}
+                                                <i class="fa-brands fa-google fa-lg" style="cursor: pointer"
+                                                   onclick="openGroupsModal('{{ item.get_groups }}')"></i>
+                                            {% else %}
+                                                {{ item.get_groups }}
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            <div>
+                                                {% if perms.auth.change_user %}
+                                                    <a href="{% url 'security:users_update' item.id %}"
+                                                       class="btn btn-info btn-sm text-white" title="Editar">
+                                                        <i class="fas fa-edit fa-lg"></i>
+                                                    </a>
+                                                {% endif %}
+
+                                                {% if perms.auth.delete_user %}
+                                                    {% with id=item.id name=item.username msg="¿ Esta seguro de eliminar este Usuario ?" %}
+                                                        <button class="btn btn-danger btn-sm "
+                                                                onclick="confirmDelete('{{ id }}','{{ name }}','{{ msg|escapejs }}');">
+                                                            <i class="fa-solid fa-trash fa-lg"></i></button>
+                                                    {% endwith %}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% include 'includes/paginations.html' %}
+                        <!-- Fin Pagination -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal al hacer click en el icono-->
+    <div id="groupsModal" class="modall hidden">
+        <div class="modal-contentt">
+            <h4><strong>Grupos</strong></h4>
+            <ul id="groupsList"></ul>
+        </div>
+    </div>
+
+    {#    scrtips del modal de  eliminacion#}
+    {% include 'includes/confirm_delete_modal.html' %}
+    <script>
+        /* funciones del modal eliminar*/
+        function confirmDelete(id, name, msg) {
+            document.getElementById('modalMessage').innerText = `${msg} ${name}`;
+            const form = document.getElementById('deleteForm');
+            form.action = `/security/users/delete/${id}/`; // Ajusta la URL según tu configuración
+            const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            modal.show();
+        }
+
+        function closeModal() {
+            const modalElement = document.getElementById('confirmDeleteModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+    </script>
+
+    {#    scripts del modal al hacer click en el icono #}
+    <script>
+        function openGroupsModal(groups) {
+            const modal = document.getElementById('groupsModal');
+            const list = document.getElementById('groupsList');
+
+            // Limpiar la lista anterior
+            list.innerHTML = '';
+
+            // Convertir grupos en una lista (suponiendo que están separados por comas)
+            const groupsArray = groups.split(',');
+
+            // Agregar cada grupo a la lista
+            groupsArray.forEach(group => {
+                const li = document.createElement('li');
+                li.textContent = group.trim();
+                list.appendChild(li);
+            });
+
+            // Mostrar el modal
+            modal.style.display = 'block';
+        }
+
+        // Cerrar el modal si se hace clic fuera del contenido
+        window.onclick = function (event) {
+            const modal = document.getElementById('groupsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+{% endblock %}

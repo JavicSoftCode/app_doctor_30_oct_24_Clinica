@@ -7,13 +7,15 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.categoryType import CategoryTypeForm
 from aplication.core.models import TipoCategoria
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+
 from doctor.utils import save_audit
+from aplication.security.mixins.mixins import *
 
 
-class CategoryTypeListView(LoginRequiredMixin, ListViewMixin, ListView):
+class CategoryTypeListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/categoryType/list.html"
   model = TipoCategoria
+  permission_required = 'view_categoriatipo'
   context_object_name = 'tipos_categorias'
 
   def get_queryset(self):
@@ -32,10 +34,11 @@ class CategoryTypeListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre')
 
 
-class CategoryTypeCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class CategoryTypeCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = TipoCategoria
   template_name = 'core/categoryType/form.html'
   form_class = CategoryTypeForm
+  permission_required = 'add_categoriatipo'
   success_url = reverse_lazy('core:categoryType_list')
 
   def form_valid(self, form):
@@ -51,10 +54,11 @@ class CategoryTypeCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class CategoryTypeUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class CategoryTypeUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = TipoCategoria
   template_name = 'core/categoryType/form.html'
   form_class = CategoryTypeForm
+  permission_required = 'change_categoriatipo'
   success_url = reverse_lazy('core:categoryType_list')
 
   def form_valid(self, form):
@@ -70,8 +74,9 @@ class CategoryTypeUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class CategoryTypeDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class CategoryTypeDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = TipoCategoria
+  permission_required = 'delete_categoriatipo'
   success_url = reverse_lazy('core:categoryType_list')
 
   def get_context_data(self, **kwargs):

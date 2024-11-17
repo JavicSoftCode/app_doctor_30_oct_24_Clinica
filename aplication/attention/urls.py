@@ -21,6 +21,11 @@ urlpatterns = [
   path('attention_update/<int:pk>/', AttentionUpdateView.as_view(), name='attention_update'),
   path('attention_detail/<int:pk>/', AttentionDetailView.as_view(), name='attention_detail'),
 
+  # pdf
+  path('attention_view/<int:pk>/certificado', ViewAtencionPdf.as_view(), name='attention_view_certificado'),
+  path('attention_descargar', generar_certificado_pdf, name='attention_descargar'),
+
+
   # URLs examen solicitado
   path('examenSolicitado_list/', ExamenSolicitadoListView.as_view(), name='examenSolicitado_list'),
   path('examenSolicitado_create/', ExamenSolicitadoCreateView.as_view(), name='examenSolicitado_create'),

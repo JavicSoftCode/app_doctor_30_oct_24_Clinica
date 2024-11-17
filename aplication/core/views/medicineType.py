@@ -8,13 +8,14 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.medicineType import MedicineTypeForm
 from aplication.core.models import TipoMedicamento
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class MedicineTypeListView(LoginRequiredMixin, ListViewMixin, ListView):
+class MedicineTypeListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/medicineType/list.html"
   model = TipoMedicamento
+  permission_required = 'view_tipomedicamento'
   context_object_name = 'tipos_medicina'
 
   def get_queryset(self):
@@ -35,10 +36,11 @@ class MedicineTypeListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre')
 
 
-class MedicineTypeCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class MedicineTypeCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = TipoMedicamento
   template_name = 'core/medicineType/form.html'
   form_class = MedicineTypeForm
+  permission_required = 'add_tipomedicamento'
   success_url = reverse_lazy('core:medicineType_list')
 
   def form_valid(self, form):
@@ -54,10 +56,11 @@ class MedicineTypeCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class MedicineTypeUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class MedicineTypeUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = TipoMedicamento
   template_name = 'core/medicineType/form.html'
   form_class = MedicineTypeForm
+  permission_required = 'change_tipomedicamento'
   success_url = reverse_lazy('core:medicineType_list')
 
   def form_valid(self, form):
@@ -73,8 +76,9 @@ class MedicineTypeUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class MedicineTypeDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class MedicineTypeDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = TipoMedicamento
+  permission_required = 'delete_tipomedicamento'
   success_url = reverse_lazy('core:medicineType_list')
 
   def get_context_data(self, **kwargs):

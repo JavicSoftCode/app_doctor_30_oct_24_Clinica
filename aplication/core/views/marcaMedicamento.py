@@ -7,13 +7,14 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.marcaMedicamento import MarcaMedicamentoForm
 from aplication.core.models import MarcaMedicamento
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class MarcaMedicamentoListView(LoginRequiredMixin, ListViewMixin, ListView):
+class MarcaMedicamentoListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/marcaMedicamento/list.html"
   model = MarcaMedicamento
+  permission_required = 'view_marcamedicamento'
   context_object_name = 'marcas'
 
   def get_queryset(self):
@@ -33,10 +34,11 @@ class MarcaMedicamentoListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre')
 
 
-class MarcaMedicamentoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class MarcaMedicamentoCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = MarcaMedicamento
   template_name = 'core/marcaMedicamento/form.html'
   form_class = MarcaMedicamentoForm
+  permission_required = 'add_marcamedicamento'
   success_url = reverse_lazy('core:marcaMedicamento_list')
 
   def form_valid(self, form):
@@ -52,10 +54,11 @@ class MarcaMedicamentoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class MarcaMedicamentoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class MarcaMedicamentoUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = MarcaMedicamento
   template_name = 'core/marcaMedicamento/form.html'
   form_class = MarcaMedicamentoForm
+  permission_required = 'change_marcamedicamento'
   success_url = reverse_lazy('core:marcaMedicamento_list')
 
   def form_valid(self, form):
@@ -72,8 +75,9 @@ class MarcaMedicamentoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class MarcaMedicamentoDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class MarcaMedicamentoDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = MarcaMedicamento
+  permission_required = 'delete_marcamedicamento'
   success_url = reverse_lazy('core:marcaMedicamento_list')
 
   def get_context_data(self, **kwargs):

@@ -1,0 +1,139 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <style>.permisos::-webkit-scrollbar {
+        width: 0;
+    }</style>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <!-- Mensajes de ERRORES -->
+                {% include 'includes/message_error_form.html' %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" class="row">
+                            {% csrf_token %}
+
+                            <h3 class="text-primary-emphasis mb-4 fw-bold">{{ title1 }}</h3>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.url.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.url.label }}</label>
+                                    {{ form.url }}
+                                    {{ form.url.errors }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.name.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.name.label }}</label>
+                                    {{ form.name }}
+                                    {{ form.name.errors }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.menu.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.menu.label }}</label>
+                                    {{ form.menu }}
+                                    {{ form.menu.errors }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.description.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.description.label }}</label>
+                                    {{ form.description }}
+                                    {{ form.description.errors }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.icon.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.icon.label }}</label>
+                                    {{ form.icon }}
+                                    {{ form.icon.errors }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.is_active.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.is_active.label }}</label>
+                                    {{ form.is_active }}
+                                    {{ form.is_active.errors }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.permissions.id_for_label }}" class="form-label fw-bold">
+                                        {{ form.permissions.label }}
+                                    </label>
+                                    <!-- Contenedor para el campo de búsqueda y los botones -->
+                                    <div style="display: flex; align-items: center; margin-left: 17%; margin-top: -8%">
+                                        <!-- Campo de búsqueda -->
+                                        <input type="text" id="searchPermissions" onkeyup="filterPermissions()"
+                                               placeholder="Buscar permiso..."
+                                               style="width: 42%; margin-top: 0; margin-right: 10px;"
+                                               class="form-control search-box" autocomplete="off">
+
+                                        <!-- Botones para marcar/desmarcar todos -->
+                                        <div style="display: flex; gap: 10px;">
+                                            <button type="button" onclick="checkAllPermissions()"
+                                                    class="btn btn-primary" style="background-color: #3B3BBA">
+                                                Marcar todos
+                                            </button>
+                                            <button type="button" onclick="uncheckAllPermissions()"
+                                                    class="btn btn-danger"
+                                                    style="background-color: #6c747b; border: none">
+                                                Desmarcar todos
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Contenedor de los checkboxes con scroll -->
+                                    <div id="permissionsContainer"
+                                         style="width: 100%; max-height: 500px; overflow-y: auto;" class="permisos">
+                                        {{ form.permissions }}
+                                    </div>
+                                    {{ form.permissions.errors }}
+                                </div>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button class="btn me-2 grabar" type="submit"
+                                            style="background-color: #3B3BBA; color: white">{{ grabar }}</button>
+                                    <a class="btn btn-secondary cancelar" href="{{ back_url }}">Cancelar</a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#    scripts de busquedad de permisos #}
+    <script>
+        function filterPermissions() {
+            const searchInput = document.getElementById('searchPermissions').value.toLowerCase();
+            const permissionsContainer = document.getElementById('permissionsContainer');
+            const permissions = permissionsContainer.getElementsByTagName('label'); // Asumiendo que cada permiso es un <label>
+
+            for (let i = 0; i < permissions.length; i++) {
+                const permissionText = permissions[i].textContent || permissions[i].innerText;
+                if (permissionText.toLowerCase().indexOf(searchInput) > -1) {
+                    permissions[i].style.display = ''; // Mostrar permiso si coincide
+                } else {
+                    permissions[i].style.display = 'none'; // Ocultar permiso si no coincide
+                }
+            }
+        }
+
+        // Función para marcar todos los checkboxes
+        function checkAllPermissions() {
+            const checkboxes = document.querySelectorAll('#permissionsContainer input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true; // Marcar todos los checkboxes
+            });
+        }
+
+        // Función para desmarcar todos los checkboxes
+        function uncheckAllPermissions() {
+            const checkboxes = document.querySelectorAll('#permissionsContainer input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false; // Desmarcar todos los checkboxes
+            });
+        }
+    </script>
+{% endblock content %}

@@ -470,24 +470,24 @@ class TipoCategoria(models.Model):
 
 
 # modelo que alamacena todos los aciones de ingreso, actualizacion, eliminacion d elos usarios que manipulan las opciones de la aplicacion
-class AuditUser(models.Model):
-  TIPOS_ACCIONES = (
-    ('A', 'A'),  # Adicion
-    ('M', 'M'),  # Modificacion
-    ('E', 'E')  # Eliminacion
-  )
-  usuario = models.ForeignKey(User, verbose_name='Usuario', on_delete=models.PROTECT)
-  tabla = models.CharField(max_length=100, verbose_name='Tabla')
-  registroid = models.IntegerField(verbose_name='Registro Id')
-  accion = models.CharField(choices=TIPOS_ACCIONES, max_length=10, verbose_name='Accion')
-  fecha = models.DateField(verbose_name='Fecha')
-  hora = models.TimeField(verbose_name='Hora')
-  estacion = models.CharField(max_length=100, verbose_name='Estacion')
-
-  def __str__(self):
-    return "{} - {} [{}]".format(self.usuario.username, self.tabla, self.accion)
-
-  class Meta:
-    verbose_name = 'Auditoria Usuario '
-    verbose_name_plural = 'Auditorias Usuarios'
-    ordering = ('-fecha', 'hora')
+# class AuditUser(models.Model):
+#   TIPOS_ACCIONES = (
+#     ('A', 'A'),  # Adicion
+#     ('M', 'M'),  # Modificacion
+#     ('E', 'E')  # Eliminacion
+#   )
+#   usuario = models.ForeignKey(User, verbose_name='Usuario', on_delete=models.PROTECT)
+#   tabla = models.CharField(max_length=100, verbose_name='Tabla')
+#   registroid = models.IntegerField(verbose_name='Registro Id')
+#   accion = models.CharField(choices=TIPOS_ACCIONES, max_length=10, verbose_name='Accion')
+#   fecha = models.DateField(verbose_name='Fecha')
+#   hora = models.TimeField(verbose_name='Hora')
+#   estacion = models.CharField(max_length=100, verbose_name='Estacion')
+#
+#   def __str__(self):
+#     return "{} - {} [{}]".format(self.usuario.username, self.tabla, self.accion)
+#
+#   class Meta:
+#     verbose_name = 'Auditoria Usuario '
+#     verbose_name_plural = 'Auditorias Usuarios'
+#     ordering = ('-fecha', 'hora')

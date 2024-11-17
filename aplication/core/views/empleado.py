@@ -13,13 +13,14 @@ from folium.plugins import FastMarkerCluster
 
 from aplication.core.forms.empleado import EmpleadoForm
 from aplication.core.models import Empleado
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class EmpleadoListView(LoginRequiredMixin, ListViewMixin, ListView):
+class EmpleadoListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/empleado/list.html"
   model = Empleado
+  permission_required = 'view_empleado'
   context_object_name = 'empleados'
 
   def get_queryset(self):
@@ -61,10 +62,11 @@ class EmpleadoListView(LoginRequiredMixin, ListViewMixin, ListView):
     return context
 
 
-class EmpleadoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class EmpleadoCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Empleado
   template_name = 'core/empleado/form.html'
   form_class = EmpleadoForm
+  permission_required = 'add_empleado'
   success_url = reverse_lazy('core:empleado_list')
 
   def get_context_data(self, **kwargs):
@@ -105,10 +107,11 @@ class EmpleadoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class EmpleadoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class EmpleadoUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Empleado
   template_name = 'core/empleado/form.html'
   form_class = EmpleadoForm
+  permission_required = 'change_empleado'
   success_url = reverse_lazy('core:empleado_list')
 
   def get_context_data(self, **kwargs):
@@ -146,8 +149,9 @@ class EmpleadoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class EmpleadoDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class EmpleadoDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = Empleado
+  permission_required = 'delete_empleado'
   success_url = reverse_lazy('core:empleado_list')
 
   def get_context_data(self, **kwargs):

@@ -7,13 +7,14 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.diagnosis import DiagnosisForm
 from aplication.core.models import Diagnostico
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class DiagnosisListView(LoginRequiredMixin, ListViewMixin, ListView):
+class DiagnosisListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/diagnosis/list.html"
   model = Diagnostico
+  permission_required = 'view_diagnostico'
   context_object_name = 'diagnosticos'
 
   def get_queryset(self):
@@ -33,10 +34,11 @@ class DiagnosisListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('descripcion')
 
 
-class DiagnosisCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class DiagnosisCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Diagnostico
   template_name = 'core/diagnosis/form.html'
   form_class = DiagnosisForm
+  permission_required = 'add_diagnostico'
   success_url = reverse_lazy('core:diagnosis_list')
 
   def form_valid(self, form):
@@ -52,10 +54,11 @@ class DiagnosisCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class DiagnosisUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class DiagnosisUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Diagnostico
   template_name = 'core/diagnosis/form.html'
   form_class = DiagnosisForm
+  permission_required = 'change_diagnostico'
   success_url = reverse_lazy('core:diagnosis_list')
 
   def form_valid(self, form):
@@ -71,8 +74,9 @@ class DiagnosisUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class DiagnosisDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class DiagnosisDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = Diagnostico
+  permission_required = 'delete_diagnostico'
   success_url = reverse_lazy('core:diagnosis_list')
 
   def get_context_data(self, **kwargs):

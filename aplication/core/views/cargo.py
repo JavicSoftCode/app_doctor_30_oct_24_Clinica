@@ -1,21 +1,19 @@
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from aplication.core.forms.cargo import CargoForm
 from aplication.core.models import Cargo
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class CargoListView(LoginRequiredMixin, ListViewMixin, ListView):
+class CargoListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/cargo/list.html"
   model = Cargo
   context_object_name = 'cargos'
+  permission_required = 'view_cargo'
 
   def get_queryset(self):
     self.query = Q()
@@ -35,10 +33,11 @@ class CargoListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre')
 
 
-class CargoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class CargoCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Cargo
   template_name = 'core/cargo/form.html'
   form_class = CargoForm
+  permission_required = 'add_cargo'
   success_url = reverse_lazy('core:cargo_list')
 
   def form_valid(self, form):
@@ -54,10 +53,11 @@ class CargoCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class CargoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class CargoUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Cargo
   template_name = 'core/cargo/form.html'
   form_class = CargoForm
+  permission_required = 'change_cargo'
   success_url = reverse_lazy('core:cargo_list')
 
   def form_valid(self, form):
@@ -73,8 +73,10 @@ class CargoUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class CargoDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class CargoDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = Cargo
+  permission_required = 'delete_cargo'
+
   success_url = reverse_lazy('core:cargo_list')
 
   def get_context_data(self, **kwargs):

@@ -3,13 +3,14 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView
 
-from aplication.core.models import AuditUser
-from doctor.mixins import ListViewMixin
+from aplication.security.models import AuditUser
+from aplication.security.mixins.mixins import *
 
 
-class AuditUserListView(LoginRequiredMixin, ListViewMixin, ListView):
+class AuditUserListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/auditUser/list.html"
   model = AuditUser
+  permission_required = 'view_auditoria'
   context_object_name = 'auditorias'
 
   def get_queryset(self):

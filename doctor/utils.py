@@ -50,7 +50,7 @@ def custom_serializer(obj):
 
 
 def save_audit(request, model, action):
-  from aplication.core.models import AuditUser
+  from aplication.security.models import AuditUser
   user = request.user
   # Obtain client ip address
   client_address = ip_client_address(request)

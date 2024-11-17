@@ -7,13 +7,14 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.specialty import SpecialtyForm
 from aplication.core.models import Especialidad
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class SpecialtyListView(LoginRequiredMixin, ListViewMixin, ListView):
+class SpecialtyListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/specialty/list.html"
   model = Especialidad
+  permission_required = 'view_especialidad'
   context_object_name = 'especialidades'
 
   def get_queryset(self):
@@ -37,10 +38,11 @@ class SpecialtyListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre')
 
 
-class SpecialtyCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class SpecialtyCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Especialidad
   template_name = 'core/specialty/form.html'
   form_class = SpecialtyForm
+  permission_required = 'add_especialidad'
   success_url = reverse_lazy('core:specialty_list')
 
   def form_valid(self, form):
@@ -57,10 +59,11 @@ class SpecialtyCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class SpecialtyUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class SpecialtyUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Especialidad
   template_name = 'core/specialty/form.html'
   form_class = SpecialtyForm
+  permission_required = 'change_especialidad'
   success_url = reverse_lazy('core:specialty_list')
 
   def form_valid(self, form):
@@ -77,8 +80,9 @@ class SpecialtyUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class SpecialtyDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class SpecialtyDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = Especialidad
+  permission_required = 'delete_especialidad'
   success_url = reverse_lazy('core:specialty_list')
 
   def get_context_data(self, **kwargs):

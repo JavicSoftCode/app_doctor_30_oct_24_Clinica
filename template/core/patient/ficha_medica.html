@@ -1,0 +1,233 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <style>
+        /* General styles */
+        .contenedorFicha {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            border: 2px solid #3B3BBA;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #3B3BBA;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            height: 80px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #3B3BBA;
+        }
+
+        .header h2 {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .button-container {
+            position: absolute;
+            right: 20px;
+            margin-top: -30px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: #3B3BBA;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #3B3BBA;
+        }
+
+      .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Crea 3 columnas de igual tamaño */
+            grid-template-rows: auto auto; /* Crea 2 filas */
+            gap: 15px; /* Espacio entre los elementos */
+            margin-bottom: 20px;
+        }
+
+           .info-grid div {
+            font-size: 14px;
+            padding: 5px;
+        }
+
+        .info-grid strong {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #3B3BBA;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Crea 3 columnas de igual tamaño */
+            grid-template-rows: auto auto; /* Crea 2 filas */
+            gap: 15px; /* Espacio entre los elementos */
+            margin-bottom: 20px;
+        }
+
+        .info-grid div {
+            font-size: 14px;
+            padding: 5px;
+        }
+
+    </style>
+
+    <div class="contenedorFicha">
+
+        <img   src="{% static 'img/logo.webp' %}" alt="Logo" style="width: 120px; height: 120px; border-radius: 20px; margin-left: 89.7%">
+        {#    <img src="{{ foto }}" alt="Foto del paciente" style="width: 150px; height: 150px; border-radius: 10px">#}
+
+        <!-- Header -->
+        <div class="header" style="margin-top: -9%">
+            <div class="header-text">
+                <h1>FICHA MÉDICA</h1>
+                <h2><i class="fa fa-hashtag fa-lg me-2"></i> {{ id }}</h2>
+                <h2>CLINICA SALUDSYNC</h2>
+                <p>FECHA: {{ fecha_creacion|date:"d/M/Y" }}</p>
+            </div>
+        </div>
+
+        <!-- Información Personal -->
+        <div class="section-title">Información Personal</div>
+
+        <div class="info-grid" style="display: flex; align-items: flex-start; ">
+            <!-- Imagen a la izquierda -->
+            <div class="mt-3"  style="width: 150px; height: 180px; border: 2px solid #3B3BBA; border-radius: 20px; padding: 5px;">
+                <img src="{{ foto }}" alt="Foto del paciente" style="width: 100%; height: 100%; border-radius: 20px;">
+            </div>
+
+            <!-- Información a la derecha -->
+            <div style="flex-grow: 1;">
+                <!-- Primera fila de información, alineada a la altura de la imagen -->
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <strong>Cédula:</strong> {{ cedula }}
+                    </div>
+                    <div style="margin-left: -44px">
+                        <strong>Edad:</strong> {{ edad }} años
+                    </div>
+                    <div style="margin-right: 14px">
+                        <strong>Email:</strong> {{ email }}
+                    </div>
+                </div>
+
+                <!-- Segunda fila de información, alineada abajo de la imagen -->
+                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                    <div>
+                        <strong>Nombre Completo:</strong> {{ paciente }}
+                    </div>
+                    <div style="margin-left: -143px">
+                        <strong>Teléfono:</strong> {{ telefono }}
+                    </div>
+                    <div style="margin-right: 53px">
+                        <strong>Tipo Sangre:</strong> {{ tipo_sangre }}
+                    </div>
+                </div>
+
+                <!-- Fila inferior -->
+                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                    <div>
+                        <strong>Sexo:</strong> {{ sexo }}
+                    </div>
+                    <div>
+                        <strong>Estado Civil:</strong> {{ estado_civil }}
+                    </div>
+                    <div>
+                        <strong>Fecha de Nacimiento:</strong> {{ fecha_nacimiento|date:"d/M/Y" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Dirección y Ubicación -->
+        <div class="section-title">Dirección y Ubicación</div>
+        <div class="info-gridd">
+            <div>
+                <strong>Dirección:</strong> {{ direccion }}
+            </div>
+            <div>
+                <strong>Latitud:</strong> {{ latitud }}
+            </div>
+            <div>
+                <strong>Longitud:</strong> {{ longitud }}
+            </div>
+        </div>
+
+
+        <!-- Historial Médico -->
+        <div class="section-title ">Historial Médico</div>
+        <table>
+            <tr>
+                <th>Alergias</th>
+                <th>Enfermedades Crónicas</th>
+                <th>Medicación Actual</th>
+                <th>Cirugías Previas</th>
+            </tr>
+            <tr>
+                <td>{{ alergias|default:"No especificado" }}</td>
+                <td>{{ enfermedades_cronicas|default:"No especificado" }}</td>
+                <td>{{ medicacion_actual|default:"No especificado" }}</td>
+                <td>{{ cirugias_previas|default:"No especificado" }}</td>
+            </tr>
+        </table>
+
+        <!-- Antecedentes Médicos -->
+        <div class="section-title">Antecedentes Médicos</div>
+        <div>
+            <strong>Antecedentes Personales:</strong> {{ antecedentes_personales|default:"No especificado" }}
+        </div>
+        <div>
+            <strong>Antecedentes Familiares:</strong> {{ antecedentes_familiares|default:"No especificado" }}
+        </div>
+      <!-- Download Button -->
+        <div class="button-container me-2">
+            <a href="{% url 'core:patient_ficha_medica' %}" style="background-color: #3B3BBA">Descargar Ficha Médica <i
+                    class="fa-solid fa-file-medical fa-lg"></i></a>
+        </div>
+    </div>
+
+{% endblock content %}
+

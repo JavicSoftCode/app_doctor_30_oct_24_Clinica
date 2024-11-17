@@ -41,10 +41,12 @@
                                 </div>
                             </form>
 
-                            <a class="btn btn-primary mt-3 mt-md-0" href="{% url 'attention:citaMedica_create' %}"
-                               style="background-color: #3B3BBA; color: white">
-                                <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}
-                            </a>
+                            {% if permissions.add_citamedica %}
+                                <a class="btn btn-primary mt-3 mt-md-0" href="{% url 'attention:citaMedica_create' %}"
+                                   style="background-color: #3B3BBA; color: white">
+                                    <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}
+                                </a>
+                            {% endif %}
                         </div>
 
                         <div class="table-responsive">
@@ -87,16 +89,20 @@
                                                         <i class="fas fa-eye"></i>
                                                     </button>
 
-                                                    <a href="{% url 'attention:citaMedica_update' item.id %}"
-                                                       class="btn btn-info btn-sm text-white" title="Editar">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    {% if permissions.change_citamedica %}
+                                                        <a href="{% url 'attention:citaMedica_update' item.id %}"
+                                                           class="btn btn-info btn-sm text-white" title="Editar">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    {% endif %}
 
-                                                    {% with id=item.id name=item.paciente msg="Esta seguro de eliminar esta Cita Médica del Paciente ?" %}
-                                                        <button class="btn btn-danger"
-                                                                onclick="confirmDelete('{{ id }}','{{ name }}','{{ msg|escapejs }}');">
-                                                            <i class="fa-solid fa-trash"></i></button>
-                                                    {% endwith %}
+                                                    {% if permissions.delete_citamedica %}
+                                                        {% with id=item.id name=item.paciente msg="Esta seguro de eliminar esta Cita Médica del Paciente ?" %}
+                                                            <button class="btn btn-danger"
+                                                                    onclick="confirmDelete('{{ id }}','{{ name }}','{{ msg|escapejs }}');">
+                                                                <i class="fa-solid fa-trash"></i></button>
+                                                        {% endwith %}
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </td>

@@ -1,0 +1,344 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        #id_group {
+            color: black;
+        }
+
+        .module-container::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .module-container {
+        {#background-color: #1a1a1a;#} border: 2px solid #dededf;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: black;
+            transition: all 0.3s ease;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .module-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(63, 131, 249, 0.1);
+        }
+
+        #module-search {
+        {#background-color: #1a1a1a;#} border: 2px solid #e5e7eb;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            width: 50%;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        #module-search:focus {
+            outline: none;
+        }
+
+        .permissions-container {
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .permissions-container.hidden {
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .EYES {
+            color: #052C65;
+        }
+
+        .module-title {
+            font-size: 22px;
+            color: #052C65;
+            font-weight: 600;
+            background-color: white;
+        }
+
+        .module-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .VISTO {
+            color: #3B3BBA;
+        }
+
+        .MENOS {
+            color: #757d86;
+        }
+
+        .action-icon {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .action-icon:hover {
+            background-color: rgba(63, 131, 249, 0.1);
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <!-- Mensajes de ERRORES -->
+                {% include 'includes/message_error_form.html' %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form id="permissions-form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <h3 class="text-primary-emphasis mb-4 fw-bold">{{ title1 }}</h3>
+
+                            <!-- Row para inputs alineados -->
+                            <div class="row g-3">
+                                <!-- Input Izquierda -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.group.id_for_label }}" class="form-label fw-bold">
+                                            Elegir {{ form.group.label }}
+                                        </label>
+                                        {{ form.group }}
+                                        <div class="text-danger mt-1 small">
+                                            {{ form.group.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Input Derecha -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label fw-bold" style="font-size: 24px">Seleccionar
+                                            Módulos</label>
+                                        <div class="flex gap-2">
+                                            <input type="text" id="module-search"
+                                                   placeholder="Buscar módulo..."
+                                                   style="color: black">
+                                            <button id="select-all" type="button"
+                                                    class="btn btn-primary mt-3 mt-md-0"
+                                                    style="height: 50px; background-color: #3B3BBA">
+                                                <i class="fa-solid fa-check"></i>
+                                                Elegir Todos
+                                            </button>
+                                            <button id="deselect-all" type="button"
+                                                    class="btn mt-3 mt-md-0"
+                                                    style="height: 50px; background-color: #757d86; color: white">
+                                                <i class="fa-solid fa-times"></i>
+                                                Quitar Todos
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="modules-list" class="module-grid"></div>
+
+                            <!-- Form Actions -->
+
+                            <div class="action-buttons">
+                                <button type="submit" class="btn me-2 grabar"
+                                        style="background-color: #3B3BBA; color: white">
+                                    Guardar
+                                </button>
+                                <a href="{{ back_url }}" class="btn btn-secondary cancelar"> Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const groupSelect = document.getElementById('id_group');
+            const modulesContainer = document.getElementById('modules-container');
+            const modulesList = document.getElementById('modules-list');
+            const selectAllButton = document.getElementById('select-all');
+            const deselectAllButton = document.getElementById('deselect-all');
+            const moduleSearch = document.getElementById('module-search');
+
+            // Enhance group select styling
+            if (groupSelect) {
+                groupSelect.classList.add('w-full', 'p-3', 'rounded-lg', 'text-black', 'border-2');
+            }
+
+            groupSelect.addEventListener('change', function () {
+                const groupId = this.value;
+                if (groupId) {
+                    fetch(`/security/get_group_permissions/${groupId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            modulesList.innerHTML = "";
+                            data.forEach(item => {
+                                const moduleDiv = document.createElement('div');
+                                moduleDiv.classList.add('module-container', 'module-item');
+
+                                const moduleHeader = document.createElement('div');
+                                moduleHeader.classList.add('module-header');
+
+                                const moduleCheckboxContainer = document.createElement('div');
+                                moduleCheckboxContainer.classList.add('flex', 'items-center', 'gap-3', 'CHECK');
+
+                                const moduleCheckbox = document.createElement('input');
+                                moduleCheckbox.type = 'checkbox';
+                                moduleCheckbox.id = `module_${item.module_id}`;
+                                moduleCheckbox.name = 'modules[]';
+                                moduleCheckbox.value = item.module_id;
+                                moduleCheckbox.classList.add('module-checkbox');
+                                if (item.assigned_permissions.length > 0) {
+                                    moduleCheckbox.checked = true;
+                                }
+
+                                const moduleLabel = document.createElement('label');
+                                moduleLabel.htmlFor = moduleCheckbox.id;
+                                moduleLabel.classList.add('module-title');
+                                moduleLabel.textContent = item.module_name;
+
+                                const toggleButton = document.createElement('button');
+                                toggleButton.type = 'button';
+                                toggleButton.classList.add('action-icon');
+                                toggleButton.innerHTML = '<i class="fa-solid fa-eye fa-lg EYES"></i>';
+                                toggleButton.onclick = function () {
+                                    togglePermissions(item.module_id);
+                                    moduleCheckbox.checked = true;
+                                };
+
+                                {#moduleCheckboxContainer.appendChild(moduleCheckbox);#}
+                                moduleCheckboxContainer.appendChild(moduleLabel);
+                                moduleHeader.appendChild(moduleCheckboxContainer);
+                                moduleHeader.appendChild(toggleButton);
+
+                                const permissionsContainer = document.createElement('div');
+                                permissionsContainer.id = `permissions-container-${item.module_id}`;
+                                permissionsContainer.classList.add('permissions-container');
+                                if (item.assigned_permissions.length === 0) {
+                                    permissionsContainer.classList.add('hidden');
+                                }
+
+                                item.permissions.forEach(permission => {
+                                    const permissionCheckboxContainer = document.createElement('div');
+                                    permissionCheckboxContainer.classList.add('flex', 'items-center', 'gap-2', 'mb-2');
+
+                                    const permissionCheckbox = document.createElement('input');
+                                    permissionCheckbox.type = 'checkbox';
+                                    permissionCheckbox.id = `permission_${item.module_id}_${permission.id}`;
+                                    permissionCheckbox.name = `permissions_${item.module_id}[]`;
+                                    permissionCheckbox.value = permission.id;
+                                    if (item.assigned_permissions.some(ap => ap.id === permission.id)) {
+                                        permissionCheckbox.checked = true;
+                                    }
+
+                                    const permissionLabel = document.createElement('label');
+                                    permissionLabel.htmlFor = permissionCheckbox.id;
+                                    permissionLabel.textContent = permission.name;
+                                    permissionLabel.classList.add('text-black');
+
+                                    permissionCheckboxContainer.appendChild(permissionCheckbox);
+                                    permissionCheckboxContainer.appendChild(permissionLabel);
+                                    permissionsContainer.appendChild(permissionCheckboxContainer);
+                                });
+
+                                const moduleActions = document.createElement('div');
+                                moduleActions.classList.add('module-actions');
+
+                                const selectAllLink = document.createElement('button');
+                                selectAllLink.type = 'button';
+                                selectAllLink.classList.add('action-icon');
+                                selectAllLink.innerHTML = '<i class="fa-solid fa-square-check fa-lg VISTO"></i>';
+                                selectAllLink.onclick = function () {
+                                    const permissionCheckboxes = permissionsContainer.querySelectorAll('input[type="checkbox"]');
+                                    permissionCheckboxes.forEach(checkbox => checkbox.checked = true);
+                                };
+
+                                const deselectAllLink = document.createElement('button');
+                                deselectAllLink.type = 'button';
+                                deselectAllLink.classList.add('action-icon');
+                                deselectAllLink.innerHTML = '<i class="fa-solid fa-square-minus fa-lg MENOS"></i>';
+                                deselectAllLink.onclick = function () {
+                                    const permissionCheckboxes = permissionsContainer.querySelectorAll('input[type="checkbox"]');
+                                    permissionCheckboxes.forEach(checkbox => checkbox.checked = false);
+                                };
+
+                                moduleActions.appendChild(selectAllLink);
+                                moduleActions.appendChild(deselectAllLink);
+
+                                moduleDiv.appendChild(moduleHeader);
+                                moduleDiv.appendChild(permissionsContainer);
+                                moduleDiv.appendChild(moduleActions);
+                                modulesList.appendChild(moduleDiv);
+                            });
+
+                            modulesContainer.classList.remove('hidden');
+                        })
+                        .catch(error => console.error('Error:', error));
+                } else {
+                    modulesContainer.classList.add('hidden');
+                }
+            });
+
+            selectAllButton.addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('#modules-list input[type="checkbox"]');
+                checkboxes.forEach(checkbox => checkbox.checked = true);
+            });
+
+            deselectAllButton.addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('#modules-list input[type="checkbox"]');
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+            });
+
+            moduleSearch.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                const moduleItems = modulesList.querySelectorAll('.module-item');
+
+                moduleItems.forEach(item => {
+                    const moduleName = item.querySelector('label').textContent.toLowerCase();
+                    if (moduleName.includes(searchTerm)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        function togglePermissions(moduleId) {
+            const permissionsContainer = document.getElementById(`permissions-container-${moduleId}`);
+            permissionsContainer.classList.toggle('hidden');
+        }
+    </script>
+{% endblock content %}

@@ -1,25 +1,211 @@
 import json
 from decimal import Decimal
 
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.db.models import Q
+from django.http import Http404
+from django.http import HttpResponse
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
 
 from aplication.attention.forms.medical_attention import AttentionForm
 from aplication.attention.models import Atencion, DetalleAtencion
 from aplication.core.models import Diagnostico, Medicamento
-from doctor.mixins import CreateViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import custom_serializer, save_audit
 
 
-class AttentionListView(LoginRequiredMixin, ListViewMixin, ListView):
+@login_required
+def generar_certificado_pdf(request):
+  # Obtener la atención médica
+  atencion = get_object_or_404(Atencion)
+
+  # Crear la respuesta HTTP con tipo de contenido PDF
+  response = HttpResponse(content_type='application/pdf')
+  sanitized_name = atencion.paciente.nombre_completo.replace(" ", "_")
+  response[
+    'Content-Disposition'] = f'attachment; filename="certificado_medico_{sanitized_name}_{atencion.fecha_atencion.date()}.pdf"'
+
+  # Crear el documento PDF
+  doc = SimpleDocTemplate(response, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+  elements = []
+  styles = getSampleStyleSheet()
+
+  # Estilo personalizado para el título
+  styles.add(ParagraphStyle(
+    name='CustomTitle',
+    parent=styles['Heading1'],
+    fontSize=16,
+    textColor=colors.HexColor('#3498db'),
+    alignment=TA_CENTER,
+    spaceAfter=20
+  ))
+
+  # Título del certificado
+  elements.append(Paragraph('CERTIFICADO MÉDICO', styles['CustomTitle']))
+  elements.append(Spacer(1, 12))
+
+  # Encabezado con información del paciente
+  elements.append(Paragraph(f"Paciente: {atencion.paciente.nombre_completo}", styles['Normal']))
+  elements.append(Paragraph(f"Cédula: {atencion.paciente.cedula}", styles['Normal']))
+  elements.append(Paragraph(f"Fecha de Atención: {atencion.fecha_atencion.strftime('%d/%m/%Y')}", styles['Normal']))
+  elements.append(Spacer(1, 12))
+
+  # Signos vitales
+  elements.append(Paragraph("Signos Vitales", styles['Heading2']))
+  signos_vitales = [
+    ['Presión Arterial', atencion.presion_arterial or 'No especificado'],
+    ['Pulso', f"{atencion.pulso} ppm" if atencion.pulso else 'No especificado'],
+    ['Temperatura', f"{atencion.temperatura} °C" if atencion.temperatura else 'No especificado'],
+    ['Frecuencia Respiratoria',
+     f"{atencion.frecuencia_respiratoria} rpm" if atencion.frecuencia_respiratoria else 'No especificado'],
+    ['Saturación de Oxígeno', f"{atencion.saturacion_oxigeno}%" if atencion.saturacion_oxigeno else 'No especificado'],
+    ['Peso', f"{atencion.peso} kg" if atencion.peso else 'No especificado'],
+    ['Altura', f"{atencion.altura} m" if atencion.altura else 'No especificado'],
+  ]
+  signos_table = Table(signos_vitales, colWidths=[3 * inch, 3 * inch])
+  signos_table.setStyle(TableStyle([
+    ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#3498db')),
+    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+    ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+    ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f0f8ff')),
+  ]))
+  elements.append(signos_table)
+  elements.append(Spacer(1, 12))
+
+  # Diagnóstico y tratamiento
+  elements.append(Paragraph("Diagnóstico y Tratamiento", styles['Heading2']))
+  elements.append(Paragraph(f"Diagnóstico: {atencion.get_diagnosticos or 'No especificado'}", styles['Normal']))
+  elements.append(Paragraph(f"Motivo de Consulta: {atencion.motivo_consulta}", styles['Normal']))
+  elements.append(Paragraph(f"Síntomas: {atencion.sintomas}", styles['Normal']))
+  elements.append(Paragraph(f"Tratamiento: {atencion.tratamiento}", styles['Normal']))
+  elements.append(Spacer(1, 12))
+
+  # Medicamentos recetados
+  elements.append(Paragraph("Medicamentos Recetados", styles['Heading2']))
+  detalles = DetalleAtencion.objects.filter(atencion=atencion)
+  if detalles.exists():
+    medicamentos_data = [['Medicamento', 'Cantidad', 'Prescripción']]
+    for detalle in detalles:
+      medicamentos_data.append([
+        detalle.medicamento.nombre,
+        detalle.cantidad,
+        detalle.prescripcion or 'No especificado'
+      ])
+    medicamentos_table = Table(medicamentos_data, colWidths=[2.5 * inch, 1.5 * inch, 3 * inch])
+    medicamentos_table.setStyle(TableStyle([
+      ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#2ecc71')),
+      ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+      ('FONTSIZE', (0, 0), (-1, -1), 10),
+      ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+      ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f6f3')),
+    ]))
+    elements.append(medicamentos_table)
+  else:
+    elements.append(Paragraph("No se recetaron medicamentos en esta atención.", styles['Normal']))
+
+  # Generar el PDF
+  doc.title = f"Certificado Médico - {atencion.paciente.nombre_completo}"
+  doc.build(elements)
+  return response
+
+
+# class ViewAtencionPdf(LoginRequiredMixin, View):
+#   def get(self, request, *args, **kwargs):
+#     try:
+#       # Obtener la atención médica usando el pk de la URL
+#       atencion = Atencion.objects.prefetch_related('diagnostico', 'atenciones').get(pk=kwargs['pk'])
+#
+#       # Obtener los detalles de la atención (medicamentos recetados)
+#       detalles = DetalleAtencion.objects.filter(atencion=atencion)
+#
+#       # Preparar los datos en un diccionario
+#       data = {
+#         'id': atencion.id,
+#         'paciente': atencion.paciente.nombre_completo,
+#         'fecha_atencion': atencion.fecha_atencion,
+#         'presion_arterial': atencion.presion_arterial,
+#         'pulso': atencion.pulso,
+#         'temperatura': atencion.temperatura,
+#         'frecuencia_respiratoria': atencion.frecuencia_respiratoria,
+#         'saturacion_oxigeno': atencion.saturacion_oxigeno,
+#         'peso': atencion.peso,
+#         'altura': atencion.altura,
+#         'motivo_consulta': atencion.motivo_consulta,
+#         'sintomas': atencion.sintomas,
+#         'tratamiento': atencion.tratamiento,
+#         'diagnosticos': atencion.get_diagnosticos,
+#         'examen_fisico': atencion.examen_fisico,
+#         'examenes_enviados': atencion.examenes_enviados,
+#         'comentario_adicional': atencion.comentario_adicional,
+#         'imc': atencion.calcular_imc,
+#         'detalles': detalles,  # Detalles de los medicamentos recetados
+#       }
+#
+#       # Renderizar el HTML con los datos de la atención
+#       return render(request, 'attention/medical_attention/atencion_pdf.html', data)
+#
+#     except Atencion.DoesNotExist:
+#       # Si la atención no existe, lanzar un error 404
+#       raise Http404("Atención médica no encontrada")
+
+class ViewAtencionPdf(LoginRequiredMixin, View):
+  def get(self, request, *args, **kwargs):
+    try:
+      # Obtener la atención médica usando el pk de la URL
+      atencion = Atencion.objects.prefetch_related('diagnostico', 'atenciones').get(pk=kwargs['pk'])
+
+      # Obtener los detalles de la atención (medicamentos recetados)
+      detalles = DetalleAtencion.objects.filter(atencion=atencion)
+
+      # Preparar los datos en un diccionario
+      data = {
+        'id': atencion.id,
+        'title1': f' Atención {atencion.id}',
+        'paciente': atencion.paciente.nombre_completo,
+        'fecha_atencion': atencion.fecha_atencion,
+        'edad': atencion.paciente.calcular_edad(atencion.paciente.fecha_nacimiento),
+        'sexo': atencion.paciente.get_sexo_display() if atencion.paciente.sexo else None,
+        'presion_arterial': atencion.presion_arterial,
+        'pulso': atencion.pulso,
+        'temperatura': atencion.temperatura,
+        'frecuencia_respiratoria': atencion.frecuencia_respiratoria,
+        'saturacion_oxigeno': atencion.saturacion_oxigeno,
+        'peso': atencion.peso,
+        'altura': atencion.altura,
+        'motivo_consulta': atencion.motivo_consulta,
+        'sintomas': atencion.sintomas,
+        'tratamiento': atencion.tratamiento,
+        'diagnosticos': atencion.get_diagnosticos,
+        'examen_fisico': atencion.examen_fisico,
+        'examenes_enviados': atencion.examenes_enviados,
+        'comentario_adicional': atencion.comentario_adicional,
+        'imc': atencion.calcular_imc,
+        'detalles': detalles,  # Detalles de los medicamentos recetados
+      }
+
+      # Aquí se puede renderizar un PDF o generar la ficha médica
+      return render(request, 'attention/medical_attention/atencion_pdf.html', data)
+    except Atencion.DoesNotExist:
+      raise Http404("No se encontró la atención médica.")
+
+
+class AttentionListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "attention/medical_attention/list.html"
   model = Atencion
+  permission_required = 'view_attention'
   context_object_name = 'atenciones'
 
   def get_queryset(self):
@@ -34,10 +220,11 @@ class AttentionListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('-fecha_atencion')
 
 
-class AttentionCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Atencion
   template_name = 'attention/medical_attention/form.html'
   form_class = AttentionForm
+  permission_required = 'add_attention'
   success_url = reverse_lazy('attention:attention_list')
 
   # permission_required = 'add_supplier' # en PermissionMixn se verfica si un grupo tiene el permiso
@@ -104,10 +291,11 @@ class AttentionCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
       return JsonResponse({"msg": str(ex)}, status=400)
 
 
-class AttentionUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class AttentionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Atencion
   template_name = 'attention/medical_attention/form.html'
   form_class = AttentionForm
+  permission_required = 'change_attention'
   success_url = reverse_lazy('attention:attention_list')
 
   # permission_required = 'add_supplier' # en PermissionMixn se verfica si un grupo tiene el permiso

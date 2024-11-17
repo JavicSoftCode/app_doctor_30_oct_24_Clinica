@@ -41,6 +41,9 @@ INSTALLED_APPS = [
   # python manage.py migrate django_celery_beat
 
 ]
+# seguridad
+INTERNAL_IPS = ["127.0.0.1", ]
+
 SHELL_PLUS = "ipython"  # Si tienes IPython instalado, usa esta opción
 SHELL_PLUS_PRINT_SQL = True
 
@@ -52,7 +55,18 @@ MIDDLEWARE = [
   'django.contrib.auth.middleware.AuthenticationMiddleware',
   'django.contrib.messages.middleware.MessageMiddleware',
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+  # seguridad
+  'crum.CurrentRequestUserMiddleware',
 ]
+# seguridad
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Usar base de datos para sesiones
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_SECURE = False  # Cambia a True en producción
+SESSION_COOKIE_HTTPONLY = True
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+BROWSER_REFRESH_SECONDS = 1
 
 ROOT_URLCONF = 'doctor.urls'
 
@@ -98,6 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
   },
   {
     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    'OPTIONS': {'min_length': 8, }  # Asegura que la contraseña tenga mayor a 8 caracteres
   },
   {
     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -113,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'es-ec'
 TIME_ZONE = 'America/Guayaquil'
 USE_I18N = True
-USE_TZ = False
+USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -123,6 +138,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)  # carpeta fisica de arch
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # carpeta fisica de archivos de Imagenes
 MEDIA_URL = '/media/'
 LOGIN_URL = '/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Correos masivos
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -148,3 +164,9 @@ CELERY_BEAT_SCHEDULE = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = 'security.User'
+LOGIN_URL = '/security/auth/login'
+SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
+

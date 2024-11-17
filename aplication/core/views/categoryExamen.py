@@ -7,13 +7,14 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.categoryExamen import CategoryExamenForm
 from aplication.core.models import CategoriaExamen
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
+from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
 
-class CategoryExamenListView(LoginRequiredMixin, ListViewMixin, ListView):
+class CategoryExamenListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/categoryExamen/list.html"
   model = CategoriaExamen
+  permission_required = 'view_categoriaexamen'
   context_object_name = 'categorias_examen'
 
   def get_queryset(self):
@@ -34,10 +35,11 @@ class CategoryExamenListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('nombre')
 
 
-class CategoryExamenCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class CategoryExamenCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = CategoriaExamen
   template_name = 'core/categoryExamen/form.html'
   form_class = CategoryExamenForm
+  permission_required = 'add_categoriaexamen'
   success_url = reverse_lazy('core:categoryExamen_list')
 
   def form_valid(self, form):
@@ -53,10 +55,11 @@ class CategoryExamenCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class CategoryExamenUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class CategoryExamenUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = CategoriaExamen
   template_name = 'core/categoryExamen/form.html'
   form_class = CategoryExamenForm
+  permission_required = 'change_categoriaexamen'
   success_url = reverse_lazy('core:categoryExamen_list')
 
   def form_valid(self, form):
@@ -72,8 +75,9 @@ class CategoryExamenUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class CategoryExamenDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class CategoryExamenDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = CategoriaExamen
+  permission_required = 'delete_categoriaexamen'
   success_url = reverse_lazy('core:categoryExamen_list')
 
   def get_context_data(self, **kwargs):

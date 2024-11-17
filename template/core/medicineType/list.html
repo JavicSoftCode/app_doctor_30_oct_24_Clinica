@@ -37,10 +37,12 @@
                                     </select>
                                 </div>
                             </form>
+                        {% if permissions.add_tipomedicamento %}
                             <a style="background-color: #3B3BBA; color: white" class="btn btn-primary mt-3 mt-md-0"
                                href="{% url 'core:medicineType_create' %}">
                                 <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}
                             </a>
+                        {% endif %}
                         </div>
 
                         <div class="table-responsive">
@@ -76,25 +78,28 @@
                                                     <i class="fas fa-eye"></i>
                                                 </button>
 
+                                            {% if permissions.change_tipomedicamento %}
                                                 <a href="{% url 'core:medicineType_update' item.id %}"
                                                    class="btn btn-info btn-sm text-white" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                            {% endif %}
 
                                                 {% if item.tiene_relaciones %}
-                                                    {#                                    related name#}
                                                     <button class="btn btn-danger btn-sm" disabled
                                                             onclick="relacionadoConsole()">
                                                         <i class="fa-solid fa-trash"
                                                            title="No se puede eliminar Tipo Medicamento Relacionado."></i>
                                                     </button>
                                                 {% else %}
+                                                    {% if permissons.delete_tipomedicamento %}
                                                     {% with id=item.id name=item.nombre msg="¿Está seguro de eliminar este Tipo Medicamento?" %}
                                                         <button class="btn btn-danger btn-sm"
                                                                 onclick="confirmDelete('{{ id }}', '{{ name }}', '{{ msg|escapejs }}');">
                                                             <i class="fa-solid fa-trash"></i>
                                                         </button>
                                                     {% endwith %}
+                                                        {% endif %}
                                                 {% endif %}
                                             </div>
                                         </td>

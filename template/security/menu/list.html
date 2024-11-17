@@ -1,0 +1,112 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+
+                <!-- Audit User  List Content -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">{{ title1 }}</h3>
+                        </div>
+
+                        <!-- Barra de búsqueda -->
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                            <form method="GET" action="{% url 'security:menus_list' %}">
+                                <input type="text" name="q" id="table-search"
+                                       class="form-control search-box"
+                                       placeholder="Búscar menú" value="{{ request.GET.q }}"
+                                       autocomplete="off">
+                            </form>
+                            {% if permissions.add_menu %}
+                                <a class="btn btn-primary mt-3 mt-md-0" href="{% url 'security:menus_create' %}"
+                                   style="background-color: #3B3BBA; color: white">
+                                    <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <!-- Tabla Content -->
+                        <div class="table-responsive">
+                            <!-- Tabla -->
+                            <table class="table table-hover text-center">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Menú</th>
+                                    <th>Icono</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in menus %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td><i class="{{ item.icon }} fa-lg"></i></td>
+                                        <td>
+                                            <div>
+
+                                                {% if permissions.change_menu %}
+                                                    <a href="{% url 'security:menus_update' item.id %}"
+                                                       class="btn btn-info btn-sm text-white" title="Editar">
+                                                        <i class="fas fa-edit fa-lg"></i>
+                                                    </a>
+                                                {% endif %}
+
+                                                {% if  item.has_related_objects %}
+                                                    <button class="btn btn-danger btn-sm" disabled
+                                                            onclick="relacionadoConsole()">
+                                                        <i class="fa-solid fa-trash"
+                                                           title="No se puede eliminar Menú Relacionado."></i>
+                                                    </button>
+                                                {% else %}
+                                                    {% if permissions.delete_menu %}
+                                                        {% with id=item.id name=item.name msg="¿ Esta seguro de eliminar este Menú ?" %}
+                                                            <button class="btn btn-danger btn-sm "
+                                                                    onclick="confirmDelete('{{ id }}','{{ name }}','{{ msg|escapejs }}');">
+                                                                <i class="fa-solid fa-trash fa-lg"></i></button>
+                                                        {% endwith %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% include 'includes/paginations.html' %}
+                        <!-- Fin Pagination -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'includes/confirm_delete_modal.html' %}
+    <script>
+        /* funciones del modal eliminar*/
+        function confirmDelete(id, name, msg) {
+            document.getElementById('modalMessage').innerText = `${msg} ${name}`;
+            const form = document.getElementById('deleteForm');
+            form.action = `/security/menus_delete/${id}/`; // Ajusta la URL según tu configuración
+            const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            modal.show();
+        }
+
+        function closeModal() {
+            const modalElement = document.getElementById('confirmDeleteModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+    </script>
+
+{% endblock %}

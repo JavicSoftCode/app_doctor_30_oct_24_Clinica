@@ -1,0 +1,137 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <style>/* Modal base */
+    .modall {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    /* Contenido del modal */
+    .modal-contentt {
+        border: 2px solid #3B3BBA;
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 50%;
+        text-align: center;
+    }
+    </style>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+
+                <!-- Audit User  List Content -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">{{ title1 }}</h3>
+                        </div>
+
+                        <!-- Barra de búsqueda -->
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                            <form method="GET" action="{% url 'security:groupmodulepermission_list' %}">
+                                <input type="text" name="q" id="table-search"
+                                       class="form-control search-box"
+                                       placeholder="Búscar G.M.P" value="{{ request.GET.q }}"
+                                       autocomplete="off">
+                            </form>
+                            {% if permissions.add_groupmodulepermission %}
+                                <a class="btn btn-primary mt-3 mt-md-0"
+                                   href="{% url 'security:groupmodulepermission_create' %}"
+                                   style="background-color: #3B3BBA; color: white">
+                                    <i class="fa-solid fa-shield-halved fa-lg me-2"></i>{{ title2 }}
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <!-- Tabla Content -->
+                        <div class="table-responsive">
+                            <!-- Tabla -->
+                            <table class="table table-hover text-center">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Grupos</th>
+                                    <th>Módulos</th>
+                                    <th>Permisos</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in grupomodulopermisos %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td> {{ item.group.name }}</td>
+                                        <td> {{ item.module.name }}</td>
+                                        <td>
+                                            {% if item.get_permissions_display != "No tiene permisos asignados" %}
+                                                <i class="fa-brands fa-product-hunt fa-lg" style="cursor: pointer"
+                                                   onclick="openModal('{{ item.get_permissions_display }}')"></i>
+                                            {% else %}
+                                                {{ item.get_permissions_display }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% include 'includes/paginations.html' %}
+                        <!-- Fin Pagination -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="permissionsModal" class="modall hidden">
+        <div class="modal-contentt">
+            <h4><strong>Permisos</strong></h4>
+            <ul id="permissionsList"></ul> <!-- Para mostrar los permisos -->
+        </div>
+    </div>
+
+    {#    scripts del modal de los permisos #}
+    <script>
+        function openModal(permissions) {
+            const modal = document.getElementById('permissionsModal');
+            const list = document.getElementById('permissionsList');
+
+            // Limpiar la lista anterior
+            list.innerHTML = '';
+
+            // Convertir permisos en una lista (suponiendo que están separados por comas)
+            const permissionsArray = permissions.split(',');
+
+            // Agregar cada permiso a la lista
+            permissionsArray.forEach(permission => {
+                const li = document.createElement('li');
+                li.textContent = permission.trim();
+                list.appendChild(li);
+            });
+
+            // Mostrar el modal
+            modal.style.display = 'block';
+        }
+
+        // Cerrar el modal si se hace clic fuera del contenido
+        window.onclick = function (event) {
+            const modal = document.getElementById('permissionsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+{% endblock %}

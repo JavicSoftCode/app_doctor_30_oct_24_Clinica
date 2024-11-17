@@ -19,7 +19,7 @@ app_name = 'core'  # define un espacio de nombre para la aplicacion
 urlpatterns = [
   path('', HomeTemplateView.as_view(), name='home'),
 
-  # Graficas
+  # # Graficas
   path('filtro-atenciones/', filter_atenciones, name='filtro_atenciones'),
   path('filtro-citas/', filter_citas, name='filtro_citas'),
   path('filtro-citas-estado/', filter_citas_estado, name='filtro_citas_estado'),
@@ -30,6 +30,10 @@ urlpatterns = [
   path('patient_update/<int:pk>/', PatientUpdateView.as_view(), name='patient_update'),
   path('patient_delete/<int:pk>/', PatientDeleteView.as_view(), name='patient_delete'),
   path('patient_detail/<int:pk>/', PatientDetailView.as_view(), name='patient_detail'),
+
+  # # Descargar ficha medica del paciente
+  path('paciente/<int:pk>/', ViewPatientPdf.as_view(), name='ver_paciente'),
+  path('patient/pdf/', generar_ficha_pdf, name='patient_ficha_medica'),
 
   # URLs de doctor
   path('doctor_list/', DoctorListView.as_view(), name="doctor_list"),

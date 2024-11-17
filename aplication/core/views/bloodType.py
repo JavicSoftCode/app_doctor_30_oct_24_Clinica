@@ -7,13 +7,14 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from aplication.core.forms.bloodType import BloodTypeForm
 from aplication.core.models import TipoSangre
-from doctor.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, UpdateViewMixin
 from doctor.utils import save_audit
+from aplication.security.mixins.mixins import *
 
 
-class BloodTypeListView(LoginRequiredMixin, ListViewMixin, ListView):
+class BloodTypeListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "core/bloodType/list.html"
   model = TipoSangre
+  permission_required = 'view_tiposangre'
   context_object_name = 'tipos_sangre'
 
   def get_queryset(self):
@@ -29,10 +30,11 @@ class BloodTypeListView(LoginRequiredMixin, ListViewMixin, ListView):
     return self.model.objects.filter(self.query).order_by('tipo')
 
 
-class BloodTypeCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class BloodTypeCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = TipoSangre
   template_name = 'core/bloodType/form.html'
   form_class = BloodTypeForm
+  permission_required = 'add_tiposangre'
   success_url = reverse_lazy('core:bloodType_list')
 
   def form_valid(self, form):
@@ -48,10 +50,11 @@ class BloodTypeCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class BloodTypeUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
+class BloodTypeUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = TipoSangre
   template_name = 'core/bloodType/form.html'
   form_class = BloodTypeForm
+  permission_required = 'change_tiposangre'
   success_url = reverse_lazy('core:bloodType_list')
 
   def form_valid(self, form):
@@ -68,8 +71,9 @@ class BloodTypeUpdateView(LoginRequiredMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
-class BloodTypeDeleteView(LoginRequiredMixin, DeleteViewMixin, DeleteView):
+class BloodTypeDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = TipoSangre
+  permission_required = 'delete_tiposangre'
   success_url = reverse_lazy('core:bloodType_list')
 
   def get_context_data(self, **kwargs):
