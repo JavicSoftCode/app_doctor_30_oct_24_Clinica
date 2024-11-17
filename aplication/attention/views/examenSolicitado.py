@@ -1,12 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from aplication.attention.forms.examenSolicitado import ExamenSolicitadoForm
 from aplication.attention.models import ExamenSolicitado
-from doctor.utils import save_audit
 from aplication.security.mixins.mixins import *
+from doctor.utils import save_audit
 
 
 class ExamenSolicitadoListView(PermissionMixin, ListViewMixin, ListView):
@@ -79,6 +80,35 @@ class ExamenSolicitadoUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
     return self.render_to_response(self.get_context_data(form=form))
 
 
+class ExamenSolicitadoResultView(PermissionMixin, UpdateView):
+  model = ExamenSolicitado
+  template_name = 'attention/examenSolicitado/form_resultado.html'
+  form_class = ExamenSolicitadoForm
+  # permission_required = 'subir_examensolicitado'
+  success_url = reverse_lazy('attention:examenSolicitado_list')
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['title'] = "SaludSync"
+    context['title1'] = f'Subir Resultado del Examen {self.model._meta.verbose_name}'
+    context['grabar'] = f'Resultado Examen {self.model._meta.verbose_name}'
+    context['back_url'] = self.success_url
+    return context
+
+  def form_valid(self, form):
+    # Establecer el estado del examen a "Realizado"
+    examen = form.save(commit=False)
+    examen.estado = 'R'  # "Realizado"
+    examen.save()
+    save_audit(self.request, examen, action='M')
+    messages.success(self.request, f"El resultado del examen {examen.nombre_examen} ha sido cargado exitosamente.")
+    return super().form_valid(form)
+
+  def form_invalid(self, form):
+    messages.error(self.request, "Error al cargar el resultado del examen. Corrige los errores.")
+    return self.render_to_response(self.get_context_data(form=form))
+
+
 class ExamenSolicitadoDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = ExamenSolicitado
   permission_required = 'delete_examensolicitado'
@@ -121,3 +151,19 @@ class ExamenSolicitadoDetailView(LoginRequiredMixin, DetailView):
       'estado': examenSolicitado.estado,
     }
     return JsonResponse(data)
+
+
+# class ExamenResultadoDetailView(LoginRequiredMixin, DetailView):
+#   model = ExamenSolicitado
+#   template_name = 'attention/examenSolicitado/examenResultado_ver.html'
+#
+#   def get_object(self):
+#     # Obtener el examen solicitado basado en el ID
+#     return get_object_or_404(ExamenSolicitado, id=self.kwargs['pk'], estado='R')
+
+class ExamenResultadoDetailView(LoginRequiredMixin, DetailView):
+  model = ExamenSolicitado
+  template_name = 'attention/examenSolicitado/examenResultado_ver.html'
+
+  def get_object(self):
+    return get_object_or_404(ExamenSolicitado, id=self.kwargs['pk'], estado='R')

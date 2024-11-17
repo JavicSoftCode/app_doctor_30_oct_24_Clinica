@@ -77,3 +77,4 @@ class ExamenSolicitadoForm(ModelForm):
       "comentario": "Comentario",
       "estado": "Cita Médica"
     }
+

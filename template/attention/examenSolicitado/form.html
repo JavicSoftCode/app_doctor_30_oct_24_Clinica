@@ -14,27 +14,27 @@
                             <h3 class="text-primary-emphasis mb-4 fw-bold">{{ title1 }}</h3>
 
                             <div class="col-md-6">
-                                <div class="file-upload-container"
-                                     style="border-radius: 20px; border: 2px solid #e4e7ea">
-
-                                    <label for="examenR" style="margin-top: 12px"
-                                           class="form-label fw-bold" id="examenR">Resultado de Exámen</label>
-                                    <!-- Card para resultado (PDF) -->
-                                    <div style="margin-left: -20%; padding: 10px">
-                                        <label class="file-upload-card" for="{{ form.resultado.id_for_label }}">
-                                            <i class="fa fa-file-pdf" style="font-size: 25px; color: white"></i>
-                                            Exámen<span class="uploaded-status">
-            {% if examensolicitado.resultado %} ✅{% endif %}
-        </span>
-                                            <span class="tooltip">
-            {% if examensolicitado.resultado %} {{ examensolicitado.resultado.name }} {% endif %}
-        </span> <!-- Tooltip para mostrar el nombre del archivo -->
-                                        </label>
-                                        <input type="file" id="{{ form.resultado.id_for_label }}" name="resultado"
-                                               class="file-input" accept=".pdf">
-
-                                    </div>
-                                </div>
+{#                                <div class="file-upload-container"#}
+{#                                     style="border-radius: 20px; border: 2px solid #e4e7ea">#}
+{##}
+{#                                    <label for="examenR" style="margin-top: 12px"#}
+{#                                           class="form-label fw-bold" id="examenR">Resultado de Exámen</label>#}
+{#                                    <!-- Card para resultado (PDF) -->#}
+{#                                    <div style="margin-left: -20%; padding: 10px">#}
+{#                                        <label class="file-upload-card" for="{{ form.resultado.id_for_label }}">#}
+{#                                            <i class="fa fa-file-pdf" style="font-size: 25px; color: white"></i>#}
+{#                                            Exámen<span class="uploaded-status">#}
+{#            {% if examensolicitado.resultado %} ✅{% endif %}#}
+{#        </span>#}
+{#                                            <span class="tooltip">#}
+{#            {% if examensolicitado.resultado %} {{ examensolicitado.resultado.name }} {% endif %}#}
+{#        </span> <!-- Tooltip para mostrar el nombre del archivo -->#}
+{#                                        </label>#}
+{#                                        <input type="file" id="{{ form.resultado.id_for_label }}" name="resultado"#}
+{#                                               class="file-input" accept=".pdf">#}
+{##}
+{#                                    </div>#}
+{#                                </div>#}
 
 
                                 <div class="form-group">
@@ -82,45 +82,45 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const fileInputs = document.querySelectorAll('.file-input');
-
-            fileInputs.forEach(input => {
-                const label = input.previousElementSibling; // Obtener la label correspondiente
-                const icon = label.querySelector('i');
-                const status = label.querySelector('.uploaded-status');
-                const tooltip = label.querySelector('.tooltip');
-
-                input.addEventListener('change', function () {
-                    if (this.files.length > 0) {
-                        const fileName = this.files[0].name; // Obtener el nombre del archivo
-                        // Cambiar el color del icono a verde
-                        icon.classList.add('uploaded'); // Suponiendo que defines un estilo 'uploaded'
-                        // Mostrar el nombre del archivo en el tooltip
-                        tooltip.textContent = fileName;
-                        // Agregar el símbolo de verificación
-                        status.innerHTML = ' ✅';
-                    }
-                });
-
-                // Mostrar el tooltip al pasar el mouse
-                label.addEventListener('mouseenter', function () {
-                    tooltip.style.display = 'block'; // Muestra el tooltip
-                });
-
-                label.addEventListener('mouseleave', function () {
-                    tooltip.style.display = 'none'; // Oculta el tooltip
-                });
-
-                // Inicializa el tooltip y el estado si ya hay un archivo cargado
-                if (input.files.length > 0) {
-                    const fileName = input.files[0].name;
-                    tooltip.textContent = fileName;
-                    status.innerHTML = ' ✅';
-                }
-            });
-        });
-    </script>
+{#    <script>#}
+{#        document.addEventListener('DOMContentLoaded', function () {#}
+{#            const fileInputs = document.querySelectorAll('.file-input');#}
+{##}
+{#            fileInputs.forEach(input => {#}
+{#                const label = input.previousElementSibling; // Obtener la label correspondiente#}
+{#                const icon = label.querySelector('i');#}
+{#                const status = label.querySelector('.uploaded-status');#}
+{#                const tooltip = label.querySelector('.tooltip');#}
+{##}
+{#                input.addEventListener('change', function () {#}
+{#                    if (this.files.length > 0) {#}
+{#                        const fileName = this.files[0].name; // Obtener el nombre del archivo#}
+{#                        // Cambiar el color del icono a verde#}
+{#                        icon.classList.add('uploaded'); // Suponiendo que defines un estilo 'uploaded'#}
+{#                        // Mostrar el nombre del archivo en el tooltip#}
+{#                        tooltip.textContent = fileName;#}
+{#                        // Agregar el símbolo de verificación#}
+{#                        status.innerHTML = ' ✅';#}
+{#                    }#}
+{#                });#}
+{##}
+{#                // Mostrar el tooltip al pasar el mouse#}
+{#                label.addEventListener('mouseenter', function () {#}
+{#                    tooltip.style.display = 'block'; // Muestra el tooltip#}
+{#                });#}
+{##}
+{#                label.addEventListener('mouseleave', function () {#}
+{#                    tooltip.style.display = 'none'; // Oculta el tooltip#}
+{#                });#}
+{##}
+{#                // Inicializa el tooltip y el estado si ya hay un archivo cargado#}
+{#                if (input.files.length > 0) {#}
+{#                    const fileName = input.files[0].name;#}
+{#                    tooltip.textContent = fileName;#}
+{#                    status.innerHTML = ' ✅';#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#    </script>#}
 
 {% endblock content %}

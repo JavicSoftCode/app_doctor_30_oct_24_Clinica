@@ -1,9 +1,9 @@
 import json
 from decimal import Decimal
 from io import BytesIO
-from django.core.mail import EmailMessage
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import EmailMessage
 from django.db import transaction
 from django.http import Http404
 from django.http import HttpResponse
@@ -553,7 +553,8 @@ class AttentionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
       from_email='ing.javiersistem02ejqp@gmail.com',
       to=[paciente_email],
     )
-    email.attach(f"certificado_actualizado_medico_{atencion.paciente.nombre_completo}.pdf", pdf_buffer.read(), 'application/pdf')
+    email.attach(f"certificado_actualizado_medico_{atencion.paciente.nombre_completo}.pdf", pdf_buffer.read(),
+                 'application/pdf')
     email.send()
 
 

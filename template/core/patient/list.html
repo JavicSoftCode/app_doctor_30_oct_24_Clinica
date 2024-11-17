@@ -95,8 +95,27 @@
                                         <td>
 
                                             <div class="action-buttons d-flex gap-2">
+
+                                                {# Aquí verificamos si hay exámenes realizados para este paciente y mostramos el botón para ver el resultado #}
+                                                {#                                                {% if item.examenes_realizados %}#}
+                                                {#                                                    <a href="{% url 'attention:examenSolicitado_resultado' item.id %}"#}
+                                                {#                                                       class="btn btn-success btn-sm" title="Ver Resultado del Examen">#}
+                                                {#                                                        <i class="fa-solid fa-file-alt fa-lg"></i> Ver Resultado#}
+                                                {#                                                    </a>#}
+                                                {#                                                {% endif %}#}
+                                                {% if item.examenes_realizados %}
+                                                    {% for examen in item.examenes_realizados %}
+                                                        <a href="{% url 'attention:examenSolicitado_resultado' examen.id %}"
+                                                           class="btn btn-success btn-sm"
+                                                           title="Ver Resultado del Examen">
+                                                            <i class="fa-solid fa-file-alt fa-lg"></i>
+                                                        </a>
+                                                    {% endfor %}
+                                                {% else %}
+                                                {% endif %}
+
                                                 <a href="{% url 'core:ver_paciente' item.id %}"
-                                                   class="btn btn-info btn-sm text-white" title="Editar">
+                                                   class="btn btn-info btn-sm text-white" title="Ver Ficha Médica">
                                                     <i class="fa-solid fa-file-medical fa-lg"></i>
                                                 </a>
 

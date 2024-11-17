@@ -30,6 +30,8 @@ urlpatterns = [
   path('examenSolicitado_list/', ExamenSolicitadoListView.as_view(), name='examenSolicitado_list'),
   path('examenSolicitado_create/', ExamenSolicitadoCreateView.as_view(), name='examenSolicitado_create'),
   path('examenSolicitado_update/<int:pk>/', ExamenSolicitadoUpdateView.as_view(), name='examenSolicitado_update'),
+  path('examenSolicitado_subir/<int:pk>/', ExamenSolicitadoResultView.as_view(), name='examenSolicitado_subir'),
+  path('examenSolicitado_resultado/<int:pk>/', ExamenResultadoDetailView.as_view(), name='examenSolicitado_resultado'),
   path('examenSolicitado_delete/<int:pk>/', ExamenSolicitadoDeleteView.as_view(), name='examenSolicitado_delete'),
   path('examenSolicitado_detail/<int:pk>/', ExamenSolicitadoDetailView.as_view(), name='examenSolicitado_detail'),
 
@@ -42,4 +44,5 @@ urlpatterns = [
        name='serviciosAdicionales_delete'),
   path('serviciosAdicionales_detail/<int:pk>/', ServiciosAdicionalesDetailView.as_view(),
        name='serviciosAdicionales_detail'),
+
 ]

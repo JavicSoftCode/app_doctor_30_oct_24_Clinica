@@ -1,0 +1,130 @@
+{#{% extends 'components/base.html' %}#}
+{#{% block content %}#}
+{#    {% load static %}#}
+{#    <div class="container-fluid">#}
+{#        <div class="row">#}
+{#            <!-- Main Content -->#}
+{#            <div class="col-md-12 col-lg-12 px-md-4 main-content">#}
+{#                <!-- Patient List Content -->#}
+{#                <div class="card mb-4">#}
+{#                    <div class="card-body">#}
+{#                        <div class="d-flex justify-content-between align-items-center mb-4">#}
+{#                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold">Detalle del#}
+{#                                Examen: {{ object.nombre_examen }}</h3>#}
+{#                        </div>#}
+{#                        <h4>Información del Examen</h4>#}
+{#                        <ul class="list-group">#}
+{#                            <li class="list-group-item">#}
+{#                                <strong>Paciente:</strong> {{ object.paciente.nombre_completo }}#}
+{#                            </li>#}
+{#                            <li class="list-group-item">#}
+{#                                <strong>Fecha de Solicitud:</strong> {{ object.fecha_solicitud|date:"d/m/Y" }}#}
+{#                            </li>#}
+{#                            <li class="list-group-item">#}
+{#                                <strong>Estado:</strong> {{ object.get_estado_display }}#}
+{#                            </li>#}
+{#                            <li class="list-group-item">#}
+{#                                <strong>Comentarios:</strong> {{ object.comentario|default:"Sin comentarios" }}#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </div>#}
+{##}
+{#                    <div class="col-md-6">#}
+{#                        <h4>Resultado del Examen</h4>#}
+{#                        {% if object.resultado %}#}
+{#                            <div class="alert alert-success">#}
+{#                                <strong>El resultado del examen está disponible:</strong>#}
+{#                                <br>#}
+{#                                <a href="{{ object.resultado.url }}" target="_blank" class="btn btn-primary mt-2">#}
+{#                                    Ver Resultado (Archivo PDF)#}
+{#                                </a>#}
+{#                            </div>#}
+{#                        {% else %}#}
+{#                            <div class="alert alert-warning">#}
+{#                                <strong>Aún no se ha cargado el resultado del examen.</strong>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                    <div class="mt-4">#}
+{#                        <a href="{% url 'core:patient_list' %}" class="btn btn-secondary">Volver a la lista de#}
+{#                            pacientes</a>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{##}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+
+
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <!-- Main Content -->
+{#            <div class="col-md-10 col-lg-8 px-md-4 main-content">#}
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <!-- Título Principal -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="card-title mb-0 text-primary-emphasis fw-bold text-center">
+                                Detalle del Examen: {{ object.nombre_examen }}
+                            </h3>
+                        </div>
+
+                        <!-- Información del Examen -->
+                        <div class="row">
+                            <!-- Información General -->
+                            <div class="col-md-6">
+                                <h4><strong>Información del Examen</strong></h4>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Paciente:</strong> {{ object.paciente.nombre_completo }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Fecha de Solicitud:</strong> {{ object.fecha_solicitud|date:"d/m/Y" }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Estado:</strong> {{ object.get_estado_display }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Comentarios:</strong> {{ object.comentario|default:"Sin comentarios" }}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Resultado del Examen -->
+                            <div class="col-md-6 d-flex flex-column align-items-center">
+                                <h4><strong>Resultado del Examen</strong></h4>
+                                {% if object.resultado %}
+                                    <div class="alert text-center" style="background-color: #3B3BBA">
+                                        <strong style="color: white">El resultado del examen está disponible:</strong>
+                                        <br>
+                                        <a href="{{ object.resultado.url }}" target="_blank" class="btn  mt-2" style="background-color: #3498DB; color: white">
+                                            Resultado del Examen <i class="fa-solid fa-file-pdf fa-lg" style="color: red"></i>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-warning text-end">
+                                        <strong>Aún no se ha cargado el resultado del examen.</strong>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Botón de Regreso -->
+                        <div class="mt-4 text-center">
+                            <a href="{% url 'core:patient_list' %}" class="btn btn-secondary">
+                                <i class="fa-solid fa-circle-chevron-left fa-lg me-2"></i>Regresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

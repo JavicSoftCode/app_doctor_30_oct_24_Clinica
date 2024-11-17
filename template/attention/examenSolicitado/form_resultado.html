@@ -1,0 +1,127 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 px-md-4 main-content">
+                <!-- Mensajes de ERRORES -->
+                {% include 'includes/message_error_form.html' %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" class="row">
+                            {% csrf_token %}
+
+                            <h3 class="text-primary-emphasis mb-4 fw-bold">{{ title1 }}</h3>
+
+                            <div class="col-md-6">
+                                <div class="file-upload-container"
+                                     style="border-radius: 20px; border: 2px solid #e4e7ea">
+
+                                    <label for="examenR" style="margin-top: 12px"
+                                           class="form-label fw-bold" id="examenR">Resultado de Exámen</label>
+                                    <!-- Card para resultado (PDF) -->
+                                    <div style="margin-left: -20%; padding: 10px">
+                                        <label class="file-upload-card" for="{{ form.resultado.id_for_label }}">
+                                            <i class="fa fa-file-pdf" style="font-size: 25px; color: white"></i>
+                                            Exámen<span class="uploaded-status">
+            {% if examensolicitado.resultado %} ✅{% endif %}
+        </span>
+                                            <span class="tooltip">
+            {% if examensolicitado.resultado %} {{ examensolicitado.resultado.name }} {% endif %}
+        </span> <!-- Tooltip para mostrar el nombre del archivo -->
+                                        </label>
+                                        <input type="file" id="{{ form.resultado.id_for_label }}" name="resultado"
+                                               class="file-input" accept=".pdf">
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="{{ form.nombre_examen.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.nombre_examen.label }}</label>
+                                    {{ form.nombre_examen }}
+                                    {{ form.nombre_examen.errors }}
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.comentario.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.comentario.label }}</label>
+                                    {{ form.comentario }}
+                                    {{ form.comentario.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.paciente.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.paciente.label }}</label>
+                                    {{ form.paciente }}
+                                    {{ form.paciente.errors }}
+                                </div>
+
+                                <div class="form-group" style="display: none">
+                                    <label for="{{ form.estado.id_for_label }}"
+                                           class="form-label fw-bold">{{ form.estado.label }}</label>
+                                    {{ form.estado }}
+                                    {{ form.estado.errors }}
+                                </div>
+
+
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button class="btn me-2 grabar" type="submit"
+                                            style="background-color: #3B3BBA; color: white">{{ grabar }}</button>
+                                    <a class="btn btn-secondary cancelar" href="{{ back_url }}">Cancelar</a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileInputs = document.querySelectorAll('.file-input');
+
+            fileInputs.forEach(input => {
+                const label = input.previousElementSibling; // Obtener la label correspondiente
+                const icon = label.querySelector('i');
+                const status = label.querySelector('.uploaded-status');
+                const tooltip = label.querySelector('.tooltip');
+
+                input.addEventListener('change', function () {
+                    if (this.files.length > 0) {
+                        const fileName = this.files[0].name; // Obtener el nombre del archivo
+                        // Cambiar el color del icono a verde
+                        icon.classList.add('uploaded'); // Suponiendo que defines un estilo 'uploaded'
+                        // Mostrar el nombre del archivo en el tooltip
+                        tooltip.textContent = fileName;
+                        // Agregar el símbolo de verificación
+                        status.innerHTML = ' ✅';
+                    }
+                });
+
+                // Mostrar el tooltip al pasar el mouse
+                label.addEventListener('mouseenter', function () {
+                    tooltip.style.display = 'block'; // Muestra el tooltip
+                });
+
+                label.addEventListener('mouseleave', function () {
+                    tooltip.style.display = 'none'; // Oculta el tooltip
+                });
+
+                // Inicializa el tooltip y el estado si ya hay un archivo cargado
+                if (input.files.length > 0) {
+                    const fileName = input.files[0].name;
+                    tooltip.textContent = fileName;
+                    status.innerHTML = ' ✅';
+                }
+            });
+        });
+    </script>
+
+{% endblock content %}

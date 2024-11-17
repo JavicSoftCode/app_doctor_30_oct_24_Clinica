@@ -1,5 +1,5 @@
 import json
-
+from django.db.models import Prefetch
 import folium
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers.json import DjangoJSONEncoder
@@ -21,6 +21,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 
 from aplication.core.forms.patient import PatientForm
 from aplication.core.models import Paciente
+from aplication.attention.models import ExamenSolicitado
 from aplication.security.mixins.mixins import *
 from doctor.utils import save_audit
 
@@ -160,42 +161,144 @@ class ViewPatientPdf(LoginRequiredMixin, View):
       raise Http404("Paciente no encontrado")
 
 
+# class PatientListView(PermissionMixin, ListViewMixin, ListView):
+#   template_name = "core/patient/list.html"
+#   model = Paciente
+#   permission_required = 'view_paciente'
+#   context_object_name = 'pacientes'
+#
+#   def get_queryset(self):
+#     self.query = Q()
+#     q1 = self.request.GET.get('q')
+#     sex = self.request.GET.get('sex')
+#     if q1 is not None:
+#       self.query.add(Q(nombres__icontains=q1), Q.OR)
+#       self.query.add(Q(apellidos__icontains=q1), Q.OR)
+#       self.query.add(Q(cedula__icontains=q1), Q.OR)
+#     if sex == "M" or sex == "F":
+#       self.query.add(Q(sexo__icontains=sex), Q.AND)
+#     return self.model.objects.filter(self.query).order_by('apellidos')
+#
+#   def get_context_data(self, **kwargs):
+#     context = super().get_context_data(**kwargs)
+#     locations = self.get_queryset()
+#     locations_data = [
+#       {
+#         'latitude': float(location.latitud) if location.latitud else None,
+#         'longitude': float(location.longitud) if location.longitud else None,
+#         'paciente': location.nombre_completo,
+#         'address': location.direccion,
+#         'image': location.foto.url if location.foto else static('img/paciente_avatar.png'),
+#       }
+#       for location in locations
+#       if location.latitud and location.longitud  # Solo incluir pacientes con coordenadas válidas
+#     ]
+#
+#     # Convertir a JSON de manera segura
+#     context['locations'] = json.dumps(locations_data, cls=DjangoJSONEncoder)
+#     return context
+
+
+# class PatientListView(PermissionMixin, ListViewMixin, ListView):
+#   template_name = "core/patient/list.html"
+#   model = Paciente
+#   permission_required = 'view_paciente'
+#   context_object_name = 'pacientes'
+#
+#   def get_queryset(self):
+#     self.query = Q()
+#     q1 = self.request.GET.get('q')
+#     sex = self.request.GET.get('sex')
+#     if q1 is not None:
+#       self.query.add(Q(nombres__icontains=q1), Q.OR)
+#       self.query.add(Q(apellidos__icontains=q1), Q.OR)
+#       self.query.add(Q(cedula__icontains=q1), Q.OR)
+#     if sex == "M" or sex == "F":
+#       self.query.add(Q(sexo__icontains=sex), Q.AND)
+#     return self.model.objects.filter(self.query).order_by('apellidos')
+#
+#   def get_context_data(self, **kwargs):
+#     context = super().get_context_data(**kwargs)
+#     locations = self.get_queryset()
+#     locations_data = [
+#       {
+#         'latitude': float(location.latitud) if location.latitud else None,
+#         'longitude': float(location.longitud) if location.longitud else None,
+#         'paciente': location.nombre_completo,
+#         'address': location.direccion,
+#         'image': location.foto.url if location.foto else static('img/paciente_avatar.png'),
+#         'examenes_realizados': [
+#           {
+#             'nombre_examen': examen.nombre_examen,
+#             'fecha_solicitud': examen.fecha_solicitud.strftime('%Y-%m-%d'),
+#             'resultado': examen.resultado.url if examen.resultado else None,
+#           }
+#           for examen in location.pacientes_examenes.filter(estado='R')
+#         ],  # Convertir QuerySet a lista de diccionarios
+#       }
+#       for location in locations
+#       if location.latitud and location.longitud  # Solo incluir pacientes con coordenadas válidas
+#     ]
+#
+#     # Serializar la lista resultante
+#     context['locations'] = json.dumps(locations_data, cls=DjangoJSONEncoder)
+#     return context
+
 class PatientListView(PermissionMixin, ListViewMixin, ListView):
-  template_name = "core/patient/list.html"
-  model = Paciente
-  permission_required = 'view_paciente'
-  context_object_name = 'pacientes'
+    template_name = "core/patient/list.html"
+    model = Paciente
+    permission_required = 'view_paciente'
+    context_object_name = 'pacientes'
 
-  def get_queryset(self):
-    self.query = Q()
-    q1 = self.request.GET.get('q')
-    sex = self.request.GET.get('sex')
-    if q1 is not None:
-      self.query.add(Q(nombres__icontains=q1), Q.OR)
-      self.query.add(Q(apellidos__icontains=q1), Q.OR)
-      self.query.add(Q(cedula__icontains=q1), Q.OR)
-    if sex == "M" or sex == "F":
-      self.query.add(Q(sexo__icontains=sex), Q.AND)
-    return self.model.objects.filter(self.query).order_by('apellidos')
+    def get_queryset(self):
+      self.query = Q()
+      q1 = self.request.GET.get('q')
+      sex = self.request.GET.get('sex')
+      if q1 is not None:
+        self.query.add(Q(nombres__icontains=q1), Q.OR)
+        self.query.add(Q(apellidos__icontains=q1), Q.OR)
+        self.query.add(Q(cedula__icontains=q1), Q.OR)
+      if sex == "M" or sex == "F":
+        self.query.add(Q(sexo__icontains=sex), Q.AND)
+      # Prefetch exámenes realizados
+      return (
+        self.model.objects.filter(self.query)
+        .prefetch_related(
+          Prefetch(
+            'pacientes_examenes',
+            queryset=ExamenSolicitado.objects.filter(estado='R'),
+            to_attr='examenes_realizados'
+          )
+        )
+        .order_by('apellidos')
+      )
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    locations = self.get_queryset()
-    locations_data = [
-      {
-        'latitude': float(location.latitud) if location.latitud else None,
-        'longitude': float(location.longitud) if location.longitud else None,
-        'paciente': location.nombre_completo,
-        'address': location.direccion,
-        'image': location.foto.url if location.foto else static('img/paciente_avatar.png'),
-      }
-      for location in locations
-      if location.latitud and location.longitud  # Solo incluir pacientes con coordenadas válidas
-    ]
+    def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      locations = self.get_queryset()
+      locations_data = [
+        {
+          'latitude': float(location.latitud) if location.latitud else None,
+          'longitude': float(location.longitud) if location.longitud else None,
+          'paciente': location.nombre_completo,
+          'address': location.direccion,
+          'image': location.foto.url if location.foto else static('img/paciente_avatar.png'),
+          'examenes_realizados': [
+            {
+              'id': examen.id,
+              'nombre_examen': examen.nombre_examen,
+              'fecha_solicitud': examen.fecha_solicitud.strftime('%Y-%m-%d'),
+              'resultado': examen.resultado.url if examen.resultado else None,
+            }
+            for examen in location.examenes_realizados  # Ya prefetch
+          ],
+        }
+        for location in locations
+        if location.latitud and location.longitud  # Solo incluir pacientes con coordenadas válidas
+      ]
 
-    # Convertir a JSON de manera segura
-    context['locations'] = json.dumps(locations_data, cls=DjangoJSONEncoder)
-    return context
+      context['locations'] = json.dumps(locations_data, cls=DjangoJSONEncoder)
+      return context
 
 
 class PatientCreateView(PermissionMixin, CreateViewMixin, CreateView):

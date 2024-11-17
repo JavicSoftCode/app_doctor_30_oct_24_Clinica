@@ -36,11 +36,6 @@ class ActivePatientManager(models.Manager):
     return super().get_queryset().filter(activo=True)
 
 
-""" Modelo que representa a los pacientes de la clínica. 
-Almacena información personal, de contacto, ubicación y detalles médicos.
-También incluye información completa de la historia clínica. """
-
-
 class Paciente(models.Model):
   # Información personal
   # Nombre completo del paciente
