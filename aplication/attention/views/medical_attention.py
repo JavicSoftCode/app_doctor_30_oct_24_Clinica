@@ -23,7 +23,7 @@ from reportlab.platypus import Paragraph, Table, TableStyle, Spacer
 from reportlab.platypus import SimpleDocTemplate
 
 from aplication.attention.forms.medical_attention import AttentionForm
-from aplication.attention.models import Atencion, DetalleAtencion
+from aplication.attention.models import Atencion, DetalleAtencion  , ServiciosAdicionales
 from aplication.core.models import Diagnostico, Medicamento
 from aplication.security.mixins.mixins import *
 from doctor.utils import custom_serializer, save_audit
@@ -70,7 +70,6 @@ def generar_factura(request, atencion_id):
     'subtotal_medicamentos': subtotal_medicamentos,
     'subtotal_servicios': subtotal_servicios,
   })
-
 
 
 @login_required
@@ -243,7 +242,9 @@ class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
 
   def post(self, request, *args, **kwargs):
     data = json.loads(request.body)
-    medicamentos = data['medicamentos']
+    medicamentos = data.get('medicamentos', [])
+    servicios_adicionales_ids = data.get('servicios_adicionales', [])
+
     try:
       with transaction.atomic():
         # Crear la instancia de Atencion
@@ -264,11 +265,25 @@ class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
           comentario_adicional=data['comentarioAdicional'],
           fecha_atencion=timezone.now()
         )
+
+        # Manejar diagnosticos
         diagnostico_ids = data.get('diagnostico', [])
         diagnosticos = Diagnostico.objects.filter(id__in=diagnostico_ids)
         atencion.diagnostico.set(diagnosticos)
-        atencion.save()
 
+        # Manejar servicios adicionales
+        if servicios_adicionales_ids:
+          servicios_adicionales = ServiciosAdicionales.objects.filter(
+            id__in=servicios_adicionales_ids, activo=True
+          )
+          if servicios_adicionales.exists():
+            atencion.servicios_adicionales.set(servicios_adicionales)
+          else:
+            return JsonResponse({
+              "msg": "Algunos servicios adicionales no son válidos o están inactivos."
+            }, status=400)
+
+        # Guardar medicamentos
         for medicamento in medicamentos:
           DetalleAtencion.objects.create(
             atencion=atencion,
@@ -276,6 +291,9 @@ class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
             cantidad=int(medicamento['cantidad']),
             prescripcion=medicamento['prescripcion'],
           )
+        print("Servicios adicionales recibidos en el request:", servicios_adicionales_ids)
+
+        print("Servicios adicionales recibidos:", servicios_adicionales_ids)
 
         # Generar y enviar el correo electrónico
         self.enviar_correo_con_pdf(atencion)
@@ -283,6 +301,7 @@ class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
         save_audit(request, atencion, "A")
         messages.success(self.request, f"Éxito al registrar la atención médica #{atencion.id}")
         return JsonResponse({"msg": "Éxito al registrar la atención médica."}, status=200)
+
     except Exception as ex:
       messages.error(self.request, f"Error al registrar la atención médica")
       return JsonResponse({"msg": str(ex)}, status=400)
@@ -396,17 +415,73 @@ class AttentionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
     context['detail_atencion'] = detail_atencion
     return context
 
+  # def post(self, request, *args, **kwargs):
+  #   # Convertir el cuerpo de la solicitud a un diccionario Python
+  #   data = json.loads(request.body)
+  #   print(data)
+  #   medicamentos = data['medicamentos']
+  #   print(medicamentos)
+  #   try:
+  #     atencion = Atencion.objects.get(id=self.kwargs.get('pk'))
+  #     print(atencion)
+  #     with transaction.atomic():
+  #       # Crear la instancia del modelo Atencion
+  #       atencion.paciente_id = int(data['paciente'])
+  #       atencion.presion_arterial = data['presionArterial']
+  #       atencion.pulso = int(data['pulso'])
+  #       atencion.temperatura = Decimal(data['temperatura'])
+  #       atencion.frecuencia_respiratoria = int(data['frecuenciaRespiratoria'])
+  #       atencion.saturacion_oxigeno = Decimal(data['saturacionOxigeno'])
+  #       atencion.peso = Decimal(data['peso'])
+  #       atencion.altura = Decimal(data['altura'])
+  #       atencion.motivo_consulta = data['motivoConsulta']
+  #       atencion.sintomas = data['sintomas']
+  #       atencion.tratamiento = data['tratamiento']
+  #       atencion.examen_fisico = data['examenFisico']
+  #       atencion.examenes_enviados = data['examenesEnviados']
+  #       atencion.comentario_adicional = data['comentarioAdicional']
+  #       print("datos de diagnostico")
+  #       diagnostico_ids = data.get('diagnostico', [])
+  #       print("diag=", diagnostico_ids)
+  #       diagnosticos = Diagnostico.objects.filter(id__in=diagnostico_ids)
+  #       atencion.diagnostico.set(diagnosticos)
+  #       atencion.save()
+  #       print("grabo atencion")
+  #       # borrar el detalle asociado a esa atencion
+  #       DetalleAtencion.objects.filter(atencion_id=atencion.id).delete()
+  #       # Ahora procesamos el arreglo de medicamentos
+  #       print("voy a medicamentos update")
+  #       for medicamento in medicamentos:
+  #         # Crear el detalle de atención para cada medicamento
+  #         DetalleAtencion.objects.create(
+  #           atencion=atencion,
+  #           medicamento_id=int(medicamento['codigo']),
+  #           cantidad=int(medicamento['cantidad']),
+  #           prescripcion=medicamento['prescripcion'],
+  #           # Si necesitas la duración del tratamiento, puedes agregarla aquí
+  #         )
+  #
+  #       # Generar y enviar el correo electrónico
+  #       self.enviar_correo_con_pdf(atencion)
+  #
+  #       save_audit(request, atencion, "M")
+  #       messages.success(self.request, f"Éxito al Actualizar la atención médica #{atencion.id}")
+  #       return JsonResponse({"msg": "Éxito al Actualizar la atención médica."}, status=200)
+  #   except Exception as ex:
+  #     messages.error(self.request, f"Érro al actualizar la atención médica")
+  #     return JsonResponse({"msg": str(ex)}, status=400)
+
   def post(self, request, *args, **kwargs):
-    # Convertir el cuerpo de la solicitud a un diccionario Python
     data = json.loads(request.body)
-    print(data)
-    medicamentos = data['medicamentos']
-    print(medicamentos)
+    medicamentos = data.get('medicamentos', [])
+    servicios_adicionales_ids = data.get('servicios_adicionales', [])
+
     try:
+      # Obtén la instancia de Atencion que se va a actualizar
       atencion = Atencion.objects.get(id=self.kwargs.get('pk'))
-      print(atencion)
+
       with transaction.atomic():
-        # Crear la instancia del modelo Atencion
+        # Actualizar los datos básicos de la atención
         atencion.paciente_id = int(data['paciente'])
         atencion.presion_arterial = data['presionArterial']
         atencion.pulso = int(data['pulso'])
@@ -421,35 +496,47 @@ class AttentionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
         atencion.examen_fisico = data['examenFisico']
         atencion.examenes_enviados = data['examenesEnviados']
         atencion.comentario_adicional = data['comentarioAdicional']
-        print("datos de diagnostico")
+
+        # Manejar diagnósticos
         diagnostico_ids = data.get('diagnostico', [])
-        print("diag=", diagnostico_ids)
         diagnosticos = Diagnostico.objects.filter(id__in=diagnostico_ids)
         atencion.diagnostico.set(diagnosticos)
+
+        # Manejar servicios adicionales
+        if servicios_adicionales_ids:
+          servicios_adicionales = ServiciosAdicionales.objects.filter(id__in=servicios_adicionales_ids, activo=True)
+          atencion.servicios_adicionales.set(servicios_adicionales)
+        else:
+          atencion.servicios_adicionales.clear()  # Si no hay servicios, se eliminan los asociados
+
         atencion.save()
-        print("grabo atencion")
-        # borrar el detalle asociado a esa atencion
+
+        # Eliminar medicamentos existentes asociados a esta atención
         DetalleAtencion.objects.filter(atencion_id=atencion.id).delete()
-        # Ahora procesamos el arreglo de medicamentos
-        print("voy a medicamentos update")
+
+        # Crear nuevos detalles de medicamentos
         for medicamento in medicamentos:
-          # Crear el detalle de atención para cada medicamento
           DetalleAtencion.objects.create(
             atencion=atencion,
             medicamento_id=int(medicamento['codigo']),
             cantidad=int(medicamento['cantidad']),
             prescripcion=medicamento['prescripcion'],
-            # Si necesitas la duración del tratamiento, puedes agregarla aquí
           )
 
-        # Generar y enviar el correo electrónico
+        # Generar y enviar el correo electrónico con PDF actualizado
         self.enviar_correo_con_pdf(atencion)
 
+        # Registrar auditoría y mostrar mensaje de éxito
         save_audit(request, atencion, "M")
-        messages.success(self.request, f"Éxito al Actualizar la atención médica #{atencion.id}")
-        return JsonResponse({"msg": "Éxito al Actualizar la atención médica."}, status=200)
+        messages.success(self.request, f"Éxito al actualizar la atención médica #{atencion.id}")
+        return JsonResponse({"msg": "Éxito al actualizar la atención médica."}, status=200)
+
+    except Atencion.DoesNotExist:
+      messages.error(self.request, "Atención médica no encontrada.")
+      return JsonResponse({"msg": "Atención médica no encontrada."}, status=404)
+
     except Exception as ex:
-      messages.error(self.request, f"Érro al actualizar la atención médica")
+      messages.error(self.request, "Error al actualizar la atención médica.")
       return JsonResponse({"msg": str(ex)}, status=400)
 
   def generar_pdf(self, atencion):

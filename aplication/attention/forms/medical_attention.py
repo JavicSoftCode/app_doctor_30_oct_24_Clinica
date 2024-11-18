@@ -9,23 +9,7 @@ class AttentionForm(ModelForm):
   # Clase interna Meta para configurar el formulario
   class Meta:
     # campos que se muestran en este mismo orden en el formulario como etiquetas html
-    # fields = [  "paciente",
-    #             "fecha_atencion",
-    #             "presion_arterial",
-    #             "pulso",
-    #             "temperatura",
-    #             "frecuencia_respiratoria",
-    #             "saturacion_oxigeno",
-    #             "peso",
-    #             "altura",
-    #             "motivo_consulta",
-    #             "sintomas",
-    #             "tratamiento",
-    #             "diagnostico",
-    #             "examen_fisico",
-    #             "examenes_enviados",
-    #             "comentario_adicional"
-    #          ]
+
     model = Atencion
     fields = '__all__'
     exclude = ['fecha_atencion']  # Se excluye porque es auto_now_add
@@ -62,9 +46,9 @@ class AttentionForm(ModelForm):
         'step': '0.01',
         'id': 'id_saturacion_oxigeno',
       }),
-      'servicios_adicionales': forms.CheckboxSelectMultiple(attrs={
-        # 'class': 'form-control shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500',
-        'id': 'id_servicios_adicionales',
+      'servicios_adicionales': forms.SelectMultiple(attrs={
+        "class": "checo",
+        'id': 'id_servicios_adicionales',  # Cambia aquí
       }),
       'peso': forms.NumberInput(attrs={
         'class': 'form-control shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500',

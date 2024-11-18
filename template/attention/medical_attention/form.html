@@ -2,6 +2,14 @@
 {% load static %}
 {% block css %}
     <style>
+        .serviciosAdicionales::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .form-group label {
+            font-size: 18px;
+        }
+
         .form-floating > label {
             padding: 0.5rem 0.75rem;
         }
@@ -56,7 +64,7 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-xxl-10">
+            <div class="col-12 col-xxl-12">
                 <h3 class="text-center mb-2 fw-bold text-primary-emphasis shadow">
                     {{ title1 }} Médica
                 </h3>
@@ -71,21 +79,24 @@
                             <hr class="border border-2 border-success">
                             <div class="row g-4 mb-2">
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        {{ form.paciente }}
+                                    <div class="form-group">
                                         <label for="{{ form.paciente.id_for_label }}">{{ form.paciente.label }}</label>
+
+                                        {{ form.paciente }}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="form-floating">
-                                        {{ form.peso }}
+                                    <div class="form-group">
                                         <label for="{{ form.peso.id_for_label }}">{{ form.peso.label }}</label>
+
+                                        {{ form.peso }}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="form-floating">
-                                        {{ form.altura }}
+                                    <div class="form-group">
                                         <label for="{{ form.altura.id_for_label }}">{{ form.altura.label }}</label>
+
+                                        {{ form.altura }}
                                     </div>
                                 </div>
                             </div>
@@ -95,33 +106,38 @@
                             <hr class="border border-2 border-success">
                             <div class="row g-2 mb-2">
                                 <div class="col-md-2">
-                                    <div class="form-floating">
-                                        {{ form.presion_arterial }}
+                                    <div class="form-group">
                                         <label for="{{ form.presion_arterial.id_for_label }}">{{ form.presion_arterial.label }}</label>
+
+                                        {{ form.presion_arterial }}
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="form-floating">
-                                        {{ form.pulso }}
+                                    <div class="form-group">
                                         <label for="{{ form.pulso.id_for_label }}">{{ form.pulso.label }}</label>
+
+                                        {{ form.pulso }}
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="form-floating">
-                                        {{ form.temperatura }}
+                                    <div class="form-group">
                                         <label for="{{ form.temperatura.id_for_label }}">{{ form.temperatura.label }}</label>
+
+                                        {{ form.temperatura }}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="form-floating">
-                                        {{ form.saturacion_oxigeno }}
+                                    <div class="form-group">
                                         <label for="{{ form.saturacion_oxigeno.id_for_label }}">{{ form.saturacion_oxigeno.label }}</label>
+
+                                        {{ form.saturacion_oxigeno }}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="form-floating">
-                                        {{ form.frecuencia_respiratoria }}
+                                    <div class="form-group">
                                         <label for="{{ form.frecuencia_respiratoria.id_for_label }}">{{ form.frecuencia_respiratoria.label }}</label>
+
+                                        {{ form.frecuencia_respiratoria }}
                                     </div>
                                 </div>
                             </div>
@@ -132,23 +148,35 @@
 
                             <div class="row g-4 mb-2">
 
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        {{ form.motivo_consulta }}
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="{{ form.motivo_consulta.id_for_label }}">{{ form.motivo_consulta.label }}</label>
+                                        {{ form.motivo_consulta }}
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        {{ form.sintomas }}
+                                    <div class="form-group">
+                                        <label for="{{ form.servicios_adicionales.id_for_label }}" class="form-label">
+                                            {{ form.servicios_adicionales.label }}
+                                        </label>
+                                        <div style="width: 100%; max-height: 110px; overflow-y: auto; border: 2px solid #E5E8EB; padding: 10px; border-radius: 6px; margin-top: -7px">
+                                            {{ form.servicios_adicionales }}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="{{ form.sintomas.id_for_label }}">{{ form.sintomas.label }}</label>
+                                        {{ form.sintomas }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        {{ form.examen_fisico }}
+                                    <div class="form-group">
                                         <label for="{{ form.examen_fisico.id_for_label }}">{{ form.examen_fisico.label }}</label>
+                                        {{ form.examen_fisico }}
                                     </div>
                                 </div>
                             </div>
@@ -158,37 +186,47 @@
                             <hr class="border border-2 border-success">
                             <div class="row g-4 mb-2">
                                 <div class="col-md-6">
-                                    <div class="form-floating" style="max-height: 270px; overflow-y: auto; ">
-                                        {{ form.diagnostico }}
+                                    <div class="form-group">
                                         <label for="{{ form.diagnostico.id_for_label }}">{{ form.diagnostico.label }}</label>
+                                        <div style="width: 100%; max-height: 500px; overflow-y: auto;"
+                                             class="permisos">
+                                            {{ form.diagnostico }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        {{ form.tratamiento }}
+                                    <div class="form-group">
                                         <label for="{{ form.tratamiento.id_for_label }}">{{ form.tratamiento.label }}</label>
+
+                                        {{ form.tratamiento }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        {{ form.examenes_enviados }}
+                                    <div class="form-group">
                                         <label for="{{ form.examenes_enviados.id_for_label }}">{{ form.examenes_enviados.label }}</label>
+
+                                        {{ form.examenes_enviados }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        {{ form.comentario_adicional }}
+                                    <div class="form-group">
                                         <label for="{{ form.comentario_adicional.id_for_label }}">{{ form.comentario_adicional.label }}</label>
+
+                                        {{ form.comentario_adicional }}
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <label for="{{ form.servicios_adicionales.id_for_label }}" class="form-label">
-                                        {{ form.servicios_adicionales.label }}
-                                    </label>
-                                    <div>
-                                        {{ form.servicios_adicionales }}
-                                    </div>
-                                </div>
+
+
+                                {#                                <div class="col-md-6">#}
+                                {#                                    <div class="form-group">#}
+                                {#                                        <label for="{{ form.servicios_adicionales.id_for_label }}">{{ form.servicios_adicionales.label }}</label>#}
+                                {#                                        <div id="permissionsContainer"#}
+                                {#                                             style="width: 100%; max-height: 500px; overflow-y: auto;" class="permisos">#}
+                                {#                                            {{ form.servicios_adicionales }}#}
+                                {#                                        </div>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+
 
                             </div>
                         </form>
@@ -197,7 +235,8 @@
                         <hr class="border border-3 border-danger fw-bold">
                         <div class="row g-3 mb-2">
                             <div class="col-md-3">
-                                <div class="form-floating">
+                                <div class="form-group">
+                                    <label for="medicationSelect" class="form-label">Medicamento</label>
                                     <select class="form-select" id="medicationSelect">
                                         {% for item in medications %}
                                             <option data-id="{{ item.id }}" data-des="{{ item.nombre }}"
@@ -205,28 +244,26 @@
                                                     {% if forloop.first %}selected{% endif %}>{{ item.nombre }}</option>
                                         {% endfor %}
                                     </select>
-                                    <label for="medicationSelect" class="form-label">Medicamento</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="form-floating">
-                                    <input type="number" class="form-control" value="1" id="medicationQuantity" min="1">
+                                <div class="form-group">
                                     <label for="medicationQuantity" class="form-label">Cantidad</label>
+                                    <input type="number" class="form-control" value="1" id="medicationQuantity" min="1">
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="medicationPrescription">
-
-                                    <label for="medicationPrescription">
-                                        Prescripción
-                                    </label>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="medicationPrescription">Prescripción</label>
+                                    <input type="text" class="form-control mt-2" id="medicationPrescription"
+                                           placeholder="Implementación del tratamiento">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-floating mt-2 ms-2">
-                                    <button class="btn btn-outline-success fw-bold w-100" onclick="addMedication()">
+                                    <button class="btn  text-white mt-4" onclick="addMedication()"
+                                            style="background-color: #3B3BBA; margin-left: 35px">
                                         Agregar
                                     </button>
                                 </div>
@@ -236,7 +273,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover " id="medicationsTable">
                                 <thead>
-                                <tr>
+                                <tr class="text-center">
                                     <th class="text-warning">Código</th>
                                     <th class="text-success">Medicamento</th>
                                     <th class="text-primary">Cantidad</th>
@@ -280,7 +317,9 @@
                 this.examenesEnviados = '';
                 this.comentarioAdicional = '';
                 this.diagnostico = [];
-                this.medicamentos = []
+                this.medicamentos = [];
+                this.servicios_adicionales = [];
+
                 console.log("detalle")
                 //console.log(detalleUpdate)
 
@@ -290,7 +329,7 @@
                         let nombre = det.medicamento__nombre
                         let cantidad = det.cantidad
                         let prescripcion = det.prescripcion
-                        print(codigo, nombre, cantidad, prescripcion)
+                        {#print(codigo, nombre, cantidad, prescripcion)#}
                         this.medicamentos.push({codigo, nombre, cantidad, prescripcion});
                     });
                     this.syncTable();
@@ -328,14 +367,14 @@
 
                 this.medicamentos.forEach((med, index) => {
                     const row = `
-                <tr>
+                <tr class="text-center">
                     <td>${med.codigo}</td>
                     <td>${med.nombre}</td>
                     <td>${med.cantidad}</td>
                     <td>${med.prescripcion}</td>
                     <td>
                         <button class="btn btn-danger" onclick="atencionMedica.removeMedication('${med.codigo}')">
-                            <i class="fas fa-trash"></i> Eliminar
+                            <i class="fas fa-trash fa-lg"></i>
                         </button>
                     </td>
                 </tr>`;
@@ -345,7 +384,6 @@
 
             // Método para capturar todos los datos del formulario y enviarlos al backend
             saveAtencion() {
-
                 this.paciente = document.querySelector('#id_paciente').value;
                 this.peso = document.querySelector('#id_peso').value;
                 this.altura = document.querySelector('#id_altura').value;
@@ -360,26 +398,42 @@
                 this.tratamiento = document.querySelector('#id_tratamiento').value;
                 this.examenesEnviados = document.querySelector('#id_examenes_enviados').value;
                 this.comentarioAdicional = document.querySelector('#id_comentario_adicional').value;
-                // Recorre las opciones seleccionadas y las agrega al arreglo
-                this.diagnostico = []
-                for (let option of document.getElementById("id_diagnostico").selectedOptions) {
-                    this.diagnostico.push(option.value);
+
+                // Manejar servicios adicionales
+                this.servicios_adicionales = [];
+                const serviciosSelect = document.getElementById("id_servicios_adicionales");
+                if (serviciosSelect && serviciosSelect.selectedOptions) {
+                    for (let option of serviciosSelect.selectedOptions) {
+                        this.servicios_adicionales.push(option.value);
+                    }
                 }
-                // Validar que todos los campos obligatorios tengan valor
+                 console.log(this.servicios_adicionales);
+
+                // Manejar diagnóstico
+                this.diagnostico = [];
+                const diagnosticoSelect = document.getElementById("id_diagnostico");
+                if (diagnosticoSelect && diagnosticoSelect.selectedOptions) {
+                    for (let option of diagnosticoSelect.selectedOptions) {
+                        this.diagnostico.push(option.value);
+                    }
+                }
+
+                // Validar campos obligatorios
                 if (!this.paciente || !this.peso || !this.altura || !this.presionArterial || !this.pulso ||
                     !this.temperatura || !this.saturacionOxigeno || !this.frecuenciaRespiratoria ||
                     !this.motivoConsulta || !this.sintomas || !this.examenFisico || !this.diagnostico ||
                     !this.tratamiento || !this.examenesEnviados) {
                     alert('Por favor, complete todos los campos obligatorios.');
-                    return;  // Detener la ejecución si algún campo está vacío
+                    return; // Detener ejecución si algún campo está vacío
                 }
 
-                // Verificar si existen medicamentos y que el arreglo no esté vacío
+                // Verificar medicamentos
                 if (this.medicamentos && this.medicamentos.length === 0) {
                     alert('Por favor, agregue al menos un medicamento.');
-                    return;  // Detener la ejecución si el arreglo de medicamentos está vacío
+                    return; // Detener ejecución si no hay medicamentos
                 }
-                // Crear el objeto para enviar al backend
+
+                // Preparar datos para enviar
                 const data = {
                     paciente: this.paciente,
                     peso: this.peso,
@@ -396,15 +450,16 @@
                     tratamiento: this.tratamiento,
                     examenesEnviados: this.examenesEnviados,
                     comentarioAdicional: this.comentarioAdicional,
+                    servicios_adicionales: this.servicios_adicionales,
                     medicamentos: this.medicamentos
                 };
-                console.log(data)
-                //alert("Datos enviados...")
-                // Enviar los datos al backend usando fetch()
-                //let url = (detailAtencionUpdate && detailAtencionUpdate.length > 0) ? '/attention_update/' : '/attention_create/'
-                let url = window.location.pathname.trim()
-                //url = url.slice(0, -1);
-                alert(url)
+
+                console.log(data);
+                // Determinar la URL para enviar
+                let url = window.location.pathname.trim();
+                alert(url);
+
+                // Enviar datos al backend
                 fetch(url, {
                     method: 'POST',
                     headers: {
@@ -415,14 +470,14 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        //console.log(data)
                         alert(data.msg);
-                        window.location.href = '/attention_list/'
+                        window.location.href = '/attention_list/';
                     })
                     .catch(error => {
                         console.error('Error al guardar la atención médica:', error);
                     });
             }
+
         }
 
         // Inicializar la clase
