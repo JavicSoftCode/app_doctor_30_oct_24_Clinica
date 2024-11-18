@@ -45,4 +45,6 @@ urlpatterns = [
   path('serviciosAdicionales_detail/<int:pk>/', ServiciosAdicionalesDetailView.as_view(),
        name='serviciosAdicionales_detail'),
 
+  path('factura/<int:atencion_id>/', generar_factura, name='generar_factura'),
+
 ]

@@ -62,6 +62,10 @@ class AttentionForm(ModelForm):
         'step': '0.01',
         'id': 'id_saturacion_oxigeno',
       }),
+      'servicios_adicionales': forms.CheckboxSelectMultiple(attrs={
+        # 'class': 'form-control shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'id': 'id_servicios_adicionales',
+      }),
       'peso': forms.NumberInput(attrs={
         'class': 'form-control shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500',
         'placeholder': 'Ingrese el peso en kg',
@@ -116,7 +120,7 @@ class AttentionForm(ModelForm):
       }),
     }
     labels = {
-      "saturacion_oxigeno": "saturacion_oxigeno",
-      "frecuencia_respiratoria": "frecuencia_respiratoria",
+      "saturacion_oxigeno": "Saturacion Oxigeno",
+      "frecuencia_respiratoria": "Frecuencia Respiratoria",
 
     }

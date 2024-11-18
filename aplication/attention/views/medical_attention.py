@@ -29,6 +29,50 @@ from aplication.security.mixins.mixins import *
 from doctor.utils import custom_serializer, save_audit
 
 
+def generar_factura(request, atencion_id):
+  """Genera los detalles de la factura para una atención médica."""
+  atencion = get_object_or_404(Atencion, id=atencion_id)
+
+  # Detalles de medicamentos (incluyendo el total por medicamento)
+  detalles_medicamentos = [
+    {
+      'nombre': detalle.medicamento.nombre,
+      'cantidad': detalle.cantidad,
+      'precio_unitario': detalle.medicamento.precio,
+      'total': detalle.cantidad * detalle.medicamento.precio,
+    }
+    for detalle in atencion.atenciones.select_related('medicamento').all()
+  ]
+
+  # Detalles de servicios adicionales
+  detalles_servicios = [
+    {
+      'nombre_servicio': servicio.nombre_servicio,
+      'costo_servicio': servicio.costo_servicio,
+    }
+    for servicio in atencion.servicios_adicionales.select_related().all()
+  ]
+
+  # Cálculo de subtotales
+  subtotal_medicamentos = sum(detalle['total'] for detalle in detalles_medicamentos)
+  subtotal_servicios = sum(servicio['costo_servicio'] for servicio in detalles_servicios)
+
+  # Cálculo del monto total
+  monto_total = subtotal_medicamentos + subtotal_servicios
+
+  return render(request, 'attention/medical_attention/factura.html', {
+    'factura': {
+      'atencion': atencion,
+      'monto_total': monto_total,
+    },
+    'detalles_medicamentos': detalles_medicamentos,
+    'detalles_servicios': detalles_servicios,
+    'subtotal_medicamentos': subtotal_medicamentos,
+    'subtotal_servicios': subtotal_servicios,
+  })
+
+
+
 @login_required
 def generar_certificado_pdf(request, pk):
   # Obtener la atención médica
@@ -183,76 +227,6 @@ class AttentionListView(PermissionMixin, ListViewMixin, ListView):
     if sex == "M" or sex == "F": self.query.add(Q(paciente__sexo__icontains=sex), Q.AND)
     return self.model.objects.filter(self.query).order_by('-fecha_atencion')
 
-
-# class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
-#   model = Atencion
-#   template_name = 'attention/medical_attention/form.html'
-#   form_class = AttentionForm
-#   permission_required = 'add_attention'
-#   success_url = reverse_lazy('attention:attention_list')
-#
-#   # permission_required = 'add_supplier' # en PermissionMixn se verfica si un grupo tiene el permiso
-#
-#   def get_context_data(self, **kwargs):
-#     context = super().get_context_data()
-#     context['detail_atencion'] = []
-#     context["medications"] = Medicamento.objects.filter(activo=True).order_by('nombre')
-#
-#     # context["medications"] = Medicamento.active_medication.order_by('nombre')
-#
-#     return context
-#
-#   def post(self, request, *args, **kwargs):
-#     # Convertir el cuerpo de la solicitud a un diccionario Python
-#     data = json.loads(request.body)
-#     print(data)
-#     medicamentos = data['medicamentos']
-#     print(medicamentos)
-#     # Crear una instancia del formulario y poblarla con los datos JSON
-#     try:
-#       with transaction.atomic():
-#         # Crear la instancia del modelo Atencion
-#         print("entro atencion")
-#         atencion = Atencion.objects.create(
-#           paciente_id=int(data['paciente']),
-#           presion_arterial=data['presionArterial'],
-#           pulso=int(data['pulso']),
-#           temperatura=Decimal(data['temperatura']),
-#           frecuencia_respiratoria=int(data['frecuenciaRespiratoria']),
-#           saturacion_oxigeno=Decimal(data['saturacionOxigeno']),
-#           peso=Decimal(data['peso']),
-#           altura=Decimal(data['altura']),
-#           motivo_consulta=data['motivoConsulta'],
-#           sintomas=data['sintomas'],
-#           tratamiento=data['tratamiento'],
-#           examen_fisico=data['examenFisico'],
-#           examenes_enviados=data['examenesEnviados'],
-#           comentario_adicional=data['comentarioAdicional'],
-#           fecha_atencion=timezone.now()
-#         )
-#         diagnostico_ids = data.get('diagnostico', [])
-#         diagnosticos = Diagnostico.objects.filter(id__in=diagnostico_ids)
-#         atencion.diagnostico.set(diagnosticos)
-#         atencion.save()
-#         # Ahora procesamos el arreglo de medicamentos
-#         print("voy a medicamentos")
-#         for medicamento in medicamentos:
-#           # Crear el detalle de atención para cada medicamento
-#           DetalleAtencion.objects.create(
-#             atencion=atencion,
-#             medicamento_id=int(medicamento['codigo']),
-#             cantidad=int(medicamento['cantidad']),
-#             prescripcion=medicamento['prescripcion'],
-#             # Si necesitas la duración del tratamiento, puedes agregarla aquí
-#           )
-#
-#         save_audit(request, atencion, "A")
-#         messages.success(self.request, f"Éxito al registrar la atención médica #{atencion.id}")
-#         return JsonResponse({"msg": "Éxito al registrar la atención médica."}, status=200)
-#
-#     except Exception as ex:
-#       messages.error(self.request, f"Érro al registrar la atención médica")
-#       return JsonResponse({"msg": str(ex)}, status=400)
 
 class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Atencion

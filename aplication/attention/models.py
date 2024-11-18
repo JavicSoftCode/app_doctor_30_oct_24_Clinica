@@ -1,11 +1,35 @@
 import datetime
+from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from aplication.core.models import *
 from doctor.const import DIA_SEMANA_CHOICES, CITA_CHOICES, EXAMEN_CHOICES
 from doctor.utils import valida_numero_decimal_positivo
+
+
+class ServiciosAdicionales(models.Model):
+  # Nombre del servicio (ej. Radiografía, Laboratorio, Procedimiento menor, etc.)
+  nombre_servicio = models.CharField(max_length=255, verbose_name="Nombre del Servicio")
+  # Costo unitario del servicio adicional
+  costo_servicio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Costo del Servicio",
+                                       validators=[valida_numero_decimal_positivo])
+  # Descripción opcional sobre el servicio adicional
+  descripcion = models.TextField(null=True, blank=True, verbose_name="Descripción del Servicio")
+
+  activo = models.BooleanField(default=True, verbose_name="Activo")
+
+  def __str__(self):
+    return self.nombre_servicio
+
+  class Meta:
+    # Ordena los servicios por nombre
+    ordering = ['nombre_servicio']
+    # Nombre singular y plural del modelo en la interfaz administrativa
+    verbose_name = "Servicio Adicional"
+    verbose_name_plural = "Servicios Adicionales"
 
 
 # Modelo que representa los días y horas de atención de un doctor.
@@ -97,6 +121,12 @@ class CitaMedica(models.Model):
 # Modelo que representa la cabecera de una atención médica.
 # Contiene la información general del paciente, diagnóstico, motivo de consulta y tratamiento.
 class Atencion(models.Model):
+  servicios_adicionales = models.ManyToManyField(
+    ServiciosAdicionales,
+    verbose_name="Servicios Adicionales",
+    related_name="atenciones",
+    blank=True,
+  )
   # Relación con el modelo Paciente, identifica al paciente que recibe la atención médica
   paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT, verbose_name="Paciente",
                                related_name="doctores_atencion")
@@ -132,6 +162,37 @@ class Atencion(models.Model):
   examenes_enviados = models.TextField(null=True, blank=True, verbose_name="Examenes enviados")
   # Comentarios adicionales del doctor sobre la atención o el estado del paciente
   comentario_adicional = models.TextField(null=True, blank=True, verbose_name="Comentario")
+
+  # def calcular_costo_total(self):
+  #   """Calcula el costo total de la atención incluyendo medicamentos y servicios adicionales."""
+  #   # Costos de medicamentos
+  #   costo_medicamentos = sum(
+  #     detalle.medicamento.precio * detalle.cantidad
+  #     for detalle in self.atenciones.all()
+  #   )
+  #
+  #   # Costos de servicios adicionales
+  #   costo_servicios = sum(
+  #     servicio.costo_servicio for servicio in self.servicios_adicionales.all()
+  #   )
+  #
+  #   return Decimal(costo_medicamentos + costo_servicios)
+
+  def calcular_costo_total(self):
+    """Calcula el costo total de los medicamentos y servicios adicionales asociados."""
+    # Costo total de medicamentos
+    costo_medicamentos = sum(
+      detalle.cantidad * detalle.medicamento.precio
+      for detalle in self.atenciones.all()
+    )
+
+    # Costo total de servicios adicionales
+    costo_servicios = sum(
+      servicio.costo_servicio for servicio in self.servicios_adicionales.all()
+    )
+
+    # Retorna el total como un Decimal
+    return Decimal(costo_medicamentos) + Decimal(costo_servicios)
 
   @property
   def get_diagnosticos(self):
@@ -194,26 +255,6 @@ class DetalleAtencion(models.Model):
 
 # Modelo que representa un servicio adicional ofrecido durante una atención médica.
 # Puede incluir exámenes, procedimientos, o cualquier otro servicio.
-class ServiciosAdicionales(models.Model):
-  # Nombre del servicio (ej. Radiografía, Laboratorio, Procedimiento menor, etc.)
-  nombre_servicio = models.CharField(max_length=255, verbose_name="Nombre del Servicio")
-  # Costo unitario del servicio adicional
-  costo_servicio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Costo del Servicio",
-                                       validators=[valida_numero_decimal_positivo])
-  # Descripción opcional sobre el servicio adicional
-  descripcion = models.TextField(null=True, blank=True, verbose_name="Descripción del Servicio")
-
-  activo = models.BooleanField(default=True, verbose_name="Activo")
-
-  def __str__(self):
-    return self.nombre_servicio
-
-  class Meta:
-    # Ordena los servicios por nombre
-    ordering = ['nombre_servicio']
-    # Nombre singular y plural del modelo en la interfaz administrativa
-    verbose_name = "Servicio Adicional"
-    verbose_name_plural = "Servicios Adicionales"
 
 
 # Modelo que representa los costos asociados a una atención médica,
@@ -291,3 +332,62 @@ class ExamenSolicitado(models.Model):
     # Nombre singular y plural del modelo en la interfaz administrativa
     verbose_name = "Examen Médico"
     verbose_name_plural = "Exámenes Médicos"
+
+
+class Pago(models.Model):
+  class MetodoPago(models.TextChoices):
+    EFECTIVO = 'EF', _('Efectivo')
+    TRANSFERENCIA = 'TR', _('Transferencia Bancaria')
+    PAYPAL = 'PP', _('Pago en línea (Paypal)')
+
+  atencion = models.ForeignKey(
+    'Atencion',
+    on_delete=models.PROTECT,
+    verbose_name="Atención",
+    related_name="pagos"
+  )
+  monto = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    verbose_name="Monto",
+    validators=[valida_numero_decimal_positivo]
+  )
+  metodo_pago = models.CharField(
+    max_length=2,
+    choices=MetodoPago.choices,
+    default=MetodoPago.EFECTIVO,
+    verbose_name="Método de Pago"
+  )
+  fecha_pago = models.DateTimeField(
+    auto_now_add=True,
+    verbose_name="Fecha del Pago"
+  )
+  estado = models.BooleanField(
+    default=True,
+    verbose_name="Pago Confirmado"
+  )
+
+  def __str__(self):
+    return f"Pago de {self.monto} ({self.get_metodo_pago_display()}) - {self.atencion}"
+
+  class Meta:
+    ordering = ['-fecha_pago']
+    verbose_name = "Pago"
+    verbose_name_plural = "Pagos"
+
+
+def valida_numero_decimal_positivo(value):
+  if value <= Decimal('0'):
+    raise ValidationError(_('El monto debe ser positivo.'), params={'value': value})
+
+
+class Factura(models.Model):
+  atencion = models.OneToOneField(
+    Atencion, on_delete=models.PROTECT, related_name="factura", verbose_name="Atención"
+  )
+  monto_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto Total")
+  pagado = models.BooleanField(default=False, verbose_name="Pagado")
+  fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
+
+  def __str__(self):
+    return f"Factura de {self.atencion} - Total: {self.monto_total}"
