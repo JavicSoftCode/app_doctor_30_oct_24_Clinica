@@ -206,15 +206,15 @@
             <thead>
             <tr>
                 <th>Servicio</th>
-                <th>Costo</th>
+{#                <th>Costo</th>#}
                 <th>Descripción</th>
             </tr>
             </thead>
             <tbody>
             {% for servicio in servicios_adicionales %}
                 <tr>
-                    <td>{{ servicio.nombre_servicio }}</td>
-                    <td>{{ servicio.costo_servicio }}</td>
+                    <td style="width: 50%">{{ servicio.nombre_servicio }}</td>
+{#                    <td>{{ servicio.costo_servicio }}</td>#}
                     <td>{{ servicio.descripcion|default:"No especificada" }}</td>
                 </tr>
             {% empty %}

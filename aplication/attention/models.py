@@ -163,21 +163,6 @@ class Atencion(models.Model):
   # Comentarios adicionales del doctor sobre la atención o el estado del paciente
   comentario_adicional = models.TextField(null=True, blank=True, verbose_name="Comentario")
 
-  # def calcular_costo_total(self):
-  #   """Calcula el costo total de la atención incluyendo medicamentos y servicios adicionales."""
-  #   # Costos de medicamentos
-  #   costo_medicamentos = sum(
-  #     detalle.medicamento.precio * detalle.cantidad
-  #     for detalle in self.atenciones.all()
-  #   )
-  #
-  #   # Costos de servicios adicionales
-  #   costo_servicios = sum(
-  #     servicio.costo_servicio for servicio in self.servicios_adicionales.all()
-  #   )
-  #
-  #   return Decimal(costo_medicamentos + costo_servicios)
-
   def calcular_costo_total(self):
     """Calcula el costo total de los medicamentos y servicios adicionales asociados."""
     # Costo total de medicamentos
