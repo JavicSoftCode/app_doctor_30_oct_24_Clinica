@@ -16,6 +16,7 @@ from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
@@ -23,7 +24,7 @@ from reportlab.platypus import Paragraph, Table, TableStyle, Spacer
 from reportlab.platypus import SimpleDocTemplate
 
 from aplication.attention.forms.medical_attention import AttentionForm
-from aplication.attention.models import Atencion, DetalleAtencion  , ServiciosAdicionales
+from aplication.attention.models import Atencion, DetalleAtencion, ServiciosAdicionales
 from aplication.core.models import Diagnostico, Medicamento
 from aplication.security.mixins.mixins import *
 from doctor.utils import custom_serializer, save_audit
@@ -75,27 +76,44 @@ def generar_factura(request, atencion_id):
 @login_required
 def generar_certificado_pdf(request, pk):
   # Obtener la atención médica
-  # atencion = get_object_or_404(Atencion)
   atencion = get_object_or_404(Atencion, pk=pk)
+  servicios_adicionales = atencion.servicios_adicionales.all()
+  detalles = DetalleAtencion.objects.filter(atencion=atencion)
+
   # Crear la respuesta HTTP con tipo de contenido PDF
   response = HttpResponse(content_type='application/pdf')
   sanitized_name = atencion.paciente.nombre_completo.replace(" ", "_")
   response[
-    'Content-Disposition'] = f'attachment; filename="certificado_medico_{sanitized_name}_{atencion.fecha_atencion.date()}.pdf"'
+    'Content-Disposition'
+  ] = f'attachment; filename="certificado_medico_{sanitized_name}_{atencion.fecha_atencion.date()}.pdf"'
 
   # Crear el documento PDF
-  doc = SimpleDocTemplate(response, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+  doc = SimpleDocTemplate(
+    response, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30
+  )
   elements = []
   styles = getSampleStyleSheet()
 
-  # Estilo personalizado para el título
+  # Estilo personalizado para títulos
   styles.add(ParagraphStyle(
     name='CustomTitle',
     parent=styles['Heading1'],
     fontSize=16,
-    textColor=colors.HexColor('#3498db'),
+    textColor=colors.HexColor('#3B3BBA'),
     alignment=TA_CENTER,
     spaceAfter=20
+  ))
+  styles.add(ParagraphStyle(
+    name='SectionTitle',
+    fontSize=14,
+    textColor=colors.HexColor('#3B3BBA'),
+    alignment=TA_LEFT,
+    spaceAfter=10
+  ))
+  styles.add(ParagraphStyle(
+    name='NormalText',
+    fontSize=12,
+    spaceAfter=5
   ))
 
   # Título del certificado
@@ -103,13 +121,14 @@ def generar_certificado_pdf(request, pk):
   elements.append(Spacer(1, 12))
 
   # Encabezado con información del paciente
-  elements.append(Paragraph(f"Paciente: {atencion.paciente.nombre_completo}", styles['Normal']))
-  elements.append(Paragraph(f"Cédula: {atencion.paciente.cedula}", styles['Normal']))
-  elements.append(Paragraph(f"Fecha de Atención: {atencion.fecha_atencion.strftime('%d/%m/%Y')}", styles['Normal']))
+  elements.append(Paragraph(f"<b>Paciente:</b> {atencion.paciente.nombre_completo}", styles['NormalText']))
+  elements.append(Paragraph(f"<b>Cédula:</b> {atencion.paciente.cedula}", styles['NormalText']))
+  elements.append(
+    Paragraph(f"<b>Fecha de Atención:</b> {atencion.fecha_atencion.strftime('%d/%m/%Y')}", styles['NormalText']))
   elements.append(Spacer(1, 12))
 
   # Signos vitales
-  elements.append(Paragraph("Signos Vitales", styles['Heading2']))
+  elements.append(Paragraph("Signos Vitales", styles['SectionTitle']))
   signos_vitales = [
     ['Presión Arterial', atencion.presion_arterial or 'No especificado'],
     ['Pulso', f"{atencion.pulso} ppm" if atencion.pulso else 'No especificado'],
@@ -122,26 +141,26 @@ def generar_certificado_pdf(request, pk):
   ]
   signos_table = Table(signos_vitales, colWidths=[3 * inch, 3 * inch])
   signos_table.setStyle(TableStyle([
-    ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#3498db')),
+    ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#3B3BBA')),
     ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
     ('FONTSIZE', (0, 0), (-1, -1), 10),
     ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-    ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f0f8ff')),
+    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#EAF2FA')),
   ]))
   elements.append(signos_table)
   elements.append(Spacer(1, 12))
 
   # Diagnóstico y tratamiento
-  elements.append(Paragraph("Diagnóstico y Tratamiento", styles['Heading2']))
-  elements.append(Paragraph(f"Diagnóstico: {atencion.get_diagnosticos or 'No especificado'}", styles['Normal']))
-  elements.append(Paragraph(f"Motivo de Consulta: {atencion.motivo_consulta}", styles['Normal']))
-  elements.append(Paragraph(f"Síntomas: {atencion.sintomas}", styles['Normal']))
-  elements.append(Paragraph(f"Tratamiento: {atencion.tratamiento}", styles['Normal']))
+  elements.append(Paragraph("Diagnóstico y Tratamiento", styles['SectionTitle']))
+  elements.append(
+    Paragraph(f"<b>Diagnóstico:</b> {atencion.get_diagnosticos or 'No especificado'}", styles['NormalText']))
+  elements.append(Paragraph(f"<b>Motivo de Consulta:</b> {atencion.motivo_consulta}", styles['NormalText']))
+  elements.append(Paragraph(f"<b>Síntomas:</b> {atencion.sintomas}", styles['NormalText']))
+  elements.append(Paragraph(f"<b>Tratamiento:</b> {atencion.tratamiento}", styles['NormalText']))
   elements.append(Spacer(1, 12))
 
   # Medicamentos recetados
-  elements.append(Paragraph("Medicamentos Recetados", styles['Heading2']))
-  detalles = DetalleAtencion.objects.filter(atencion=atencion)
+  elements.append(Paragraph("Medicamentos Recetados", styles['SectionTitle']))
   if detalles.exists():
     medicamentos_data = [['Medicamento', 'Cantidad', 'Prescripción']]
     for detalle in detalles:
@@ -156,11 +175,41 @@ def generar_certificado_pdf(request, pk):
       ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
       ('FONTSIZE', (0, 0), (-1, -1), 10),
       ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-      ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f6f3')),
+      ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#DFF6EF')),
     ]))
     elements.append(medicamentos_table)
   else:
-    elements.append(Paragraph("No se recetaron medicamentos en esta atención.", styles['Normal']))
+    elements.append(Paragraph("No se recetaron medicamentos en esta atención.", styles['NormalText']))
+
+  elements.append(Spacer(1, 12))
+
+  # Servicios adicionales
+  elements.append(Paragraph("Servicios Adicionales", styles['SectionTitle']))
+  if servicios_adicionales.exists():
+    servicios_data = [['Servicio', 'Costo', 'Descripción']]
+    for servicio in servicios_adicionales:
+      servicios_data.append([
+        servicio.nombre_servicio,
+        f"{servicio.costo_servicio} USD",
+        servicio.descripcion or 'No especificada'
+      ])
+    servicios_table = Table(servicios_data, colWidths=[2.5 * inch, 1.5 * inch, 3 * inch])
+    servicios_table.setStyle(TableStyle([
+      ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#FFD700')),
+      ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+      ('FONTSIZE', (0, 0), (-1, -1), 10),
+      ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+      ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#FFF8DC')),
+    ]))
+    elements.append(servicios_table)
+  else:
+    elements.append(Paragraph("No se registraron servicios adicionales en esta atención.", styles['NormalText']))
+
+  elements.append(Spacer(1, 12))
+
+  # Comentario adicional
+  elements.append(Paragraph("Comentarios Adicionales", styles['SectionTitle']))
+  elements.append(Paragraph(atencion.comentario_adicional or "No especificado", styles['NormalText']))
 
   # Generar el PDF
   doc.title = f"Certificado Médico - {atencion.paciente.nombre_completo}"
@@ -172,10 +221,14 @@ class ViewAtencionPdf(LoginRequiredMixin, View):
   def get(self, request, *args, **kwargs):
     try:
       # Obtener la atención médica usando el pk de la URL
-      atencion = Atencion.objects.prefetch_related('diagnostico', 'atenciones').get(pk=kwargs['pk'])
+      atencion = Atencion.objects.prefetch_related('diagnostico', 'atenciones', 'servicios_adicionales').get(
+        pk=kwargs['pk'])
 
       # Obtener los detalles de la atención (medicamentos recetados)
       detalles = DetalleAtencion.objects.filter(atencion=atencion)
+
+      # Obtener servicios adicionales
+      servicios_adicionales = atencion.servicios_adicionales.all()
 
       # Preparar los datos en un diccionario
       data = {
@@ -201,9 +254,10 @@ class ViewAtencionPdf(LoginRequiredMixin, View):
         'comentario_adicional': atencion.comentario_adicional,
         'imc': atencion.calcular_imc,
         'detalles': detalles,  # Detalles de los medicamentos recetados
+        'servicios_adicionales': servicios_adicionales,  # Servicios adicionales asociados
       }
 
-      # Aquí se puede renderizar un PDF o generar la ficha médica
+      # Renderizar el PDF o mostrar la ficha médica
       return render(request, 'attention/medical_attention/atencion_pdf.html', data)
     except Atencion.DoesNotExist:
       raise Http404("No se encontró la atención médica.")

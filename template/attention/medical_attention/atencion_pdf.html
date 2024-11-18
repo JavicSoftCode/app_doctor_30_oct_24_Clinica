@@ -200,6 +200,32 @@
             </tbody>
         </table>
 
+        <!-- Detalles de Servicios Adicionales -->
+        <div class="section-title">Servicios Adicionales</div>
+        <table>
+            <thead>
+            <tr>
+                <th>Servicio</th>
+                <th>Costo</th>
+                <th>Descripción</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for servicio in servicios_adicionales %}
+                <tr>
+                    <td>{{ servicio.nombre_servicio }}</td>
+                    <td>{{ servicio.costo_servicio }}</td>
+                    <td>{{ servicio.descripcion|default:"No especificada" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No se encontraron servicios adicionales.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
         <!-- Comentarios Adicionales -->
         <div class="section-title">Comentario Adicional</div>
         <div>
@@ -212,10 +238,6 @@
                 Descargar Ficha de Atención Médica <i class="fa-solid fa-file-medical fa-lg"></i>
             </a>
         </div>
-
-        {#        <div class="button-container me-2">#}
-        {#            <a href="{% url 'attention:attention_descargar' %}" style="background-color: #3B3BBA">Descargar Ficha de Atención Médica <i class="fa-solid fa-file-medical fa-lg"></i></a>#}
-        {#        </div>#}
 
     </div>
 {% endblock content %}
