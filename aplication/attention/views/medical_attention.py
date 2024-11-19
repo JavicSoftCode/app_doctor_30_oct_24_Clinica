@@ -58,8 +58,10 @@ def generar_factura(request, atencion_id):
   subtotal_medicamentos = sum(detalle['total'] for detalle in detalles_medicamentos)
   subtotal_servicios = sum(servicio['costo_servicio'] for servicio in detalles_servicios)
 
+  costo_atencion = 20
+
   # Cálculo del monto total
-  monto_total = subtotal_medicamentos + subtotal_servicios
+  monto_total = subtotal_medicamentos + subtotal_servicios + costo_atencion
 
   return render(request, 'attention/medical_attention/factura.html', {
     'factura': {
