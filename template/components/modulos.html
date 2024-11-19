@@ -1,42 +1,146 @@
+{#{% extends 'components/base.html' %}#}
+{#{% load static %}#}
+{#<title>{% block title %} {{ title1 }} {% endblock title %}</title>#}
+{#{% block content %}#}
+{#    <div class="container-fluid">#}
+{#        <div class="row">#}
+{#            <!-- Main Content -->#}
+{#            <div class="col-md-12 col-lg-12 px-md-4 main-content">#}
+{#                <!-- Mensajes de ERRORES -->#}
+{#                {% include 'includes/messages.html' %}#}
+{#                <!-- Audit User  List Content -->#}
+{##}
+{#                <div class="card mb-4">#}
+{#                    <div class="card-body">#}
+{#    <!-- SECCION DE MENU Y MODULOS -->#}
+{#                        <section class="dark:bg-principal">#}
+{#                            <div class="p-8" data-aos="fade-up" data-aos-delay="300">#}
+{##}
+{#                                <h1 class="card-title mb-0 text-primary-emphasis fw-bold text-center">#}
+{#                                    {{ title2 }}#}
+{#                                </h1>#}
+{#                                <p class="dark:text-gray-400  text-center mt-6 text-4xl font-light"#}
+{#                                   style="color: #052C65; font-weight: bold">#}
+{#                                    Bienvenido <span#}
+{#                                        class="card-title mb-0 text-primary-emphasis fw-bold text-center"> {{ user.username }} </span>#}
+{#                                </p>#}
+{##}
+{#                                {% for menu_wrapper in menu_list %}#}
+{#                                    <div class="w-screen flex border-b-2 border-gray-200 py-4 opacity-90">#}
+{#                                        <i class="{{ menu_wrapper.menu.icon }} fa-lg me-3"></i>#}
+{#                                        <h3 class="dark:text-gray-400 font-bold characteristics-card-title" style="margin-top: -17px">{{ menu_wrapper.menu.name }}</h3>#}
+{#                                    </div>#}
+{#                                    {% for group_modulo_permission in menu_wrapper.group_module_permission_list %}#}
+{#                                        <div class="col-lg-4 col-md-6 mb-4">#}
+{#                                            <div class="card h-100">#}
+{#                                                <div class="card-header text-center  text-white"#}
+{#                                                     style="background-color: #3B3BBA">#}
+{#                                                    <h4>{{ group_modulo_permission.module.name }}</h4>#}
+{#                                                </div>#}
+{#                                                <div class="card-body text-center">#}
+{#                                                    <p>{{ group_modulo_permission.module.description }}.</p>#}
+{#                                                    <i class="{{ group_modulo_permission.module.icon }} fa-3x"></i>#}
+{#                                                    <!-- Icono relacionado con diversos roles laborales -->#}
+{#                                                </div>#}
+{#                                                <div class="card-footer text-center">#}
+{#                                                    <a href="{{ group_modulo_permission.module.url }}"#}
+{#                                                       class="btn text-white"#}
+{#                                                       style="background-color: #3B3BBA">Ver {{ group_modulo_permission.module.name }}</a>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endfor %}#}
+{#                                {% endfor %}#}
+{##}
+{#                            </div>#}
+{#                        </section>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <!-- CIERRE DE SECCION DE MENU Y MODULOS -->#}
+{##}
+{#    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}
+{##}
+{#    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>#}
+{##}
+{#    <script src="{% static 'js/sweet_alert.js' %}"></script>#}
+{#{% endblock content %}#}
 {% extends 'components/base.html' %}
 {% load static %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
+    <style>
+      .search-container {
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #3b3bba;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
     <div class="container-fluid">
         <div class="row">
             <!-- Main Content -->
             <div class="col-md-12 col-lg-12 px-md-4 main-content">
                 <!-- Mensajes de ERRORES -->
                 {% include 'includes/messages.html' %}
-                <!-- Audit User  List Content -->
+                <!-- Audit User List Content -->
 
                 <div class="card mb-4">
                     <div class="card-body">
-                        {#    <!-- SECCION DE MENU Y MODULOS -->#}
+                        {# SECCION DE MENU Y MODULOS #}
                         <section class="dark:bg-principal">
                             <div class="p-8" data-aos="fade-up" data-aos-delay="300">
-
                                 <h1 class="card-title mb-0 text-primary-emphasis fw-bold text-center">
                                     {{ title2 }}
                                 </h1>
-                                <p class="dark:text-gray-400  text-center mt-6 text-4xl font-light"
+                                <p class="dark:text-gray-400 text-center mt-6 text-4xl font-light"
                                    style="color: #052C65; font-weight: bold">
-                                    Bienvenido <span
-                                        class="card-title mb-0 text-primary-emphasis fw-bold text-center"> {{ user.username }} </span>
+                                    Bienvenido
+                                    <span class="card-title mb-0 text-primary-emphasis fw-bold text-center">
+                                        {{ user.username }}
+                                    </span>
                                 </p>
 
-                                {% for menu_wrapper in menu_list %}
-                                    <div class="w-screen flex border-b-2 border-gray-200 py-4 opacity-90">
-                                        <i class="{{ menu_wrapper.menu.icon }}"></i><h3 class="dark:text-gray-400 font-bold characteristics-card-title">{{ menu_wrapper.menu.name }}</h3>
-                                    </div>
-{#                                    <div class="dark:bg-principal grid sm:grid-cols-2 lg:grid-cols-4 gap-8 m-4 lg:mx-4 lg:p-4 rounded-3xl"#}
-{#                                         data-aos="fade-up" data-aos-delay="300">#}
-                                        {% for group_modulo_permission in menu_wrapper.group_module_permission_list %}
+                                <div class="search-container align-center">
+                                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar módulos...">
+                                </div>
 
-                                            <!-- Card: Cargo de Empleado -->
+                                {# Contenedor principal de tarjetas con sistema de cuadrículas #}
+                                <div class="row">
+                                    {% for menu_wrapper in menu_list %}
+                                        <div class="w-screen flex border-b-2 border-gray-200 py-4 opacity-90">
+                                            <i class="{{ menu_wrapper.menu.icon }} fa-lg me-3"></i>
+                                            <h3 class="dark:text-gray-400 font-bold characteristics-card-title"
+                                                style="margin-top: -17px">
+                                                {{ menu_wrapper.menu.name }}
+                                            </h3>
+                                        </div>
+                                        {% for group_modulo_permission in menu_wrapper.group_module_permission_list %}
                                             <div class="col-lg-4 col-md-6 mb-4">
                                                 <div class="card h-100">
-                                                    <div class="card-header text-center  text-white"
+                                                    <div class="card-header text-center text-white"
                                                          style="background-color: #3B3BBA">
                                                         <h4>{{ group_modulo_permission.module.name }}</h4>
                                                     </div>
@@ -48,22 +152,15 @@
                                                     <div class="card-footer text-center">
                                                         <a href="{{ group_modulo_permission.module.url }}"
                                                            class="btn text-white"
-                                                           style="background-color: #3B3BBA">Ver {{ group_modulo_permission.module.name }}</a>
+                                                           style="background-color: #3B3BBA">
+                                                            Ver {{ group_modulo_permission.module.name }}
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {#                                            <div#}
-                                            {#                                                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-purple-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-purple-500">#}
-                                            {#                                                <i class="{{ group_modulo_permission.module.icon }} text-3xl text-purple-500"></i>#}
-                                            {#                                                <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a#}
-                                            {#                                                        href="{{ group_modulo_permission.module.url }}">{{ group_modulo_permission.module.name }}</a>#}
-                                            {#                                                </h3>#}
-                                            {#                                            </div>#}
                                         {% endfor %}
-{#                                    </div>#}
-                                {% endfor %}
-
+                                    {% endfor %}
+                                </div>
                             </div>
                         </section>
                     </div>
@@ -74,8 +171,33 @@
     <!-- CIERRE DE SECCION DE MENU Y MODULOS -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <script src="{% static 'js/sweet_alert.js' %}"></script>
+    {#    Scripts de la busquedas de las cards#}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const cards = document.querySelectorAll('.col-lg-4');
+
+            function filterCards(searchTerm) {
+                const normalizedSearch = searchTerm.toLowerCase().trim();
+
+                cards.forEach(card => {
+                    // Ahora solo buscamos en el texto del h4
+                    const cardTitle = card.querySelector('.card-header h4').textContent.toLowerCase();
+                    const matchesSearch = cardTitle.includes(normalizedSearch);
+
+                    if (matchesSearch) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+
+            searchInput.addEventListener('input', function (e) {
+                filterCards(this.value);
+            });
+        });
+    </script>
 {% endblock content %}

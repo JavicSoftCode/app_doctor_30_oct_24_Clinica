@@ -108,18 +108,17 @@
                                     <i class="fas fa-user-md fa-lg me-2"></i><strong>{{ request.user }}</strong>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{% url 'security:auth_profile' %}"><i
-                                            class="fas fa-user fa-lg me-2"></i>Perfil</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="{% url 'security:auth_update_profile' %}"><i
-                                            class="fa-solid fa-id-badge fa-lg me-2"></i>Actualizar Perfil</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="{% url 'security:auth_change_password' %}"><i
-                                            class="fa-solid fa-key fa-lg me-2"></i>Actualizar Contraseña</a>
-                                    </li>
+{#                                    <li><a class="dropdown-item" href="{% url 'security:auth_profile' %}"><i#}
+                                    {#                                            class="fas fa-user fa-lg me-2"></i>Perfil</a>#}
+                                    {#                                    </li>#}
+{#                                    <li><a class="dropdown-item" href="{% url 'security:auth_update_profile' %}"><i#}
+{#                                            class="fa-solid fa-id-badge fa-lg me-2"></i>Actualizar Perfil</a>#}
+{#                                    </li>#}
+{#                                    <li><a class="dropdown-item" href="{% url 'security:auth_change_password' %}"><i#}
+{#                                            class="fa-solid fa-key fa-lg me-2"></i>Actualizar Contraseña</a>#}
+{#                                    </li>#}
                                     <li><a class="dropdown-item" href="{% url 'core:auditUser_list' %}"><i
-                                            class="fa-solid fa-user-shield fa-lg me-2"></i>Auditoría
-                                        / Administración</a></li>
+                                            class="fa-solid fa-user-shield fa-lg me-2"></i>Auditoría Usuario</a></li>
                                     {% if user.is_superuser or user.is_staff %}
                                         <li><a class="dropdown-item" href="{% url 'modulos' %}"><i
                                                 class="fas fa-user-secret  fa-lg me-2"></i>Block

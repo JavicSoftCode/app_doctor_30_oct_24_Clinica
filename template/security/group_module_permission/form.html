@@ -7,12 +7,17 @@
             color: black;
         }
 
+        .module-checkbox {
+            display: none;
+        }
+
         .module-container::-webkit-scrollbar {
             width: 0;
         }
 
         .module-container {
-        {#background-color: #1a1a1a;#} border: 2px solid #dededf;
+            background-color: #ffffff;
+            border: 2px solid #dededf;
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
@@ -28,7 +33,8 @@
         }
 
         #module-search {
-        {#background-color: #1a1a1a;#} border: 2px solid #e5e7eb;
+            background-color: #1a1a1a;
+            border: 2px solid #e5e7eb;
             padding: 0.75rem 1rem;
             border-radius: 8px;
             width: 50%;
@@ -80,7 +86,7 @@
         }
 
         .module-title {
-            font-size: 22px;
+            font-size: 20px;
             color: #052C65;
             font-weight: 600;
             background-color: white;
@@ -147,7 +153,7 @@
                                         <div class="flex gap-2">
                                             <input type="text" id="module-search"
                                                    placeholder="Buscar módulo..."
-                                                   style="color: black">
+                                                   style="color: black; background-color: white">
                                             <button id="select-all" type="button"
                                                     class="btn btn-primary mt-3 mt-md-0"
                                                     style="height: 50px; background-color: #3B3BBA">
@@ -238,7 +244,7 @@
                                     moduleCheckbox.checked = true;
                                 };
 
-                                {#moduleCheckboxContainer.appendChild(moduleCheckbox);#}
+                                moduleCheckboxContainer.appendChild(moduleCheckbox);
                                 moduleCheckboxContainer.appendChild(moduleLabel);
                                 moduleHeader.appendChild(moduleCheckboxContainer);
                                 moduleHeader.appendChild(toggleButton);
@@ -342,3 +348,280 @@
         }
     </script>
 {% endblock content %}
+{##}
+{#{% extends 'components/base.html' %}#}
+{#{% block content %}#}
+{#    {% load static %}#}
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">#}
+{#    <style>#}
+{##}
+{#    #module-search{#}
+{#        background-color: black;#}
+{#        border: 3px solid #13274C;#}
+{#        color: white;#}
+{#    }#}
+{##}
+{#        .permissions-container {#}
+{#            transition: max-height 0.1s ease, padding 0.1s ease;#}
+{#            overflow: hidden;#}
+{#        }#}
+{##}
+{#        .permissions-container.hidden {#}
+{#            max-height: 0;#}
+{#            padding: 0;#}
+{#        }#}
+{##}
+{#        .links-container {#}
+{#            display: flex;#}
+{#            justify-content: center;#}
+{#            gap: 3rem;#}
+{#            margin-bottom: 1rem;#}
+{#        }#}
+{##}
+{#        .links-container a {#}
+{#            color: inherit;#}
+{#            text-decoration: none;#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            transition: color 0.3s;#}
+{#        }#}
+{##}
+{#        .links-container a:hover {#}
+{#            color: currentColor;#}
+{#        }#}
+{##}
+{#        .links-container i {#}
+{#            font-size: 2 rem;#}
+{#        }#}
+{##}
+{#        .moduleDiv{#}
+{#            border: 3px solid #3F83F9;#}
+{#        }#}
+{##}
+{#    </style>#}
+{#    <title>{% block title %} {{ title1 }} {% endblock title %}</title>#}
+{#    <section class="dark:bg-principal">#}
+{#        <div class="text-center" data-aos="fade-up" data-aos-delay="200">#}
+{##}
+{#            <!-- Cabecera -->#}
+{#            <div class="sm:pt-28 lg:pt-24">#}
+{#                <div class="flex flex-col items-center justify-center">#}
+{#                    <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">#}
+{#                        {{ title1 }}#}
+{#                    </span>#}
+{#                </div>#}
+{#                <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">#}
+{#                    {{ title2 }}#}
+{#                </h1>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <div class="flex justify-center items-center mt-8 py-8" style="width: 100%">#}
+{#            <form id="permissions-form" method="post" enctype="multipart/form-data"#}
+{#                  class="flex justify-center items-center w-full">#}
+{#                <div class="grid grid-cols-1 xl:grid-cols-2 gap-12 mx-4 lg:mx-28 p-4 rounded-3xl dark:bg-secundario w-full max-w-5xl"#}
+{#                     data-aos="fade">#}
+{#                    <div class="flex flex-col justify-center items-center w-full">#}
+{#                        {% csrf_token %}#}
+{#                        <div style="margin-top: -5%">#}
+{#                            {{ form.group }}#}
+{#                        </div>#}
+{##}
+{#                        <div id="modules-container" class="w-full mb-8 hidden">#}
+{#                            <label class="dark:text-blue-300 font-black uppercase text-lg">Módulos</label> <br> <br>#}
+{#                            <input type="text" id="module-search" placeholder="Buscar módulo..." class="w-full p-2 mb-4 border rounded">#}
+{#                            <div id="modules-list"#}
+{#                                 class="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-4 lg:grid-cols-5 gap-8"></div>#}
+{#                            <div class="flex justify-between mt-4">#}
+{#                                <button id="select-all" type="button"#}
+{#                                        class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center">#}
+{#                                    <i class="fa-solid fa-check mr-2"></i>Seleccionar Todos#}
+{#                                </button>#}
+{#                                <button id="deselect-all" type="button"#}
+{#                                        class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-full flex items-center">#}
+{#                                    <i class="fa-solid fa-times mr-2"></i>Quitar Todos#}
+{#                                </button>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <br>#}
+{#                        <div class="flex justify-center mb-4 space-x-4">#}
+{#                            <button type="submit"#}
+{#                                    class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center justify-center w-full md:w-auto">#}
+{#                                <i class="fa-solid fa-save mr-2"></i>Guardar#}
+{#                            </button>#}
+{#                            <a class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-full flex items-center justify-center w-full md:w-auto"#}
+{#                               href="{% url 'security:groupmodulepermission_list' %}">#}
+{#                                <i class="fa-solid fa-xmark mr-2"></i>Cancelar#}
+{#                            </a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </form>#}
+{#        </div>#}
+{#    </section>#}
+{##}
+{##}
+{#    <script>#}
+{#        document.addEventListener("DOMContentLoaded", function () {#}
+{#            const groupSelect = document.getElementById('id_group');#}
+{#            const modulesContainer = document.getElementById('modules-container');#}
+{#            const modulesList = document.getElementById('modules-list');#}
+{#            const selectAllButton = document.getElementById('select-all');#}
+{#            const deselectAllButton = document.getElementById('deselect-all');#}
+{#            const moduleSearch = document.getElementById('module-search');#}
+{##}
+{#            groupSelect.addEventListener('change', function () {#}
+{#                const groupId = this.value;#}
+{#                if (groupId) {#}
+{#                    fetch(`/security/get_group_permissions/${groupId}/`)#}
+{#                        .then(response => response.json())#}
+{#                        .then(data => {#}
+{#                            modulesList.innerHTML = "";#}
+{#                            data.forEach(item => {#}
+{#                                const moduleDiv = document.createElement('div');#}
+{#                                moduleDiv.classList.add('flex', 'flex-col', 'mb-50', 'p-4', 'rounded-lg', 'bg-black', 'module-item');#}
+{##}
+{#                                const moduleCheckboxContainer = document.createElement('div');#}
+{#                                moduleCheckboxContainer.classList.add('flex', 'items-center', 'justify-between');#}
+{##}
+{#                                const moduleCheckbox = document.createElement('input');#}
+{#                                moduleCheckbox.type = 'checkbox';#}
+{#                                moduleCheckbox.id = `module_${item.module_id}`;#}
+{#                                moduleCheckbox.name = 'modules[]';#}
+{#                                moduleCheckbox.value = item.module_id;#}
+{#                                moduleCheckbox.classList.add('module-checkbox', 'mr-2');#}
+{#                                if (item.assigned_permissions.length > 0) {#}
+{#                                    moduleCheckbox.checked = true;#}
+{#                                }#}
+{##}
+{#                                const moduleLabel = document.createElement('label');#}
+{#                                moduleLabel.htmlFor = moduleCheckbox.id;#}
+{#                                moduleLabel.classList.add('dark:text-blue-300', 'font-medium');#}
+{#                                moduleLabel.textContent = item.module_name;#}
+{##}
+{#                                const toggleButton = document.createElement('button');#}
+{#                                toggleButton.type = 'button';#}
+{#                                toggleButton.classList.add('ml-2', 'text-blue-500');#}
+{#                                toggleButton.innerHTML = '<i class="fa-solid fa-eye"></i>';#}
+{#                                toggleButton.onclick = function () {#}
+{#                                    togglePermissions(item.module_id);#}
+{#                                    moduleCheckbox.checked = true;#}
+{#                                };#}
+{##}
+{#                                moduleCheckboxContainer.appendChild(moduleCheckbox);#}
+{#                                moduleCheckboxContainer.appendChild(moduleLabel);#}
+{#                                moduleCheckboxContainer.appendChild(toggleButton);#}
+{##}
+{#                                const permissionsContainer = document.createElement('div');#}
+{#                                permissionsContainer.id = `permissions-container-${item.module_id}`;#}
+{#                                permissionsContainer.classList.add('space-y-2', 'pl-6', 'permissions-container');#}
+{#                                if (item.assigned_permissions.length === 0) {#}
+{#                                    permissionsContainer.classList.add('hidden');#}
+{#                                }#}
+{##}
+{#                                item.permissions.forEach(permission => {#}
+{#                                    const permissionCheckboxContainer = document.createElement('div');#}
+{#                                    permissionCheckboxContainer.classList.add('flex', 'items-center');#}
+{##}
+{#                                    const permissionCheckbox = document.createElement('input');#}
+{#                                    permissionCheckbox.type = 'checkbox';#}
+{#                                    permissionCheckbox.id = `permission_${item.module_id}_${permission.id}`;#}
+{#                                    permissionCheckbox.name = `permissions_${item.module_id}[]`;#}
+{#                                    permissionCheckbox.value = permission.id;#}
+{#                                    permissionCheckbox.classList.add('mr-2');#}
+{#                                    if (item.assigned_permissions.some(ap => ap.id === permission.id)) {#}
+{#                                        permissionCheckbox.checked = true;#}
+{#                                    }#}
+{##}
+{#                                    const permissionLabel = document.createElement('label');#}
+{#                                    permissionLabel.htmlFor = permissionCheckbox.id;#}
+{#                                    permissionLabel.textContent = permission.name;#}
+{#                                    permissionLabel.classList.add('dark:text-blue-300', 'font-medium');#}
+{#                                    permissionCheckboxContainer.appendChild(permissionCheckbox);#}
+{#                                    permissionCheckboxContainer.appendChild(permissionLabel);#}
+{#                                    permissionsContainer.appendChild(permissionCheckboxContainer);#}
+{#                                });#}
+{##}
+{#                                const linksContainer = document.createElement('div');#}
+{#                                linksContainer.classList.add('links-container');#}
+{##}
+{#                                const selectAllLink = document.createElement('a');#}
+{#                                selectAllLink.href = '#';#}
+{#                                selectAllLink.innerHTML = '<i class="fa-solid fa-square-check text-green-500"></i>';#}
+{#                                selectAllLink.classList.add('text-blue-700', 'hover:text-blue-800', 'block');#}
+{#                                selectAllLink.addEventListener('click', function (event) {#}
+{#                                    event.preventDefault();#}
+{#                                    const permissionCheckboxes = permissionsContainer.querySelectorAll('input[type="checkbox"]');#}
+{#                                    permissionCheckboxes.forEach(checkbox => {#}
+{#                                        checkbox.checked = true;#}
+{#                                    });#}
+{#                                });#}
+{##}
+{#                                const deselectAllLink = document.createElement('a');#}
+{#                                deselectAllLink.href = '#';#}
+{#                                deselectAllLink.innerHTML = '<i class="fa-solid fa-square-minus text-red-500"></i>';#}
+{#                                deselectAllLink.classList.add('text-red-700', 'hover:text-red-800', 'block');#}
+{#                                deselectAllLink.addEventListener('click', function (event) {#}
+{#                                    event.preventDefault();#}
+{#                                    const permissionCheckboxes = permissionsContainer.querySelectorAll('input[type="checkbox"]');#}
+{#                                    permissionCheckboxes.forEach(checkbox => {#}
+{#                                        checkbox.checked = false;#}
+{#                                    });#}
+{#                                });#}
+{##}
+{#                                linksContainer.appendChild(selectAllLink);#}
+{#                                linksContainer.appendChild(deselectAllLink);#}
+{##}
+{#                                moduleDiv.appendChild(moduleCheckboxContainer);#}
+{#                                moduleDiv.appendChild(permissionsContainer);#}
+{#                                moduleDiv.appendChild(linksContainer);#}
+{##}
+{#                                modulesList.appendChild(moduleDiv);#}
+{#                            });#}
+{##}
+{#                            modulesContainer.classList.remove('hidden');#}
+{#                        })#}
+{#                        .catch(error => {#}
+{#                            console.error('Error fetching data:', error);#}
+{#                        });#}
+{#                } else {#}
+{#                    modulesContainer.classList.add('hidden');#}
+{#                }#}
+{#            });#}
+{##}
+{#            selectAllButton.addEventListener('click', function () {#}
+{#                const checkboxes = document.querySelectorAll('#modules-list input[type="checkbox"]');#}
+{#                checkboxes.forEach(checkbox => checkbox.checked = true);#}
+{#            });#}
+{##}
+{#            deselectAllButton.addEventListener('click', function () {#}
+{#                const checkboxes = document.querySelectorAll('#modules-list input[type="checkbox"]');#}
+{#                checkboxes.forEach(checkbox => checkbox.checked = false);#}
+{#            });#}
+{##}
+{#            moduleSearch.addEventListener('input', function () {#}
+{#                const searchTerm = this.value.toLowerCase();#}
+{#                const moduleItems = modulesList.querySelectorAll('.module-item');#}
+{##}
+{#                moduleItems.forEach(item => {#}
+{#                    const moduleName = item.querySelector('label').textContent.toLowerCase();#}
+{#                    if (moduleName.includes(searchTerm)) {#}
+{#                        item.style.display = '';#}
+{#                    } else {#}
+{#                        item.style.display = 'none';#}
+{#                    }#}
+{#                });#}
+{#            });#}
+{#        });#}
+{##}
+{#        function togglePermissions(moduleId) {#}
+{#            const permissionsContainer = document.getElementById(`permissions-container-${moduleId}`);#}
+{#            permissionsContainer.classList.toggle('hidden');#}
+{#        }#}
+{##}
+{##}
+{#    </script>#}
+{#{% endblock content %}#}
+
+
+
