@@ -8,8 +8,7 @@ from django.db import transaction
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
@@ -24,7 +23,7 @@ from reportlab.platypus import Paragraph, Table, TableStyle, Spacer
 from reportlab.platypus import SimpleDocTemplate
 
 from aplication.attention.forms.medical_attention import AttentionForm
-from aplication.attention.models import Atencion, DetalleAtencion, ServiciosAdicionales
+from aplication.attention.models import Atencion, DetalleAtencion, ServiciosAdicionales, CostosAtencion
 from aplication.core.models import Diagnostico, Medicamento
 from aplication.security.mixins.mixins import *
 from doctor.utils import custom_serializer, save_audit
@@ -73,6 +72,194 @@ def generar_factura(request, atencion_id):
     'subtotal_medicamentos': subtotal_medicamentos,
     'subtotal_servicios': subtotal_servicios,
   })
+
+
+# def generar_factura(request, atencion_id):
+#   """Genera y confirma los detalles de la factura para una atención médica."""
+#   atencion = get_object_or_404(Atencion, id=atencion_id)
+#
+#   # Verificar si ya existe un registro de pago para esta atención
+#   pago_realizado = CostosAtencion.objects.filter(atencion=atencion).exists()
+#
+#   # Detalles de medicamentos
+#   detalles_medicamentos = [
+#     {
+#       'nombre': detalle.medicamento.nombre,
+#       'cantidad': detalle.cantidad,
+#       'precio_unitario': detalle.medicamento.precio,
+#       'total': detalle.cantidad * detalle.medicamento.precio,
+#     }
+#     for detalle in atencion.atenciones.select_related('medicamento').all()
+#   ]
+#
+#   # Detalles de servicios adicionales
+#   detalles_servicios = [
+#     {
+#       'nombre_servicio': servicio.nombre_servicio,
+#       'costo_servicio': servicio.costo_servicio,
+#     }
+#     for servicio in atencion.servicios_adicionales.select_related().all()
+#   ]
+#
+#   # Cálculo de subtotales
+#   subtotal_medicamentos = sum(detalle['total'] for detalle in detalles_medicamentos)
+#   subtotal_servicios = sum(servicio['costo_servicio'] for servicio in detalles_servicios)
+#
+#   costo_atencion = 20  # Costo base de la consulta médica
+#   monto_total = subtotal_medicamentos + subtotal_servicios + costo_atencion
+#
+#   # Recalcular los costos si la atención ha sido modificada
+#   if request.method == 'POST':
+#     detalles_medicamentos = [
+#       {
+#         'nombre': detalle.medicamento.nombre,
+#         'cantidad': detalle.cantidad,
+#         'precio_unitario': detalle.medicamento.precio,
+#         'total': detalle.cantidad * detalle.medicamento.precio,
+#       }
+#       for detalle in atencion.atenciones.select_related('medicamento').all()
+#     ]
+#
+#     detalles_servicios = [
+#       {
+#         'servicio': servicio,  # Instancia de ServiciosAdicionales
+#         'costo_servicio': servicio.costo_servicio,
+#       }
+#       for servicio in atencion.servicios_adicionales.all()
+#     ]
+#
+#     subtotal_medicamentos = sum(detalle['total'] for detalle in detalles_medicamentos)
+#     subtotal_servicios = sum(servicio['costo_servicio'] for servicio in detalles_servicios)
+#
+#     monto_total = subtotal_medicamentos + subtotal_servicios + costo_atencion
+#
+#     if not pago_realizado:
+#       try:
+#         with transaction.atomic():
+#           costos_atencion = CostosAtencion.objects.create(
+#             atencion=atencion,
+#             total=monto_total,
+#           )
+#
+#           # Crear los detalles de los servicios
+#           for detalle in detalles_servicios:
+#             CostoAtencionDetalle.objects.create(
+#               costo_atencion=costos_atencion,
+#               servicios_adicionales=detalle['servicio'],
+#               costo_servicio=detalle['costo_servicio'],
+#             )
+#
+#         messages.success(request, "Pago realizado exitosamente.")
+#         return redirect('attention:attention_list')
+#
+#       except Exception as e:
+#         messages.error(request, f"Error al guardar los costos: {str(e)}")
+#
+#     else:
+#       # Si ya se ha pagado, mostrar un mensaje
+#       messages.error(request, "Pago ya realizado anteriormente.")
+#
+#   # Renderizar la factura con la variable pago_realizado para controlar el botón
+#   return render(request, 'attention/medical_attention/factura.html', {
+#     'factura': {
+#       'atencion': atencion,
+#       'monto_total': monto_total,
+#     },
+#     'detalles_medicamentos': detalles_medicamentos,
+#     'detalles_servicios': detalles_servicios,
+#     'subtotal_medicamentos': subtotal_medicamentos,
+#     'subtotal_servicios': subtotal_servicios,
+#     'pago_realizado': pago_realizado,  # Nueva variable de contexto para el botón
+#   })
+
+
+# def generar_factura(request, atencion_id):
+#   """Genera y confirma los detalles de la factura para una atención médica."""
+#   atencion = get_object_or_404(Atencion, id=atencion_id)
+#
+#   # Detalles de medicamentos
+#   detalles_medicamentos = [
+#     {
+#       'nombre': detalle.medicamento.nombre,
+#       'cantidad': detalle.cantidad,
+#       'precio_unitario': detalle.medicamento.precio,
+#       'total': detalle.cantidad * detalle.medicamento.precio,
+#     }
+#     for detalle in atencion.atenciones.select_related('medicamento').all()
+#   ]
+#
+#   # Detalles de servicios adicionales
+#   detalles_servicios = [
+#     {
+#       'nombre_servicio': servicio.nombre_servicio,
+#       'costo_servicio': servicio.costo_servicio,
+#     }
+#     for servicio in atencion.servicios_adicionales.select_related().all()
+#   ]
+#
+#   # Cálculo de subtotales
+#   subtotal_medicamentos = sum(detalle['total'] for detalle in detalles_medicamentos)
+#   subtotal_servicios = sum(servicio['costo_servicio'] for servicio in detalles_servicios)
+#
+#   costo_atencion = 20  # Costo base de la consulta médica
+#   monto_total = subtotal_medicamentos + subtotal_servicios + costo_atencion
+#
+#   if request.method == 'POST':
+#     detalles_medicamentos = [
+#       {
+#         'nombre': detalle.medicamento.nombre,
+#         'cantidad': detalle.cantidad,
+#         'precio_unitario': detalle.medicamento.precio,
+#         'total': detalle.cantidad * detalle.medicamento.precio,
+#       }
+#       for detalle in atencion.atenciones.select_related('medicamento').all()
+#     ]
+#
+#     detalles_servicios = [
+#       {
+#         'servicio': servicio,  # Instancia de ServiciosAdicionales
+#         'costo_servicio': servicio.costo_servicio,
+#       }
+#       for servicio in atencion.servicios_adicionales.all()
+#     ]
+#
+#     subtotal_medicamentos = sum(detalle['total'] for detalle in detalles_medicamentos)
+#     subtotal_servicios = sum(servicio['costo_servicio'] for servicio in detalles_servicios)
+#
+#     costo_atencion = 20
+#     monto_total = subtotal_medicamentos + subtotal_servicios + costo_atencion
+#
+#     try:
+#       with transaction.atomic():
+#         costos_atencion = CostosAtencion.objects.create(
+#           atencion=atencion,
+#           total=monto_total,
+#         )
+#
+#         for detalle in detalles_servicios:
+#           CostoAtencionDetalle.objects.create(
+#             costo_atencion=costos_atencion,
+#             servicios_adicionales=detalle['servicio'],
+#             costo_servicio=detalle['costo_servicio'],
+#           )
+#
+#       messages.success(request, "Pago realizado exitosamente.")
+#       return redirect('attention:attention_list')
+#
+#     except Exception as e:
+#       messages.error(request, f"Error al guardar los costos: {str(e)}")
+#
+#   # Renderizar la factura
+#   return render(request, 'attention/medical_attention/factura.html', {
+#     'factura': {
+#       'atencion': atencion,
+#       'monto_total': monto_total,
+#     },
+#     'detalles_medicamentos': detalles_medicamentos,
+#     'detalles_servicios': detalles_servicios,
+#     'subtotal_medicamentos': subtotal_medicamentos,
+#     'subtotal_servicios': subtotal_servicios,
+#   })
 
 
 @login_required
@@ -266,6 +453,22 @@ class ViewAtencionPdf(LoginRequiredMixin, View):
       raise Http404("No se encontró la atención médica.")
 
 
+# class AttentionListView(PermissionMixin, ListViewMixin, ListView):
+#   template_name = "attention/medical_attention/list.html"
+#   model = Atencion
+#   permission_required = 'view_attention'
+#   context_object_name = 'atenciones'
+#
+#   def get_queryset(self):
+#     # self.query = Q()
+#     q1 = self.request.GET.get('q')  # ver
+#     sex = self.request.GET.get('sex')
+#     if q1 is not None:
+#       self.query.add(Q(paciente__nombres__icontains=q1), Q.OR)
+#       self.query.add(Q(paciente__apellidos__icontains=q1), Q.OR)
+#       self.query.add(Q(paciente__cedula__icontains=q1), Q.OR)
+#     if sex == "M" or sex == "F": self.query.add(Q(paciente__sexo__icontains=sex), Q.AND)
+#     return self.model.objects.filter(self.query).order_by('-fecha_atencion')
 class AttentionListView(PermissionMixin, ListViewMixin, ListView):
   template_name = "attention/medical_attention/list.html"
   model = Atencion
@@ -273,15 +476,28 @@ class AttentionListView(PermissionMixin, ListViewMixin, ListView):
   context_object_name = 'atenciones'
 
   def get_queryset(self):
-    # self.query = Q()
     q1 = self.request.GET.get('q')  # ver
     sex = self.request.GET.get('sex')
     if q1 is not None:
       self.query.add(Q(paciente__nombres__icontains=q1), Q.OR)
       self.query.add(Q(paciente__apellidos__icontains=q1), Q.OR)
       self.query.add(Q(paciente__cedula__icontains=q1), Q.OR)
-    if sex == "M" or sex == "F": self.query.add(Q(paciente__sexo__icontains=sex), Q.AND)
+    if sex == "M" or sex == "F":
+      self.query.add(Q(paciente__sexo__icontains=sex), Q.AND)
     return self.model.objects.filter(self.query).order_by('-fecha_atencion')
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+
+    # Añadir el campo costo_pagado a cada atencion
+    for atencion in context['atenciones']:
+      costo_atencion = atencion.costos_atencion.filter(activo=True).first()
+      if costo_atencion:
+        atencion.costo_pagado = True  # Si hay un costo activo, se considera como pagado
+      else:
+        atencion.costo_pagado = False  # Si no hay costo activo, no está pagado
+
+    return context
 
 
 class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
@@ -516,6 +732,68 @@ class AttentionCreateView(PermissionMixin, CreateViewMixin, CreateView):
     email.attach(f"certificado_medico_{atencion.paciente.nombre_completo}.pdf", pdf_buffer.read(), 'application/pdf')
     email.send()
 
+  # def form_valid(self, form):
+  #   # Guardamos la atención
+  #   response = super().form_valid(form)
+  #   self.crear_costos_atencion()
+  #   return response
+  #
+  # def crear_costos_atencion(self):
+  #   """Crea o actualiza los costos asociados a la atención."""
+  #   with transaction.atomic():
+  #     atencion = self.object
+  #     # Cálculo del costo de los servicios adicionales
+  #     costo_servicios = sum(servicio.costo_servicio for servicio in atencion.servicios_adicionales.all())
+  #
+  #     # Cálculo del costo de medicamentos
+  #     costo_medicamentos = sum(
+  #       detalle.cantidad * detalle.medicamento.precio
+  #       for detalle in atencion.atenciones.all()
+  #     )
+  #
+  #     # Crear o actualizar el modelo `CostosAtencion`
+  #     total_costos = costo_servicios + costo_medicamentos
+  #     costo_atencion = CostosAtencion.objects.create(
+  #       atencion=atencion,
+  #       total=total_costos
+  #     )
+  #
+  #     # Crear detalles para cada servicio adicional
+  #     for servicio in atencion.servicios_adicionales.all():
+  #       CostoAtencionDetalle.objects.create(
+  #         costo_atencion=costo_atencion,
+  #         servicios_adicionales=servicio,
+  #         costo_servicio=servicio.costo_servicio
+  #       )
+
+
+# class CostosListView(ListView):
+#   model = CostosAtencion
+#   template_name = 'attention/costoAtencion/list.html'
+#   context_object_name = 'costos'
+
+
+# class CostoAtencionUpdateView(UpdateView):
+#   model = CostosAtencion
+#   fields = ['activo']  # Solo permite cambiar el estado de pago
+#   template_name = 'attention/costoAtencion/form.html'
+#   success_url = reverse_lazy('costos_list')
+#
+#   def form_valid(self, form):
+#     if self.request.POST.get('pagar'):  # Si se hace clic en el botón "Pagar"
+#       form.instance.activo = True
+#     return super().form_valid(form)
+#
+#
+# # Vista para cambiar el estado de pago vía AJAX
+# def marcar_pagado(request, pk):
+#   if request.method == 'POST':
+#     costo = get_object_or_404(CostosAtencion, pk=pk)
+#     costo.activo = True
+#     costo.save()
+#     return JsonResponse({'success': True})
+#   return JsonResponse({'success': False}, status=400)
+
 
 class AttentionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Atencion
@@ -599,6 +877,28 @@ class AttentionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
             prescripcion=medicamento['prescripcion'],
           )
 
+          # Actualizar el costo asociado a la atención
+          costos_atencion = CostosAtencion.objects.filter(atencion=atencion).first()
+          if costos_atencion:
+            # Marcar como pendiente de pago
+            costos_atencion.activo = False  # Indicar que requiere una revisión o nuevo pago
+
+            # Recalcular detalles y costo total
+            subtotal_medicamentos = sum(
+              int(med['cantidad']) * Medicamento.objects.get(id=int(med['codigo'])).precio
+              for med in medicamentos
+            )
+            subtotal_servicios = sum(
+              ServiciosAdicionales.objects.get(id=s_id).costo_servicio
+              for s_id in servicios_adicionales_ids
+            )
+            costo_base = 20  # Costo fijo de la consulta
+            monto_total = subtotal_medicamentos + subtotal_servicios + costo_base
+
+            # Actualizar el total con el nuevo cálculo
+            costos_atencion.total = monto_total
+            costos_atencion.save()
+
         # Generar y enviar el correo electrónico con PDF actualizado
         self.enviar_correo_con_pdf(atencion)
 
@@ -614,72 +914,6 @@ class AttentionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
     except Exception as ex:
       messages.error(self.request, "Error al actualizar la atención médica.")
       return JsonResponse({"msg": str(ex)}, status=400)
-
-  # def generar_pdf(self, atencion):
-  #   buffer = BytesIO()
-  #   doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
-  #   elements = []
-  #   styles = getSampleStyleSheet()
-  #
-  #   styles.add(ParagraphStyle(
-  #     name='CustomTitle',
-  #     parent=styles['Heading1'],
-  #     fontSize=16,
-  #     textColor=colors.HexColor('#3498db'),
-  #     alignment=TA_CENTER,
-  #     spaceAfter=20
-  #   ))
-  #
-  #   elements.append(Paragraph('CERTIFICADO MÉDICO ACTUALIZADO', styles['CustomTitle']))
-  #   elements.append(Spacer(1, 12))
-  #
-  #   elements.append(Paragraph(f"Paciente: {atencion.paciente.nombre_completo}", styles['Normal']))
-  #   elements.append(Paragraph(f"Cédula: {atencion.paciente.cedula}", styles['Normal']))
-  #   elements.append(Paragraph(f"Fecha de Atención: {atencion.fecha_atencion.strftime('%d/%m/%Y')}", styles['Normal']))
-  #   elements.append(Spacer(1, 12))
-  #
-  #   signos_vitales = [
-  #     ['Presión Arterial', atencion.presion_arterial or 'No especificado'],
-  #     ['Pulso', f"{atencion.pulso} ppm" if atencion.pulso else 'No especificado'],
-  #     ['Temperatura', f"{atencion.temperatura} °C" if atencion.temperatura else 'No especificado'],
-  #     ['Frecuencia Respiratoria',
-  #      f"{atencion.frecuencia_respiratoria} rpm" if atencion.frecuencia_respiratoria else 'No especificado'],
-  #     ['Saturación de Oxígeno',
-  #      f"{atencion.saturacion_oxigeno}%" if atencion.saturacion_oxigeno else 'No especificado'],
-  #     ['Peso', f"{atencion.peso} kg" if atencion.peso else 'No especificado'],
-  #     ['Altura', f"{atencion.altura} m" if atencion.altura else 'No especificado'],
-  #   ]
-  #   signos_table = Table(signos_vitales, colWidths=[3 * inch, 3 * inch])
-  #   signos_table.setStyle(TableStyle([
-  #     ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#3498db')),
-  #     ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-  #     ('FONTSIZE', (0, 0), (-1, -1), 10),
-  #     ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-  #   ]))
-  #   elements.append(signos_table)
-  #   elements.append(Spacer(1, 12))
-  #
-  #   detalles = DetalleAtencion.objects.filter(atencion=atencion)
-  #   if detalles.exists():
-  #     medicamentos_data = [['Medicamento', 'Cantidad', 'Prescripción']]
-  #     for detalle in detalles:
-  #       medicamentos_data.append([
-  #         detalle.medicamento.nombre,
-  #         detalle.cantidad,
-  #         detalle.prescripcion or 'No especificado'
-  #       ])
-  #     medicamentos_table = Table(medicamentos_data, colWidths=[2.5 * inch, 1.5 * inch, 3 * inch])
-  #     medicamentos_table.setStyle(TableStyle([
-  #       ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#2ecc71')),
-  #     ]))
-  #     elements.append(medicamentos_table)
-  #   else:
-  #     elements.append(Paragraph("No se recetaron medicamentos.", styles['Normal']))
-  #
-  #   doc.title = f"Certificado Médico Actualizado - {atencion.paciente.nombre_completo}"
-  #   doc.build(elements)
-  #   buffer.seek(0)
-  #   return buffer
 
   def generar_pdf(self, atencion):
     buffer = BytesIO()

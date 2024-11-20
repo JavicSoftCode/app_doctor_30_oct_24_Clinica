@@ -30,7 +30,7 @@
 {#  </div>#}
 {#{% endif %}#}
 {% if messages %}
-    <div id="notification-container" class="fixed top-0 right-0 m-3" style="z-index: 9999;">
+    <div id="notification-container" class="fixed top-0 right-0 m-3 mt-5" style="z-index: 9999;">
         {% for message in messages %}
             {% if message.tags == 'success' %}
                 <div id="alert-border-success" class="alert alert-success alert-dismissible fade show"

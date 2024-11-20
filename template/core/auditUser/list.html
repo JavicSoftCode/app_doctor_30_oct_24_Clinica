@@ -1,34 +1,34 @@
 {% extends 'components/base.html' %}
 {% block content %}
     {% load static %}
-{#    <style>#}
-{#        .search-container {#}
-{#            margin: 20px auto;#}
-{#            max-width: 600px;#}
-{#            padding: 15px;#}
-{#        }#}
-{##}
-{#        .search-input {#}
-{#            width: 100%;#}
-{#            padding: 12px 20px;#}
-{#            margin: 8px 0;#}
-{#            box-sizing: border-box;#}
-{#            border: 2px solid #007bff;#}
-{#            border-radius: 4px;#}
-{#            font-size: 16px;#}
-{#            outline: none;#}
-{#            transition: 0.3s;#}
-{#        }#}
-{##}
-{#        .search-input:focus {#}
-{#            border-color: #0056b3;#}
-{#            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);#}
-{#        }#}
-{##}
-{#        .hidden {#}
-{#            display: none !important;#}
-{#        }#}
-{#    </style>#}
+    <style>
+        .search-container {
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #007bff;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
     <div class="container-fluid">
         <div class="row">
             <!-- Main Content -->
@@ -137,363 +137,363 @@
         </div>
     </div>
 
-{#    <div class="container mt-3">#}
-{#        <!-- Barra de búsqueda -->#}
-{##}
-{#        <div class="search-container align-center">#}
-{#            <h3 class="card-title mb-0 text-primary-emphasis fw-bold" style="margin-left: 100px">Busquedad en#}
-{#                Administración</h3>#}
-{#            <input type="text" class="search-input" id="searchInput" placeholder="Buscar...">#}
-{#        </div>#}
-        {#    Cards de los CRUDS de todos los modelos #}
-{#        <div class="card-body">#}
-{#            <div class="row">#}
-{#                <!-- Card: Tipo de Sangre -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Tipos de Sangre</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Administra los tipos de sangre de los pacientes, esencial para transfusiones y#}
-{#                                tratamientos#}
-{#                                médicos seguros, tu unico tipo de sangre.</p>#}
-{#                            <i class="fas fa-tint fa-3x"></i>#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:bloodType_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Tipos de Sangre</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Pacientes -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Pacientes</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Gestiona la información de los pacientes, incluyendo datos personales, historial médico,#}
-{#                                y#}
-{#                                contacto de emergencia.</p>#}
-{#                            <i class="fas fa-user-injured fa-3x"></i>#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:patient_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Pacientes</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Citas -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Citas Médicas</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Para gestionar la información de las citas médicas de manera efectiva, es fundamental#}
-{#                                recopilar y organizar varios tipos de datos. </p>#}
-{#                            <i class="fas fa-calendar-check fa-3x"></i>#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'attention:citaMedica_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Citas</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Diagnósticos -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Diagnósticos</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Los diagnósticos médicos son el proceso de identificación de una enfermedad o condición#}
-{#                                mediante el análisis de los síntomas, pruebas y evaluaciones clínicas.</p>#}
-{#                            <i class="fas fa-stethoscope fa-3x"></i> <!-- Icono relacionado con diagnóstico médico -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:diagnosis_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Diagnósticos</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Marca Medicamento -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Marca Medicamento</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>La marca de un medicamento es el nombre comercial bajo el cual se comercializa un#}
-{#                                fármaco.#}
-{#                                Cada marca puede variar en su formulación y precio, aunque el principio activo sea el#}
-{#                                mismo.</p>#}
-{#                            <i class="fas fa-capsules fa-3x"></i> <!-- Icono relacionado con medicamentos -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:marcaMedicamento_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Marcas</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Tipo Medicamento -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Tipo Medicamento</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>El tipo de medicamento se clasifica según su función terapéutica, como analgésicos,#}
-{#                                antibióticos, antiinflamatorios, entre otros, para tratar diferentes tipos de#}
-{#                                enfermedades o#}
-{#                                síntomas.</p>#}
-{#                            <i class="fas fa-pills fa-3x"></i> <!-- Icono relacionado con tipos de medicamentos -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:medicineType_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Tipos de Medicamentos</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: de Medicamento -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Medicamentos</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>El medicamento puede ser su nombre comercial (marca) o el nombre genérico#}
-{#                                (químico). El nombre genérico es el nombre común del principio activo, mientras que el#}
-{#                                nombre de marca es el nombre con el que se comercializa.</p>#}
-{#                            <i class="fas fa-capsules fa-3x"></i> <!-- Icono relacionado con medicamentos -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:medicine_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Medicamentos</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{##}
-{#                <!-- Card: Atencion -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Atención / Consultas</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>La consulta médica es un encuentro entre un paciente y un profesional de la salud, donde#}
-{#                                se#}
-{#                                evalúan síntomas, se realizan diagnósticos.</p>#}
-{#                            <i class="fas fa-heartbeat fa-3x"></i>#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'attention:attention_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Consultas</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Categoría Examen -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Categoría Examen</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Los exámenes médicos se agrupan en categorías según su propósito y tipo de procedimiento.#}
-{#                                Estas categorías pueden incluir diagnósticos de laboratorio, pruebas de imagen, y#}
-{#                                exámenes#}
-{#                                preventivos, entre otros.</p>#}
-{#                            <i class="fas fa-flask fa-3x"></i> <!-- Icono relacionado con exámenes de laboratorio -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:categoryExamen_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Categorías de#}
-{#                                Exámenes</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Categoría de Examen -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Tipos de Examenes</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Gestiona las categorías de exámenes médicos para organizar y clasificar los diferentes#}
-{#                                tipos#}
-{#                                de pruebas de diagnóstico.</p>#}
-{#                            <i class="fas fa-notes-medical fa-3x"></i>#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:categoryType_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Tipos</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{##}
-{#                <!-- Card: Servicios Adicionales -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Servicios Adicionales</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Explora los servicios adicionales que ofrece la clínica, incluyendo radiografías, pruebas#}
-{#                                cardíacas y otros exámenes especializados.</p>#}
-{#                            <i class="fas fa-stethoscope fa-3x"></i>#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'attention:serviciosAdicionales_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver#}
-{#                                Servicios</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Especialidades -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Especialidades</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Las especialidades médicas son áreas específicas de la medicina que requieren un profundo#}
-{#                                conocimiento y habilidades avanzadas para diagnosticar y tratar enfermedades.</p>#}
-{#                            <i class="fas fa-user-md fa-3x"></i> <!-- Icono relacionado con especialistas médicos -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:specialty_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Especialidades</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Doctores -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Doctores</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Gestiona la atención integral en salud, enfocándose en un modelo que prioriza la familia#}
-{#                                y la#}
-{#                                comunidad. Estrategias para mejorar la calidad de los servicios.</p>#}
-{#                            <i class="fas fa-user-md fa-3x"></i>#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:doctor_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Doctores</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Cargo de Empleado -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Cargos de Empleados</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Los empleados de una clínica o hospital desempeñan roles esenciales, desde el apoyo#}
-{#                                administrativo hasta la atención directa al paciente.</p>#}
-{#                            <i class="fas fa-users-cog fa-3x"></i>#}
-{#                            <!-- Icono relacionado con diversos roles laborales -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:cargo_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Cargos</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <!-- Card: Empleado / Asistente Médico -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Empleados</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>El asistente médico desempeña un papel clave en el apoyo a los médicos y profesionales de#}
-{#                                la#}
-{#                                salud, ayudando en tareas administrativas y gestión de citas.</p>#}
-{#                            <i class="fa-solid fa-user-tie fa-3x"></i>#}
-{#                            <!-- Icono relacionado con un asistente médico -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'core:empleado_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Empleados</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{##}
-{#                <!-- Card: Examen Solicitado -->#}
-{#                <div class="col-lg-4 col-md-6 mb-4">#}
-{#                    <div class="card h-100">#}
-{#                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">#}
-{#                            <h4>Exámenes Solicitados</h4>#}
-{#                        </div>#}
-{#                        <div class="card-body text-center">#}
-{#                            <p>Un examen solicitado es una prueba específica requerida por un médico para evaluar la#}
-{#                                salud#}
-{#                                del paciente, basándose en los síntomas, antecedentes médicos, y necesidades#}
-{#                                diagnósticas.#}
-{#                            </p>#}
-{#                            <i class="fas fa-file-medical-alt fa-3x"></i>#}
-{#                            <!-- Icono relacionado con solicitud de examen -->#}
-{#                        </div>#}
-{#                        <div class="card-footer text-center">#}
-{#                            <a href="{% url 'attention:examenSolicitado_list' %}" class="btn text-white"#}
-{#                               style="background-color: #3B3BBA">Ver Exámenes#}
-{#                                Solicitados</a>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
+    <div class="container mt-3">
+        <!-- Barra de búsqueda -->
+
+        <div class="search-container align-center">
+            <h3 class="card-title mb-0 text-primary-emphasis fw-bold" style="margin-left: 100px">Busquedad en
+                Administración</h3>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar...">
+        </div>
+{#            Cards de los CRUDS de todos los modelos#}
+        <div class="card-body">
+            <div class="row">
+                <!-- Card: Tipo de Sangre -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">
+                            <h4>Tipos de Sangre</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Administra los tipos de sangre de los pacientes, esencial para transfusiones y
+                                tratamientos
+                                médicos seguros, tu unico tipo de sangre.</p>
+                            <i class="fas fa-tint fa-3x"></i>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:bloodType_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Tipos de Sangre</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Pacientes -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">
+                            <h4>Pacientes</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Gestiona la información de los pacientes, incluyendo datos personales, historial médico,
+                                y
+                                contacto de emergencia.</p>
+                            <i class="fas fa-user-injured fa-3x"></i>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:patient_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Pacientes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Citas -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">
+                            <h4>Citas Médicas</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Para gestionar la información de las citas médicas de manera efectiva, es fundamental
+                                recopilar y organizar varios tipos de datos. </p>
+                            <i class="fas fa-calendar-check fa-3x"></i>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'attention:citaMedica_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Citas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Diagnósticos -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Diagnósticos</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Los diagnósticos médicos son el proceso de identificación de una enfermedad o condición
+                                mediante el análisis de los síntomas, pruebas y evaluaciones clínicas.</p>
+                            <i class="fas fa-stethoscope fa-3x"></i> <!-- Icono relacionado con diagnóstico médico -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:diagnosis_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Diagnósticos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Marca Medicamento -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Marca Medicamento</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>La marca de un medicamento es el nombre comercial bajo el cual se comercializa un
+                                fármaco.
+                                Cada marca puede variar en su formulación y precio, aunque el principio activo sea el
+                                mismo.</p>
+                            <i class="fas fa-capsules fa-3x"></i> <!-- Icono relacionado con medicamentos -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:marcaMedicamento_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Marcas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Tipo Medicamento -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">
+                            <h4>Tipo Medicamento</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>El tipo de medicamento se clasifica según su función terapéutica, como analgésicos,
+                                antibióticos, antiinflamatorios, entre otros, para tratar diferentes tipos de
+                                enfermedades o
+                                síntomas.</p>
+                            <i class="fas fa-pills fa-3x"></i> <!-- Icono relacionado con tipos de medicamentos -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:medicineType_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Tipos de Medicamentos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: de Medicamento -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Medicamentos</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>El medicamento puede ser su nombre comercial (marca) o el nombre genérico
+                                (químico). El nombre genérico es el nombre común del principio activo, mientras que el
+                                nombre de marca es el nombre con el que se comercializa.</p>
+                            <i class="fas fa-capsules fa-3x"></i> <!-- Icono relacionado con medicamentos -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:medicine_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Medicamentos</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Card: Atencion -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">
+                            <h4>Atención / Consultas</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>La consulta médica es un encuentro entre un paciente y un profesional de la salud, donde
+                                se
+                                evalúan síntomas, se realizan diagnósticos.</p>
+                            <i class="fas fa-heartbeat fa-3x"></i>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'attention:attention_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Consultas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Categoría Examen -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Categoría Examen</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Los exámenes médicos se agrupan en categorías según su propósito y tipo de procedimiento.
+                                Estas categorías pueden incluir diagnósticos de laboratorio, pruebas de imagen, y
+                                exámenes
+                                preventivos, entre otros.</p>
+                            <i class="fas fa-flask fa-3x"></i> <!-- Icono relacionado con exámenes de laboratorio -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:categoryExamen_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Categorías de
+                                Exámenes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Categoría de Examen -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center text-white" style="background-color: #3B3BBA">
+                            <h4>Tipos de Examenes</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Gestiona las categorías de exámenes médicos para organizar y clasificar los diferentes
+                                tipos
+                                de pruebas de diagnóstico.</p>
+                            <i class="fas fa-notes-medical fa-3x"></i>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:categoryType_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Tipos</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Card: Servicios Adicionales -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Servicios Adicionales</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Explora los servicios adicionales que ofrece la clínica, incluyendo radiografías, pruebas
+                                cardíacas y otros exámenes especializados.</p>
+                            <i class="fas fa-stethoscope fa-3x"></i>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'attention:serviciosAdicionales_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver
+                                Servicios</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Especialidades -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Especialidades</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Las especialidades médicas son áreas específicas de la medicina que requieren un profundo
+                                conocimiento y habilidades avanzadas para diagnosticar y tratar enfermedades.</p>
+                            <i class="fas fa-user-md fa-3x"></i> <!-- Icono relacionado con especialistas médicos -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:specialty_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Especialidades</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Doctores -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Doctores</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Gestiona la atención integral en salud, enfocándose en un modelo que prioriza la familia
+                                y la
+                                comunidad. Estrategias para mejorar la calidad de los servicios.</p>
+                            <i class="fas fa-user-md fa-3x"></i>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:doctor_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Doctores</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Cargo de Empleado -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Cargos de Empleados</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Los empleados de una clínica o hospital desempeñan roles esenciales, desde el apoyo
+                                administrativo hasta la atención directa al paciente.</p>
+                            <i class="fas fa-users-cog fa-3x"></i>
+                            <!-- Icono relacionado con diversos roles laborales -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:cargo_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Cargos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Empleado / Asistente Médico -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Empleados</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>El asistente médico desempeña un papel clave en el apoyo a los médicos y profesionales de
+                                la
+                                salud, ayudando en tareas administrativas y gestión de citas.</p>
+                            <i class="fa-solid fa-user-tie fa-3x"></i>
+                            <!-- Icono relacionado con un asistente médico -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'core:empleado_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Empleados</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Card: Examen Solicitado -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center  text-white" style="background-color: #3B3BBA">
+                            <h4>Exámenes Solicitados</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Un examen solicitado es una prueba específica requerida por un médico para evaluar la
+                                salud
+                                del paciente, basándose en los síntomas, antecedentes médicos, y necesidades
+                                diagnósticas.
+                            </p>
+                            <i class="fas fa-file-medical-alt fa-3x"></i>
+                            <!-- Icono relacionado con solicitud de examen -->
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'attention:examenSolicitado_list' %}" class="btn text-white"
+                               style="background-color: #3B3BBA">Ver Exámenes
+                                Solicitados</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% include 'includes/confirm_delete_modal.html' %}
     {% include 'core/auditUser/includes/auditUser_datail.html' %}
 
     {#    Scripts de la busquedas de las cards#}
-{#    <script>#}
-{#        document.addEventListener('DOMContentLoaded', function () {#}
-{#            const searchInput = document.getElementById('searchInput');#}
-{#            const cards = document.querySelectorAll('.col-lg-4');#}
-{##}
-{#            function filterCards(searchTerm) {#}
-{#                const normalizedSearch = searchTerm.toLowerCase().trim();#}
-{##}
-{#                cards.forEach(card => {#}
-{#                    // Ahora solo buscamos en el texto del h4#}
-{#                    const cardTitle = card.querySelector('.card-header h4').textContent.toLowerCase();#}
-{#                    const matchesSearch = cardTitle.includes(normalizedSearch);#}
-{##}
-{#                    if (matchesSearch) {#}
-{#                        card.classList.remove('hidden');#}
-{#                    } else {#}
-{#                        card.classList.add('hidden');#}
-{#                    }#}
-{#                });#}
-{#            }#}
-{##}
-{#            searchInput.addEventListener('input', function (e) {#}
-{#                filterCards(this.value);#}
-{#            });#}
-{#        });#}
-{#    </script>#}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const cards = document.querySelectorAll('.col-lg-4');
+
+            function filterCards(searchTerm) {
+                const normalizedSearch = searchTerm.toLowerCase().trim();
+
+                cards.forEach(card => {
+                    // Ahora solo buscamos en el texto del h4
+                    const cardTitle = card.querySelector('.card-header h4').textContent.toLowerCase();
+                    const matchesSearch = cardTitle.includes(normalizedSearch);
+
+                    if (matchesSearch) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+
+            searchInput.addEventListener('input', function (e) {
+                filterCards(this.value);
+            });
+        });
+    </script>
 
     <script>
         /* funciones del modal eliminar*/

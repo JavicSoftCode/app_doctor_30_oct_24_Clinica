@@ -76,13 +76,27 @@
                                             <div class="action-buttons d-flex gap-2">
 
 
+                                                <a href="{% url 'attention:costos_atencion_pagar' item.id %}"
+                                                   class="btn btn-warning btn-sm" title="Pagar"
+                                                   {% if item.costo_pagado %}style="display:none"{% endif %}>
+                                                    <i class="fa-solid fa-cash-register fa-lg"></i>
+                                                </a>
 
-                                                        <a href="{% url 'attention:generar_factura' item.id %}"
-                                                           class="btn btn-warning btn-sm">
-                                                            <i class="fas fa-receipt"></i> Pagar
-                                                        </a>
+                                                <a href="{% url 'attention:generar_factura' item.id %}"
+                                                   class="btn btn-warning btn-sm" title="Factura"
+                                                   {% if not item.costo_pagado %}style="display:none"{% endif %}>
+                                                    <i class="fas fa-receipt fa-lg"></i>
+                                                </a>
 
-
+                                                {#                                                <a href="{% url 'attention:generar_factura' item.id %}"#}
+                                                {#                                                   class="btn btn-warning btn-sm" title="Factura">#}
+                                                {#                                                    <i class="fas fa-receipt fa-lg"></i>#}
+                                                {#                                                </a>#}
+                                                {##}
+                                                {#                                              <a href="{% url 'attention:costos_atencion_pagar' item.id %}"#}
+                                                {#                                                   class="btn btn-warning btn-sm" title="Pagar">#}
+                                                {#                                                    <i class="fa-solid fa-cash-register fa-lg"></i>#}
+                                                {#                                                </a>#}
 
 
                                                 <a href="{% url 'attention:attention_view_certificado' item.id %}"

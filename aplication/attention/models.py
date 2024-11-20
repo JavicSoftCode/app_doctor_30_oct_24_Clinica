@@ -179,6 +179,16 @@ class Atencion(models.Model):
     # Retorna el total como un Decimal
     return Decimal(costo_medicamentos) + Decimal(costo_servicios)
 
+  def obtener_detalles_costo(self):
+    """Obtiene los detalles de los servicios adicionales para la atención."""
+    return [
+      {
+        'servicio': servicio.nombre_servicio,
+        'costo': servicio.costo_servicio
+      }
+      for servicio in self.servicios_adicionales.all()
+    ]
+
   @property
   def get_diagnosticos(self):
     return " - ".join([c.descripcion for c in self.diagnostico.all().order_by('descripcion')])
@@ -253,7 +263,7 @@ class CostosAtencion(models.Model):
   # Fecha en que se registraron los costos
   fecha_pago = models.DateTimeField(auto_now_add=True, verbose_name="Fecha Pago")
 
-  activo = models.BooleanField(default=True, verbose_name="Activo")
+  activo = models.BooleanField(default=False, verbose_name="Activo")
 
   def __str__(self):
     return f"{self.atencion} - Total: {self.total}"

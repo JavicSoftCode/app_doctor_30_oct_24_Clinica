@@ -4,6 +4,7 @@ from aplication.attention.views.citaMedica import *  #
 from aplication.attention.views.examenSolicitado import *  #
 from aplication.attention.views.medical_attention import *  #
 from aplication.attention.views.serviciosAdicionales import *
+from aplication.attention.views.costoAtencion import *
 
 app_name = 'attention'
 urlpatterns = [
@@ -47,4 +48,9 @@ urlpatterns = [
 
   path('factura/<int:atencion_id>/', generar_factura, name='generar_factura'),
 
+  # path('costos/', CostosListView.as_view(), name='costos_list'),
+  # path('costos/<int:pk>/update/', CostoAtencionUpdateView.as_view(), name='costo_update'),
+  # path('costos/<int:pk>/pagar/', marcar_pagado, name='marcar_pagado'),
+  path('costos_atencion/', CostosAtencionListView.as_view(), name='costos_atencion_list'),
+  path('costos_atencion/pagar/<int:pk>/', PagarCostoAtencionView.as_view(), name='costos_atencion_pagar'),
 ]

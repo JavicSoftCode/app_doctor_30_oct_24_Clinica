@@ -1,0 +1,202 @@
+{#{% extends "components/modulos.html" %}#}
+{##}
+{#{% block content %}#}
+{#<h2>Listado de Costos de Atención</h2>#}
+{##}
+{#<form method="get" class="mb-4">#}
+{#    <input type="text" name="q" placeholder="Buscar por paciente o DNI" class="form-control" value="{{ request.GET.q }}">#}
+{#    <button type="submit" class="btn btn-primary mt-2">Buscar</button>#}
+{#</form>#}
+{##}
+{#<table class="table table-striped">#}
+{#    <thead>#}
+{#        <tr>#}
+{#            <th>#</th>#}
+{#            <th>Paciente</th>#}
+{#            <th>Fecha de Atención</th>#}
+{#            <th>Total</th>#}
+{#            <th>Estado</th>#}
+{#            <th>Acciones</th>#}
+{#        </tr>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#        {% for costo in costos %}#}
+{#            <tr>#}
+{#                <td>{{ forloop.counter }}</td>#}
+{#                <td>{{ costo.atencion.paciente.nombre }}</td>#}
+{#                <td>{{ costo.atencion.fecha_atencion|date:"d/m/Y" }}</td>#}
+{#                <td>${{ costo.total }}</td>#}
+{#                <td>#}
+{#                    {% if costo.activo %}#}
+{#                        <span class="badge bg-success">Pagado</span>#}
+{#                    {% else %}#}
+{#                        <span class="badge bg-warning">Pendiente</span>#}
+{#                    {% endif %}#}
+{#                </td>#}
+{#                <td>#}
+{#                    <a href="{% url 'attention:costos_atencion_pagar' costo.atencion.id %}" class="btn btn-primary btn-sm">#}
+{#                        Ver Detalles#}
+{#                    </a>#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% empty %}#}
+{#            <tr>#}
+{#                <td colspan="6" class="text-center">No se encontraron registros</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </tbody>#}
+{#</table>#}
+{##}
+{#<div class="d-flex justify-content-center">#}
+{#    {% if is_paginated %}#}
+{#        <ul class="pagination">#}
+{#            {% if page_obj.has_previous %}#}
+{#                <li class="page-item"><a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}" class="page-link">Anterior</a></li>#}
+{#            {% endif %}#}
+{#            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>#}
+{#            {% if page_obj.has_next %}#}
+{#                <li class="page-item"><a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}" class="page-link">Siguiente</a></li>#}
+{#            {% endif %}#}
+{#        </ul>#}
+{#    {% endif %}#}
+{#</div>#}
+{#{% endblock %}#}
+
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid">
+    <div class="row">
+    <!-- Main Content -->
+    <div class="col-md-12 col-lg-12 px-md-4 main-content">
+    <!-- Mensajes de ERRORES -->
+    {% include 'includes/messages.html' %}
+    <!-- Patient List Content -->
+    <div class="card mb-4">
+    <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="card-title mb-0 text-primary-emphasis fw-bold">Consulta de Pagos</h3>
+    </div>
+
+    <!-- Search and Filter -->
+{#    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">#}
+{#        <form method="GET" action="{% url 'core:bloodType_list' %}"#}
+{#              class="d-flex flex-column flex-md-row gap-3 align-items-md-center">#}
+{#            <div class="col-md-6">#}
+{#                <input type="text" name="q" class="form-control search-box"#}
+{#                       value="{{ request.GET.q }}"#}
+{#                       placeholder="Buscar tipo sangre...">#}
+{#            </div>#}
+{#            <div class="col-md-6">#}
+{#                <select class="form-select" name="tip">#}
+{#                    <option value="T">Todos</option>#}
+{#                    <option value="+" {% if request.GET.tip == "+" %} selected{% endif %}>Positivo#}
+{#                    </option>#}
+{#                    <option value="-" {% if request.GET.tip == "-" %} selected{% endif %}>Negativo#}
+{#                    </option>#}
+{#                </select>#}
+{#            </div>#}
+{#        </form>#}
+{#        {% if permissions.add_tiposangre %}#}
+{#            <a class="btn btn-primary mt-3 mt-md-0" href="{% url 'core:bloodType_create' %}"#}
+{#               style="background-color: #3B3BBA; color: white">#}
+{#                <i class="fas fa-plus fa-lg me-2"></i>{{ title2 }}#}
+{#            </a>#}
+{#        {% endif %}#}
+{#    </div>#}
+
+    <div class="table-responsive">
+
+{#    <table class="table table-striped">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>#</th>#}
+{#            <th>Paciente</th>#}
+{#            <th>Fecha de Atención</th>#}
+{#            <th>Total</th>#}
+{#            <th>Estado</th>#}
+{#            <th>Acciones</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% for costo in costos %}#}
+{#            <tr>#}
+{#                <td>{{ forloop.counter }}</td>#}
+{#                <td>{{ costo.paciente_nombre }}</td>#}
+{##}
+{#                <td>{{ costo.atencion.fecha_atencion|date:"d/m/Y" }}</td>#}
+{#                <td>${{ costo.total }}</td>#}
+{#                <td>#}
+{#                    {% if costo.activo %}#}
+{#                        <span class="badge bg-success">Pagado</span>#}
+{#                    {% else %}#}
+{#                        <span class="badge bg-warning">Pendiente</span>#}
+{#                    {% endif %}#}
+{#                </td>#}
+{#                <td>#}
+{#                    <a href="{% url 'attention:costos_atencion_pagar' costo.atencion.id %}"#}
+{#                       class="btn btn-primary btn-sm">#}
+{#                        Ver Detalles#}
+{#                    </a>#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% empty %}#}
+{#            <tr>#}
+{#                <td colspan="6" class="text-center">No se encontraron registros</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+
+                            <table class="table table-hover text-center">
+                                <thead class="table-light">
+                                <tr>
+                                    <th><i class="fa-hashtag fa-lg"></i></th>
+                                    <th>Paciente</th>
+                                    <th>Fecha de Atención</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                </thead>
+                                        <tbody>
+        {% for costo in costos %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ costo.paciente_nombre }}</td>
+
+                <td>{{ costo.atencion.fecha_atencion|date:"d/m/Y" }}</td>
+                <td>${{ costo.total }}</td>
+                <td>
+                    {% if costo.activo %}
+                        <span class="badge bg-success">Pagado</span>
+                    {% else %}
+                        <span class="badge bg-warning">Pendiente</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'attention:costos_atencion_pagar' costo.atencion.id %}"
+                       class="btn btn-primary btn-sm">
+                        Ver Detalles
+                    </a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No se encontraron registros</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+                            </table>
+
+    {% include 'includes/paginations.html' %}
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+{% endblock %}
