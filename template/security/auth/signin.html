@@ -2,99 +2,495 @@
 {% load static %}
 {% block content %}
     <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+   <style>*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
 
-    <div class="bg-slate-100 dark:bg-principal p-2 relative overflow-hidden">
-        <div class="absolute inset-0 bg-center blur-[106px]"></div>
+.FondoDoctor{
+    background-image: url("{% static 'img/FondoDoctor.jpg' %}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
 
-        <div class="relative">
-            <a href="/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse text-center justify-center " data-aos="fade-up">
-            <img src="{% static 'img/logo.webp' %}" class="w-12 h-12" alt="Flowbite Logo" />
-            <span class="self-center whitespace-nowrap dark:text-blue-300 font-extrabold">Iguanas Corporation</span>
-        </a>
-            <section class="p-4 my-4 mx-auto max-w-4xl rounded-3xl bg-white dark:bg-secundario" data-aos="fade-up"
-                     data-aos-delay="200">
-                <h1 class="text-4xl text-center font-Pacifico dark:text-blue-300 my-2">
-                    {{ title2 }}
-                </h1>
+main{
+    width: 100%;
+    padding: 20px;
+    margin: auto;
+    margin-top: 100px;
+}
 
-                <p class="text-center my-6 font-Tiny5 text-2xl dark:text-gray-400 uppercase">¡Bienvenido de vuelta!<br>
-                    Completa el formulario para ingresar a nuestro sistema</p>
+.contenedor__todo{
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    position: relative;
+}
 
-                <div class="flex justify-center items-center">
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
+.caja__trasera{
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 128, 255, 0.5);
 
-                        <div class="mb-5 relative">
-                            <label for="{{ form.username.id_for_label }}"
-                                   class="dark:text-blue-300 font-black uppercase text-lg z-20">{{ form.username.label }}</label>
+}
 
-                            <div class="input-group">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 top-6">
-                                <i class="text-blue-400 fa-solid fa-user"></i>
-                            </span>
+.caja__trasera div{
+    margin: 100px 40px;
+    color: white;
+    transition: all 500ms;
+}
 
-                                <input type="text"
-                                       class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                       id="id_username" name="username">
-                            </div>
-                        </div>
 
-                        <div class="mb-5 relative">
-                            <label for="{{ form.password.id_for_label }}"
-                                   class="dark:text-blue-300 font-black uppercase text-lg z-20">{{ form.password.label }}</label>
+.caja__trasera div p,
+.caja__trasera button{
+    margin-top: 30px;
+}
 
-                            <div class="input-group">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 top-6">
-                                <i class="text-blue-400 fa-solid fa-lock"></i>
-                            </span>
+.caja__trasera div h3{
+    font-weight: 400;
+    font-size: 26px;
+}
 
-                                <input type="password"
-                                       class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                       id="id_password" name="password">
+.caja__trasera div p{
+    font-size: 16px;
+    font-weight: 300;
+}
 
-                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 top-6">
-                                    <button class="btn btn-outline-secondary p-2" type="button" id="togglePassword">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </span>
+.caja__trasera button{
+    padding: 10px 40px;
+    border: 2px solid #fff;
+    font-size: 14px;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    outline: none;
+    transition: all 300ms;
+}
 
-                            </div>
-                        </div>
+.caja__trasera button:hover{
+    background: #fff;
+    color: #46A2FD;
+}
 
-                        <div class="flex flex-col items-center text-center mb-5">
-                            <button type="submit"
-                                    class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-2 flex items-center">
-                                Iniciar Sesión
-                            </button>
-                        </div>
+/*Formularios*/
 
-                    </form>
+.contenedor__login-register{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 380px;
+    position: relative;
+    top: -185px;
+    left: 10px;
+
+    /*La transicion va despues del codigo JS*/
+    transition: left 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
+
+.contenedor__login-register form{
+    width: 100%;
+    padding: 80px 20px;
+    background: white;
+    position: absolute;
+    border-radius: 20px;
+}
+
+.contenedor__login-register form h2{
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #46A2FD;
+}
+
+.contenedor__login-register form input{
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    background: #F2F2F2;
+    font-size: 16px;
+    outline: none;
+}
+
+.contenedor__login-register form button{
+    padding: 10px 40px;
+    margin-top: 40px;
+    border: 2px solid #fff;
+    font-size: 14px;
+    background: #46A2FD;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    outline: none;
+}
+
+
+
+
+.formulario__login{
+    opacity: 1;
+    display: block;
+}
+.formulario__register{
+    display: none;
+}
+
+
+
+@media screen and (max-width: 850px){
+
+    main{
+        margin-top: 50px;
+    }
+
+    .caja__trasera{
+        max-width: 350px;
+        height: 300px;
+        flex-direction: column;
+        margin: auto;
+    }
+
+    .caja__trasera div{
+        margin: 0px;
+        position: absolute;
+    }
+
+
+    /*Formularios*/
+
+    .contenedor__login-register{
+        top: -10px;
+        left: -5px;
+        margin: auto;
+    }
+
+    .contenedor__login-register form{
+        position: relative;
+    }
+}
+
+#successModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+.modal-content h3 {
+    margin-bottom: 10px;
+}
+
+.modal-content button {
+    background-color: #46A2FD;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.modal-content button:hover {
+    background-color: #3692d9;
+}
+
+.contenedor {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;    /* Centra verticalmente */
+    height: 115px;          /* Altura del contenedor */
+    
+  }
+  </style>
+    <main>
+        <div class="contenedor__todo">
+            <div class="caja__trasera">
+                <div class="caja__trasera-login">
+                    <h3>¿Ya tienes una cuenta?</h3>
+                    <p>Inicia sesión para entrar en la página</p>
+                    <button id="btn__iniciar-sesion">Iniciar Sesión</button>
+                </div>
+                <div class="caja__trasera-register">
+                    <h3>¿Aún no tienes una cuenta?</h3>
+                    <p>Regístrate para que puedas iniciar sesión</p>
+                    <button id="btn__registrarse">Regístrarse</button>
+                </div>
+            </div>
+
+            <!--Formulario de Login y registro-->
+            <div class="contenedor__login-register">
+                <!--Login
+                <form action="" class="formulario__login" id="loginForm">
+                    <div class="contenedor">
+                        <img src="{% static 'img/Medico.jpg' %}" alt="Icono médico" class="mb-3" style="width: 250px; height: 250px;">
+                      </div>
+                    <h2>Iniciar Sesión</h2>
+                    <input type="text" id="loginEmail" placeholder="Correo Electrónico" required>
+                    <small id="login-email-error" class="error-message" style="display:none; color:red;"></small>
+                    
+                    <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                    <small id="login-password-error" class="error-message" style="display:none; color:red;"></small>
+                    
+                    <button type="submit">Entrar</button>
+                </form>
+            -->
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="contenedor">
+                    <img src="{% static 'img/Medico.jpg' %}" alt="Icono médico" class="mb-3" style="width: 250px; height: 250px;">
+                  </div>
+
+                <div class="mb-5 relative">
+                    <label for="{{ form.username.id_for_label }}"
+                           class="dark:text-blue-300 font-black uppercase text-lg z-20">{{ form.username.label }}</label>
+
+                    <div class="input-group">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 top-6">
+                        <i class="text-blue-400 fa-solid fa-user"></i>
+                    </span>
+
+                        <input type="text"
+                               class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                               id="id_username" name="username">
+                    </div>
                 </div>
 
-                <p class="dark:text-gray-400 text-center mt-3 z-10 ">¿No tienes una cuenta? <a
-                        href="{% url 'security:auth_signup' %}"
-                        class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">Regístrate</a></p>
+                <div class="mb-5 relative">
+                    <label for="{{ form.password.id_for_label }}"
+                           class="dark:text-blue-300 font-black uppercase text-lg z-20">{{ form.password.label }}</label>
 
-            </section>
+                    <div class="input-group">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 top-6">
+                        <i class="text-blue-400 fa-solid fa-lock"></i>
+                    </span>
+
+                        <input type="password"
+                               class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                               id="id_password" name="password">
+
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 top-6">
+                            <button class="btn btn-outline-secondary p-2" type="button" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </span>
+
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center text-center mb-5">
+                    <button type="submit"
+                            class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-2 flex items-center">
+                        Iniciar Sesión
+                    </button>
+                </div>
+
+            </form>
+        </div>
+                <!--Register-->
+                <form action="" class="formulario__register" id="registerForm">
+                    <h2>Regístrarse</h2>
+                    <input type="text" id="fullName" placeholder="Nombre completo" required>
+                    
+                    <input type="text" id="registerEmail" placeholder="Correo Electrónico" required>
+                    <small id="email-error" class="error-message" style="display:none; color:red;"></small>
+                    
+                    <input type="text" id="username" placeholder="Usuario" required>
+                    
+                    <input type="password" id="registerPassword" placeholder="Contraseña" maxlength="8" required>
+                    <small id="password-error" class="error-message" style="display:none; color:red;"></small>
+                    
+                    <button type="submit">Regístrarse</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de mensaje emergente -->
+    <div id="successModal" style="display:none;">
+        <div class="modal-content">
+            <h3>¡Registro Exitoso!</h3>
+            <p>Te has registrado correctamente. ¡Bienvenido!</p>
+            <button onclick="closeModal()">Cerrar</button>
         </div>
     </div>
-
-    <script>
-        document.getElementById("togglePassword").addEventListener("click", function () {
-            var passwordInput = document.getElementById("id_password");
-            var icon = this.querySelector("i");
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye");
-            }
-        });
-    </script>
-
+ <script>//Ejecutando funciones
+    document.getElementById("btn__iniciar-sesion").addEventListener("click", iniciarSesion);
+    document.getElementById("btn__registrarse").addEventListener("click", register);
+    window.addEventListener("resize", anchoPage);
+    
+    //Declarando variables
+    var formulario_login = document.querySelector(".formulario__login");
+    var formulario_register = document.querySelector(".formulario__register");
+    var contenedor_login_register = document.querySelector(".contenedor__login-register");
+    var caja_trasera_login = document.querySelector(".caja__trasera-login");
+    var caja_trasera_register = document.querySelector(".caja__trasera-register");
+    
+    function anchoPage() {
+        if (window.innerWidth > 850) {
+            caja_trasera_register.style.display = "block";
+            caja_trasera_login.style.display = "block";
+        } else {
+            caja_trasera_register.style.display = "block";
+            caja_trasera_register.style.opacity = "1";
+            caja_trasera_login.style.display = "none";
+            formulario_login.style.display = "block";
+            contenedor_login_register.style.left = "0px";
+            formulario_register.style.display = "none";
+        }
+    }
+    
+    anchoPage();
+    
+    function iniciarSesion() {
+        if (window.innerWidth > 850) {
+            formulario_login.style.display = "block";
+            contenedor_login_register.style.left = "10px";
+            formulario_register.style.display = "none";
+            caja_trasera_register.style.opacity = "1";
+            caja_trasera_login.style.opacity = "0";
+        } else {
+            formulario_login.style.display = "block";
+            contenedor_login_register.style.left = "0px";
+            formulario_register.style.display = "none";
+            caja_trasera_register.style.display = "block";
+            caja_trasera_login.style.display = "none";
+        }
+    }
+    
+    function register() {
+        if (window.innerWidth > 850) {
+            formulario_register.style.display = "block";
+            contenedor_login_register.style.left = "410px";
+            formulario_login.style.display = "none";
+            caja_trasera_register.style.opacity = "0";
+            caja_trasera_login.style.opacity = "1";
+        } else {
+            formulario_register.style.display = "block";
+            contenedor_login_register.style.left = "0px";
+            formulario_login.style.display = "none";
+            caja_trasera_register.style.display = "none";
+            caja_trasera_login.style.display = "block";
+            caja_trasera_login.style.opacity = "1";
+        }
+    }
+    
+    // Validar correo electrónico y contraseña
+    function validateEmail(email) {
+        const allowedDomains = ["gmail.com", "hotmail.com", "outlook.com"];
+        const emailParts = email.split("@");
+    
+        if (emailParts.length === 2 && allowedDomains.includes(emailParts[1])) {
+            return true;
+        }
+        return false;
+    }
+    
+    function validatePassword(password) {
+        // Debe contener al menos 8 caracteres
+        return password.length >= 8;
+    }
+    
+    // Manejo del registro
+    document.getElementById("registerForm").addEventListener("submit", function (event) {
+        const email = document.getElementById("registerEmail").value;
+        const password = document.getElementById("registerPassword").value;
+        const emailError = document.getElementById("email-error");
+        const passwordError = document.getElementById("password-error");
+    
+        let valid = true;
+    
+        // Validar correo
+        if (!validateEmail(email)) {
+            emailError.textContent = "El correo debe ser de Gmail, Hotmail u Outlook.";
+            emailError.style.display = "block";
+            valid = false;
+        } else {
+            emailError.style.display = "none";
+        }
+    
+        // Validar contraseña
+        if (!validatePassword(password)) {
+            passwordError.textContent = "La contraseña debe tener al menos 8 caracteres.";
+            passwordError.style.display = "block";
+            valid = false;
+        } else {
+            passwordError.style.display = "none";
+        }
+    
+        // Si no es válido, prevenir el envío
+        if (!valid) {
+            event.preventDefault();
+        } else {
+            event.preventDefault(); // Prevenir envío real solo para pruebas
+            showModal(); // Mostrar modal si todo es válido
+        }
+    });
+    
+    // Manejo del login
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+        const loginPasswordError = document.getElementById("login-password-error");
+    
+        let valid = true;
+    
+        // Validar correo
+        if (!validateEmail(email)) {
+            loginEmailError.textContent = "El correo debe ser de Gmail, Hotmail u Outlook.";
+            loginEmailError.style.display = "block";
+            valid = false;
+        } else {
+            loginEmailError.style.display = "none";
+        }
+    
+        // Validar contraseña
+        if (!validatePassword(password)) {
+            loginPasswordError.textContent = "La contraseña debe tener al menos 8 caracteres.";
+            loginPasswordError.style.display = "block";
+            valid = false;
+        } else {
+            loginPasswordError.style.display = "none";
+        }
+    
+        // Si no es válido, prevenir el envío
+        if (!valid) {
+            event.preventDefault();
+        }
+    });
+    
+    // Función para mostrar el modal
+    function showModal() {
+        const modal = document.getElementById('successModal');
+        modal.style.display = 'flex'; // Cambiar a 'flex' para asegurarte de que se muestre correctamente
+    }
+    
+    // Función para cerrar el modal
+    function closeModal() {
+        const modal = document.getElementById('successModal');
+        modal.style.display = 'none';
+    }</script>
 {% endblock content %}
 
 {% block navbar %}{% endblock navbar %}
