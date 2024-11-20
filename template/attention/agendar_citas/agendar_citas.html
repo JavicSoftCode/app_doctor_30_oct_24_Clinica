@@ -1,0 +1,288 @@
+{#{% extends 'components/base.html' %}#}
+{#{% block content %}#}
+{#    {% load static %}#}
+{#    <style>#}
+{#        .calendar-container {#}
+{#            background-color: white;#}
+{#            padding: 20px;#}
+{#            border-radius: 10px;#}
+{#            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);#}
+{#            max-width: 500px;#}
+{#            width: 100%;#}
+{#        }#}
+{##}
+{#        .calendar {#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#        }#}
+{##}
+{#        .header {#}
+{#            display: flex;#}
+{#            justify-content: space-between;#}
+{#            align-items: center;#}
+{#            margin-bottom: 10px;#}
+{#        }#}
+{##}
+{#        .month {#}
+{#            font-size: 1.2em;#}
+{#            font-weight: bold;#}
+{#        }#}
+{##}
+{#        .btns {#}
+{#            display: flex;#}
+{#            gap: 5px;#}
+{#        }#}
+{##}
+{#        .btn {#}
+{#            cursor: pointer;#}
+{#            padding: 5px;#}
+        {#border-radius: 50%;#} background-color: #e0e0e0;
+{#            transition: background-color 0.3s;#}
+{#        }#}
+{##}
+{#        .btn:hover {#}
+{#            background-color: #d4d4d4;#}
+{#        }#}
+{##}
+{#        .weekdays, .days {#}
+{#            display: grid;#}
+{#            grid-template-columns: repeat(7, 1fr);#}
+{#            gap: 5px;#}
+{#            text-align: center;#}
+{#        }#}
+{##}
+{#        .weekdays .day {#}
+{#            font-weight: bold;#}
+{#            color: #333;#}
+{#            padding: 5px 0;#}
+{#        }#}
+{##}
+{#        .days .day {#}
+{#            padding: 10px 0;#}
+{#            border-radius: 5px;#}
+{#            transition: background-color 0.3s;#}
+{#            cursor: pointer;#}
+{#            font-weight: bold;#}
+{#        }#}
+{##}
+        {#.days .day:hover {#}
+        {#    background-color: #d4e4f2;#}
+{##}
+{#        .day.active {#}
+{#            background-color: #d4e4f2; /* Fondo bajo cuando está activo */#}
+{#        }#}
+{##}
+{#        .day.has-hours {#}
+{#            background-color: #4a90e2; /* Fondo fuerte cuando tiene horas seleccionadas */#}
+{#            color: white;#}
+{#        }#}
+{##}
+{#        .hours-selection {#}
+{#            margin-top: 20px;#}
+{#            display: none;#}
+{#        }#}
+{##}
+{#        .hours-selection h4 {#}
+{#            text-align: center;#}
+{#            font-size: 1.1em;#}
+{#            color: #4a90e2;#}
+{#        }#}
+{##}
+{#        .hours-container {#}
+{#            display: flex;#}
+{#            flex-wrap: wrap;#}
+{#            gap: 10px;#}
+{#            justify-content: center;#}
+{#            margin-top: 10px;#}
+{#        }#}
+{##}
+{#        .hour-block {#}
+{#            width: 80px;#}
+{#            padding: 10px;#}
+{#            text-align: center;#}
+{#            border-radius: 5px;#}
+{#            background-color: #d4e4f2; /* Fondo bajo por defecto */#}
+{#            cursor: pointer;#}
+{#            transition: all 0.3s;#}
+{#        }#}
+{##}
+{#        .hour-block:hover {#}
+{#            background-color: #b9d9e6;#}
+{#        }#}
+{##}
+{#        .hour-block.selected {#}
+{#            background-color: #4a90e2; /* Fondo fuerte cuando está seleccionado */#}
+{#            color: white;#}
+{#        }#}
+{##}
+{#        .clear-btn {#}
+{#            display: block;#}
+{#            margin: 10px auto;#}
+{#            padding: 5px 10px;#}
+{#            background-color: #ff4d4d;#}
+{#            color: white;#}
+{#            border: none;#}
+{#            border-radius: 5px;#}
+{#            cursor: pointer;#}
+{#            font-weight: bold;#}
+{#        }#}
+{##}
+{#        .clear-btn:hover {#}
+{#            background-color: #ff1a1a;#}
+{#        }#}
+{#    </style>#}
+{##}
+{#    <div class="container-fluid">#}
+{#        <div class="row">#}
+{#            <div class="col-md-12 col-lg-12 px-md-4 main-content">#}
+{#                <!-- Mensajes de ERRORES -->#}
+{#                {% include 'includes/message_error_form.html' %}#}
+{#                <div class="card mb-4">#}
+{#                    <div class="card-body">#}
+{##}
+{#                        <div class="calendar-container">#}
+{#                            <div class="calendar">#}
+{#                                <div class="header">#}
+{#                                    <div class="month"></div>#}
+{#                                    <div class="btns">#}
+{#                                        <div class="btn today-btn">Hoy</div>#}
+{#                                        <div class="btn prev-btn">Anterior</div>#}
+{#                                        <div class="btn next-btn">Siguiente</div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="weekdays">#}
+{#                                    <div class="day">Dom</div>#}
+{#                                    <div class="day">Lun</div>#}
+{#                                    <div class="day">Mar</div>#}
+{#                                    <div class="day">Mié</div>#}
+{#                                    <div class="day">Jue</div>#}
+{#                                    <div class="day">Vie</div>#}
+{#                                    <div class="day">Sáb</div>#}
+{#                                </div>#}
+{#                                <div class="days"></div>#}
+{#                            </div>#}
+{##}
+{#                            <div class="hours-selection">#}
+{#                                <h4>Seleccionar Hora</h4>#}
+{#                                <div class="hours-container"></div>#}
+{#                                <button id="confirm-btn" type="button" style="display: none;">Confirmar Cita</button>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <script>#}
+{#        const horarioAtencion = JSON.parse('{{ horario_atencion|safe }}'); // JSON con horarios#}
+{#        const daysContainer = document.querySelector(".days");#}
+{#        const nextBtn = document.querySelector(".next-btn");#}
+{#        const prevBtn = document.querySelector(".prev-btn");#}
+{#        const month = document.querySelector(".month");#}
+{#        const hoursContainer = document.querySelector(".hours-container");#}
+{#        const confirmBtn = document.getElementById("confirm-btn");#}
+{##}
+{#        const months = [#}
+{#            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",#}
+{#            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"#}
+{#        ];#}
+{##}
+{#        const date = new Date();#}
+{#        let currentMonth = date.getMonth();#}
+{#        let currentYear = date.getFullYear();#}
+{#        let selectedHour = null;#}
+{#        let activeDay = null;#}
+{##}
+{#        function renderCalendar() {#}
+{#            date.setDate(1);#}
+{#            const firstDay = new Date(currentYear, currentMonth, 1).getDay();#}
+{#            const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();#}
+{#            const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();#}
+{##}
+{#            let days = "";#}
+{#            for (let x = firstDay; x > 0; x--) {#}
+{#                days += `<div class="day prev">${prevLastDay - x + 1}</div>`;#}
+{#            }#}
+{##}
+{#            for (let i = 1; i <= lastDay; i++) {#}
+{#                const dayKey = `${currentYear}-${currentMonth}-${i}`;#}
+{#                const isAvailable = horarioAtencion[dayKey];#}
+{#                days += `<div class="day ${isAvailable ? 'has-hours' : ''}" data-day="${i}">${i}</div>`;#}
+{#            }#}
+{##}
+{#            daysContainer.innerHTML = days;#}
+{#            month.textContent = `${months[currentMonth]} ${currentYear}`;#}
+{#        }#}
+{##}
+{#        function renderHours(selectedDayKey) {#}
+{#            hoursContainer.innerHTML = "";#}
+{#            const hours = horarioAtencion[selectedDayKey] || [];#}
+{#            hours.forEach(hour => {#}
+{#                const hourDiv = document.createElement("div");#}
+{#                hourDiv.classList.add("hour-block");#}
+{#                hourDiv.textContent = hour;#}
+{##}
+{#                hourDiv.addEventListener("click", () => {#}
+{#                    document.querySelectorAll(".hour-block").forEach(h => h.classList.remove("selected"));#}
+{#                    hourDiv.classList.add("selected");#}
+{#                    selectedHour = hour;#}
+{#                    confirmBtn.style.display = "block";#}
+{#                });#}
+{##}
+{#                hoursContainer.appendChild(hourDiv);#}
+{#            });#}
+{#        }#}
+{##}
+{#        daysContainer.addEventListener("click", (e) => {#}
+{#            if (!e.target.classList.contains("day") || !e.target.classList.contains("has-hours")) return;#}
+{##}
+{#            const day = e.target.dataset.day;#}
+{#            const dayKey = `${currentYear}-${currentMonth}-${day}`;#}
+{#            activeDay = dayKey;#}
+{#            renderHours(dayKey);#}
+{#        });#}
+{##}
+{#        confirmBtn.addEventListener("click", () => {#}
+{#            if (activeDay && selectedHour) {#}
+{#                // Enviar datos al backend#}
+{#                axios.post("{% url 'attention:confirmar_cita' %}", {#}
+{#                    fecha: activeDay,#}
+{#                    hora: selectedHour#}
+{#                }).then(response => {#}
+{#                    alert("Cita confirmada!");#}
+{#                    // Opcional: Redirigir al paciente o mostrar mensaje#}
+{#                }).catch(error => {#}
+{#                    alert("Error al confirmar la cita");#}
+{#                });#}
+{#            }#}
+{#        });#}
+{##}
+{#        nextBtn.addEventListener("click", () => {#}
+{#            currentMonth++;#}
+{#            if (currentMonth > 11) {#}
+{#                currentMonth = 0;#}
+{#                currentYear++;#}
+{#            }#}
+{#            renderCalendar();#}
+{#        });#}
+{##}
+{#        prevBtn.addEventListener("click", () => {#}
+{#            currentMonth--;#}
+{#            if (currentMonth < 0) {#}
+{#                currentMonth = 11;#}
+{#                currentYear--;#}
+{#            }#}
+{#            renderCalendar();#}
+{#        });#}
+{##}
+{#        renderCalendar();#}
+{#    </script>#}
+{##}
+{#{% endblock content %}#}
+{##}
+{#<form id="horario-form" method="post" action="{% url 'attention:guardarRegistroHorasView' %}">#}
+{#    {% csrf_token %}#}
+{#    <input type="hidden" id="horario_atencion_input" name="horario_atencion_input">#}
+{#    <button type="submit" class="save-schedule-btn">Guardar Horarios</button>#}
+{#</form>#}

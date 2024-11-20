@@ -82,9 +82,9 @@
                 <h3>Resumen</h3>
                 <p><strong style="color: green">Monto Total Calculado: $ {{ monto_total|floatformat:2 }}</strong></p>
 
-                {% if diferencia > 0 %}
+                {% if diferencia > total_anterior %}
                     <p class="alert alert-warning" style="width: 30%"><strong>Nota:</strong> {{ mensaje_diferencia }}</p>
-                {% elif diferencia < 0 %}
+                {% elif diferencia < total_anterior %}
                     <p class="alert alert-info" style="width: 30%"><strong>Nota:</strong> {{ mensaje_diferencia }}</p>
                 {% else %}
                     <p class="alert alert-success" style="width: 30%"><strong>Nota:</strong> {{ mensaje_diferencia }}</p>

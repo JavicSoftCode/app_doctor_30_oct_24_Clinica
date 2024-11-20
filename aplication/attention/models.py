@@ -34,28 +34,57 @@ class ServiciosAdicionales(models.Model):
 
 # Modelo que representa los días y horas de atención de un doctor.
 # Incluye los días de la semana, la hora de inicio y la hora de fin de la atención.
-class HorarioAtencion(models.Model):
-  # Días de la semana en los que el doctor atiende
-  dia_semana = models.CharField(max_length=10, choices=DIA_SEMANA_CHOICES, verbose_name="Día de la Semana", unique=True)
-  # Hora de inicio de atención del doctor
-  hora_inicio = models.TimeField(verbose_name="Hora de Inicio")
-  # Hora de fin de atención del doctor
-  hora_fin = models.TimeField(verbose_name="Hora de Fin")
-  # Inicio de descanso de atención del doctor
-  Intervalo_desde = models.TimeField(verbose_name="Intervalo desde")
-  # Fin de descanso de atención del doctor
-  Intervalo_hasta = models.TimeField(verbose_name="Intervalo Hasta")
+# class HorarioAtencion(models.Model):
+#   # Días de la semana en los que el doctor atiende
+#   dia_semana = models.CharField(max_length=10, choices=DIA_SEMANA_CHOICES, verbose_name="Día de la Semana", unique=True)
+#   # Hora de inicio de atención del doctor
+#   hora_inicio = models.TimeField(verbose_name="Hora de Inicio")
+#   # Hora de fin de atención del doctor
+#   hora_fin = models.TimeField(verbose_name="Hora de Fin")
+#   # Inicio de descanso de atención del doctor
+#   Intervalo_desde = models.TimeField(verbose_name="Intervalo desde")
+#   # Fin de descanso de atención del doctor
+#   Intervalo_hasta = models.TimeField(verbose_name="Intervalo Hasta")
+#
+#   activo = models.BooleanField(default=True, verbose_name="Activo")
+#
+#   def __str__(self):
+#     return f"{self.dia_semana}"
+#
+#   class Meta:
+#     # Nombre singular y plural del modelo en la interfaz administrativa
+#     verbose_name = "Horario de Atenciónl Doctor"
+#     verbose_name_plural = "Horarios de Atención de los Doctores"
 
-  activo = models.BooleanField(default=True, verbose_name="Activo")
+class HorarioAtencion(models.Model):
+    dia_semana = models.CharField(max_length=10, choices=DIA_SEMANA_CHOICES, verbose_name="Día de la Semana",
+                                  unique=True)
+    hora_inicio = models.TimeField(verbose_name="Hora de Inicio")
+    hora_fin = models.TimeField(verbose_name="Hora de Fin")
+    intervalo_desde = models.TimeField(verbose_name="Intervalo desde")
+    intervalo_hasta = models.TimeField(verbose_name="Intervalo Hasta")
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+
+    def __str__(self):
+      return f"{self.dia_semana} ({self.hora_inicio} - {self.hora_fin})"
+
+    class Meta:
+      verbose_name = "Horario de Atención Doctor"
+      verbose_name_plural = "Horarios de Atención de los Doctores"
+
+
+class RegistroHorasDoctor(models.Model):
+  horario = models.ForeignKey(HorarioAtencion, on_delete=models.CASCADE, related_name="registros",
+                              verbose_name="Horario")
+  fecha = models.DateField(verbose_name="Fecha")
+  horas_trabajadas = models.JSONField(verbose_name="Horas Trabajadas")  # Almacena un JSON con las horas seleccionadas
 
   def __str__(self):
-    return f"{self.dia_semana}"
+    return f"{self.horario.dia_semana} - {self.fecha}"
 
   class Meta:
-    # Nombre singular y plural del modelo en la interfaz administrativa
-    verbose_name = "Horario de Atenciónl Doctor"
-    verbose_name_plural = "Horarios de Atención de los Doctores"
-
+    verbose_name = "Registro de Horas Trabajadas"
+    verbose_name_plural = "Registros de Horas Trabajadas"
 
 class CitaMedica(models.Model):
   fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")

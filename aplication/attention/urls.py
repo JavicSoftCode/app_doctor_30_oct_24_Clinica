@@ -5,6 +5,7 @@ from aplication.attention.views.examenSolicitado import *  #
 from aplication.attention.views.medical_attention import *  #
 from aplication.attention.views.serviciosAdicionales import *
 from aplication.attention.views.costoAtencion import *
+# from aplication.attention.views.agendar_citas import *
 
 app_name = 'attention'
 urlpatterns = [
@@ -53,4 +54,8 @@ urlpatterns = [
   # path('costos/<int:pk>/pagar/', marcar_pagado, name='marcar_pagado'),
   path('costos_atencion/', CostosAtencionListView.as_view(), name='costos_atencion_list'),
   path('costos_atencion/pagar/<int:pk>/', PagarCostoAtencionView.as_view(), name='costos_atencion_pagar'),
+
+  # path('agendar-cita/<int:doctor_id>/', agendar_cita, name='agendar_cita'),
+  # path('confirmar-cita/', confirmar_cita, name='confirmar_cita'),
+  # path('guardarRegistroHorasView/', GuardarRegistroHorasView.as_view(), name='guardar_registro_horas'),
 ]
